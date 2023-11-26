@@ -213,5 +213,5 @@ for docount = 1:5
 
 end
 
-cd 'A:\Lin project'
+cd 'A:\Lin project\Individual_Project\'
 end

@@ -10,7 +10,7 @@ fs=1000000; % Sampling frequency
 Ts=1/fs;    % Sampling period
 
 for num = 1:len
-    cd 'A:\Lin project'
+    cd 'A:\Lin project\Individual_Project'
     [Udc_mean_sample, Urms_mean_sample, RDF_eachwindow, Swell_timesum, Dip_timesum,...
     Interruption_timesum, SampleDipCount, SampleSwellCount, SampleInterruptionCount,...
     Factor_peak_valley_sample, Factor_rms_sample] = evaluation(num,listing);
