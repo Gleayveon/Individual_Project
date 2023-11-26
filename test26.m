@@ -1,6 +1,6 @@
 clc
 clear
-
+close all
 cd 'A:\Lin project\Data_Check'
 % listing = dir('*.csv')
 listing = dir('*.tdms')
