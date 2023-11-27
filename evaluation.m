@@ -1,12 +1,30 @@
-function [Udc_mean_sample, Urms_mean_sample, RDF_eachwindow, Swell_timesum, Dip_timesum,...
-    Interruption_timesum, SampleDipCount, SampleSwellCount, SampleInterruptionCount,...
-    Factor_peak_valley_sample, Factor_rms_sample] = evaluation(num,listing)
+function [Udc_mean_sample,Urms_mean_sample,RDF_eachwindow,Swell_timesum,Dip_timesum,...
+    Interruption_timesum,SampleDipCount,SampleSwellCount,SampleInterruptionCount,...
+    Factor_peak_valley_sample,Factor_rms_sample,isSwell,isDip,isInterruption] = ...
+    evaluation(num,listing,isSwell,isDip,isInterruption)
 % evaluation(A)
 % Inputs:
-%   A   = Number of the data
+%   num                         = Number of the data
+%   listing                     = Sample's name list
+%   isSwell                     = Is Swell occuring last sample window?
+%   isDip                       = Is Dip occuring last sample window?
+%   isInterruption              = Is Interruption occuring last sample window?
 % Outputs:
-%   signal    = Synthesized signal.
-%   signal_ft = Spectrum of signal.
+%   Udc_mean_sample             = Mean Udc of this sample
+%   Urms_mean_sample            = Mean Urms of this sample
+%   RDF_eachwindow              = RDF of each sample window (i.e.200ms) 
+%   Swell_timesum               = The total time length of Swell in this sample
+%   Dip_timesum                 = The total time length of Dip in this sample
+%   Interruption_timesum        = The total time length of Interruption in this sample
+%   SampleDipCount              = The total number of new Dip detected in this sample
+%   SampleSwellCount            = The total number of new Swell detected in this sample
+%   SampleInterruptionCount     = The total number of new Interruption detected in this sample
+%   Factor_peak_valley_sample   = The Peak to Valley Factor of this sample
+%   Factor_rms_sample           = The mean RMS Factor of this sample
+%   isSwell                     = Is Swell occuring last sample window?
+%   isDip                       = Is Dip occuring last sample window?
+%   isInterruption              = Is Interruption occuring last sample window?
+
 cd 'A:\Lin project\Data_Check'
 Name = listing(num).name;
 data = tdmsread(Name); % signal contains both ripple and non-stationary disturbances
@@ -109,9 +127,7 @@ for docount = 1:5
     DipCount = 0;
     SwellCount = 0;
     InterruptionCount = 0;
-    isSwell = 0;
-    isDip = 0;
-    isInterruption = 0;
+
     isNonStatDistOccur = zeros(num_groups,1);
     % Swell
     for i = 1:num_groups
