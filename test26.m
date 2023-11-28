@@ -35,31 +35,46 @@ for num = 1:len
     InterruptionCount = InterruptionCount + SampleInterruptionCount;
     Urms_mean = cat(1,Urms_mean,Urms_mean_sample);
     Udc_mean = cat(1,Udc_mean, Udc_mean_sample);
-    figure(2)
+    figure(1)
     pie(Pie_Data);
     legend('Normal','Swell','Dip','Interruption');
     title('Chart of the data''s voltage status');
     cd 'A:\Lin project\Data_Check'
-    figure(3)
+    
+    figure(2)
     subplot(2,1,1)
-    plot(Udc_mean(2:end));
-    title('Udc_mean');
+    time = 0:5:(length(Udc_mean)-2);
+    plot(time,Udc_mean(2:end));
+    title('U_D_C mean');
+    ylabel('U_D_C Magnitude');
+    xlabel('Time (ms)')
     hold on
     subplot(2,1,2)
-    plot(Urms_mean(2:end));
-    title('Urms_mean');
+    plot(time,Urms_mean(2:end));
+    title('U_r_m_s mean');
+    ylabel('U_r_m_s Magnitude');
+    xlabel('Time (ms)')
     Factor_rms = cat(1,Factor_rms, Factor_rms_sample);
-    figure(4)
-    plot(Factor_rms(2:end));
-    title('Factor_rms');
+    figure(3)
+    time = 0:5:(length(Factor_rms)-2);
+    plot(time,Factor_rms(2:end));
+    title('Factor_r_m)s');
+    xlabel('Time (ms)');
+    ylabel('Factor_r_m_s Magnitude');
     Factor_peak_valley = cat(1,Factor_peak_valley,Factor_peak_valley_sample);
-    figure(5)
-    plot(Factor_peak_valley(2:end));
-    title('Factor_peak_valley');
+    figure(4)
+    plot(time,Factor_peak_valley(2:end));
+    title('Factor_p_e_a_k_-_v_a_l_l_e_y');
+    xlabel('Time (ms)');
+    ylabel('Factor_p_e_a_k_-_v_a_l_l_e_y Magnitude');
     RDF_total = cat(1,RDF_total,RDF_eachwindow);
-    figure(6)
-    plot(RDF_total(2:end));
-    title('RDF_total');
+    figure(5)
+    time = 0:5:(length(RDF_total)-2);
+    plot(time,RDF_total(2:end));
+    title('RDF_V_o_l_t_a_g_e_1');
+    xlabel('Time (ms)');
+    ylabel('RDF_V_o_l_t_a_g_e_1 Magnitude');
+
 
 end
 disp('=========Detection_Report=========');
