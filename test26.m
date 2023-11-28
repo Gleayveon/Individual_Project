@@ -62,3 +62,21 @@ for num = 1:len
     title('RDF_total');
 
 end
+disp('=========Detection_Report=========');
+fprintf(['In these signals sampled,\n']);
+if SwellCount == 0;
+    fprintf(['There is no Swell in these sample.\n'])
+else
+    fprintf(['%d Swell(s) have been identified.\n'],SwellCount);
+end
+if DipCount == 0
+    fprintf(['There is no Dip in these sample.\n'])
+else
+    fprintf(['%d Dip(s) have been identified.\n'],DipCount);
+end
+if InterruptionCount == 0
+    fprintf(['There is no Interruption in these sample.\n'])
+else
+    fprintf(['%d Interruption(s) have been identified.\n'],InterruptionCount);
+end
+fprintf('-------------------------------------\n');
