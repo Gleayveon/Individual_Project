@@ -2,7 +2,6 @@ clc
 clear
 close all
 cd 'A:\Lin project\Data_Check'
-% listing = dir('*.csv')
 listing = dir('*.tdms');
 len = length(listing);
 Pie_Data = [0 0 0 0]; %[ Nomal Swell Dip Interruption ]
@@ -43,7 +42,7 @@ for num = 1:len
     
     figure(2)
     subplot(2,1,1)
-    time = 0:5:(length(Udc_mean)-2);
+    time = 0:200:200*(length(Udc_mean)-2);
     plot(time,Udc_mean(2:end));
     title('U_D_C mean');
     ylabel('U_D_C Magnitude');
@@ -56,20 +55,20 @@ for num = 1:len
     xlabel('Time (ms)')
     Factor_rms = cat(1,Factor_rms, Factor_rms_sample);
     figure(3)
-    time = 0:5:(length(Factor_rms)-2);
+    time = 0:200:200*(length(Factor_rms)-2);
     plot(time,Factor_rms(2:end));
     title('Factor_r_m)s');
     xlabel('Time (ms)');
-    ylabel('Factor_r_m_s Magnitude');
+    ylabel('Factor_r_m_s Magnitude (%)');
     Factor_peak_valley = cat(1,Factor_peak_valley,Factor_peak_valley_sample);
     figure(4)
     plot(time,Factor_peak_valley(2:end));
     title('Factor_p_e_a_k_-_v_a_l_l_e_y');
     xlabel('Time (ms)');
-    ylabel('Factor_p_e_a_k_-_v_a_l_l_e_y Magnitude');
+    ylabel('Factor_p_e_a_k_-_v_a_l_l_e_y Magnitude (%)');
     RDF_total = cat(1,RDF_total,RDF_eachwindow);
     figure(5)
-    time = 0:5:(length(RDF_total)-2);
+    time = 0:200:200*(length(RDF_total)-2);
     plot(time,RDF_total(2:end));
     title('RDF_V_o_l_t_a_g_e_1');
     xlabel('Time (ms)');
