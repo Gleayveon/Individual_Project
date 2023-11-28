@@ -49,7 +49,16 @@ for num = 1:len
     plot(Urms_mean(2:end));
     title('Urms_mean');
     Factor_rms = cat(1,Factor_rms, Factor_rms_sample);
+    figure(4)
+    plot(Factor_rms(2:end));
+    title('Factor_rms');
     Factor_peak_valley = cat(1,Factor_peak_valley,Factor_peak_valley_sample);
+    figure(5)
+    plot(Factor_peak_valley(2:end));
+    title('Factor_peak_valley');
     RDF_total = cat(1,RDF_total,RDF_eachwindow);
+    figure(6)
+    plot(RDF_total(2:end));
+    title('RDF_total');
 
 end
