@@ -25,7 +25,7 @@ function [Udc_mean_sample,Urms_mean_sample,RDF_eachwindow,Swell_timesum,Dip_time
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
 
-%% Start 0
+%% Evaluation Start
 cd 'A:\Lin project\Data_Check'
 Name = listing(num).name;
 data = tdmsread(Name); % signal contains both ripple and non-stationary disturbances
