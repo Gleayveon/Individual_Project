@@ -47,16 +47,16 @@ L3_Current=L3_Current.*25;
 % %% For debug
 % data = readtable(Name);
 % voltage = data.voltage1;
-figure(1)
-Time=(Ts:Ts:length(L1_Voltage)*Ts)'; % Time vector 
-
-plot(Time,L1_Voltage)
-hold on
-plot(Time,L1_Current)
-hold on
-plot(Time,L2_Current)
-hold on
-plot(Time,L3_Current)
+% figure(1)
+% Time=(Ts:Ts:length(L1_Voltage)*Ts)'; % Time vector 
+% 
+% plot(Time,L1_Voltage)
+% hold on
+% plot(Time,L1_Current)
+% hold on
+% plot(Time,L2_Current)
+% hold on
+% plot(Time,L3_Current)
 
 
 %%
