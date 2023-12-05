@@ -6,9 +6,9 @@ function [Udc_mean_sample,Urms_mean_sample,RDF_eachwindow,Swell_timesum,Dip_time
 % Inputs:
 %   num                         = Number of the data
 %   listing                     = Sample's name list
-%   isSwell                     = Is Swell occuring last sample window?
-%   isDip                       = Is Dip occuring last sample window?
-%   isInterruption              = Is Interruption occuring last sample window?
+%   isSwell_legacy              = Is Swell occuring last sample window?
+%   isDip_legacy                = Is Dip occuring last sample window?
+%   isInterruption_legacy       = Is Interruption occuring last sample window?
 % Outputs:
 %   Udc_mean_sample             = Mean Udc of this sample
 %   Urms_mean_sample            = Mean Urms of this sample
@@ -24,7 +24,7 @@ function [Udc_mean_sample,Urms_mean_sample,RDF_eachwindow,Swell_timesum,Dip_time
 %   isSwell                     = Is Swell occuring last sample window?
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
-% Version: 1.1.4α
+% Version: 1.1.5α
 
 %% Evaluation Preparation
 cd 'A:\Lin project\Data_Check'  % Here is the path of where Data file locate
