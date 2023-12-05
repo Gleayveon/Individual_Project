@@ -64,7 +64,7 @@ L3_Current=L3_Current.*25;
 U_nominal = 700;
 timescale = 1000000;
 Fs = 1000000;
-group_size = 5;
+group_size = 5000; %resolution 5ms(5000us)
 hysteresis = 0.02*U_nominal;
 Dip_tr = 0.9*U_nominal;
 Swell_tr = 1.1*U_nominal;
@@ -109,11 +109,11 @@ for docount = 1:5
     Udc = zeros(num_groups, 1);
     k = 1;
     j = 1;
-    temp = zeros(5,1);
-    for i = 1:timescale/5
+    temp = zeros(group_size,1);
+    for i = 1:timescale/group_size
         temp(k) = voltage(i);
         k = k+1;
-        if k == 6
+        if k == (group_size + 1)
             Udc(j) = mean(temp);
             k = 1;
             j = j + 1;
@@ -125,11 +125,12 @@ for docount = 1:5
     Urms = zeros(num_groups, 1);
     k = 1;
     j = 1;
-    for i = 1:timescale/5
+    for i = 1:timescale/group_size
         temp(k) = voltage(i)^2;
         k = k+1;
-        if k == group_size+1
-            Urms(j) = sqrt(1/group_size * sum(temp));
+        if k == (group_size + 1)
+            % Urms(j) = sqrt(1/group_size * sum(temp)); %math formula ver.
+            Urms(j) = rms(temp);
             k = 1;
             j = j + 1;
         end
