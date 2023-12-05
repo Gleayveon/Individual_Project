@@ -24,11 +24,12 @@ function [Udc_mean_sample,Urms_mean_sample,RDF_eachwindow,Swell_timesum,Dip_time
 %   isSwell                     = Is Swell occuring last sample window?
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
+% Version: 1.1.4α
 
-%% Evaluation Start
-cd 'A:\Lin project\Data_Check'
-Name = listing(num).name;
-data = tdmsread(Name); % signal contains both ripple and non-stationary disturbances
+%% Evaluation Preparation
+cd 'A:\Lin project\Data_Check'  % Here is the path of where Data file locate
+Name = listing(num).name; % Name of the files
+data = tdmsread(Name); 
 
 fs=1000000; % Sampling frequency
 Ts=1/fs;    % Sampling period
@@ -59,14 +60,14 @@ L3_Current=L3_Current.*25;
 % plot(Time,L3_Current)
 
 
-%%
+%% Evaluation Start
 
-U_nominal = 700;
-timescale = 1000000;
-Fs = 1000000;
+U_nominal = 700; %The nominal voltage of the network
+timescale = 1000000; %The time length of this sample
+Fs = 1000000; %Sampling Frequency
 group_size = 5000; %resolution 5ms(5000us)
 hysteresis = 0.02*U_nominal;
-Dip_tr = 0.9*U_nominal;
+Dip_tr = 0.9*U_nominal; %Threashold_Dip
 Swell_tr = 1.1*U_nominal;
 Interruption_tr = 0.1*U_nominal;
 Udc_mean_sample = zeros(5,1);
@@ -85,13 +86,14 @@ Factor_rms_sample = zeros(5,1);
 Uripple_mean = zeros(5,1);
 Uripple_variance = zeros(5,1);
 
+%Split one file to 5 samples (200ms each)
 voltage1 = L1_Voltage(1:200000);
 voltage2 = L1_Voltage(200001:400000);
 voltage3 = L1_Voltage(400001:600000);
 voltage4 = L1_Voltage(600001:800000);
 voltage5 = L1_Voltage(800001:1000000);
 
-for docount = 1:5
+for docount = 1:5 
     if docount == 1
         voltage = voltage1;
     elseif docount == 2
@@ -140,10 +142,10 @@ for docount = 1:5
     %% Detection
 
     timecount = 0;
-    isSwell = 0;
+    isSwell = 0; %To flag status of the sample
     isDip = 0;
     isInterruption = 0;
-    DipCount = 1;
+    DipCount = 1; %Not starts at 0 as previous sample may leave a flag of disturance and start from 0 will result a bug.
     SwellCount = 1;
     InterruptionCount = 1;
 
@@ -151,14 +153,14 @@ for docount = 1:5
     % Swell
     for i = 1:num_groups
         if Urms(i) > Swell_tr && isSwell == 0
-            if isSwell_legacy == 1
+            if isSwell_legacy == 1 %Previous one's status
                 isSwell = 1;
                 timecount = 1;
                 SwellCount = SwellCount;
                 SwellTime(timecount,SwellCount) = 1;
                 SwellSpec(timecount,SwellCount) = Urms(i);
                 isNonStatDistOccur(i) = 1;
-                isSwell_legacy = 2;
+                isSwell_legacy = 2; %Change to 2 here to help further counting
             else
                 isSwell = 1;
                 timecount = 1;
@@ -179,7 +181,7 @@ for docount = 1:5
     end
     if isSwell_legacy == 2
         SampleSwellCount = SampleSwellCount + (SwellCount - 1);
-        isSwell_legacy = isSwell;
+        isSwell_legacy = isSwell; %To pass this sample's status to next one
         for i = 1:SwellCount
             Swell_timesum = Swell_timesum + group_size * sum(SwellTime(:,i));
         end        
@@ -191,7 +193,7 @@ for docount = 1:5
         end
     end
 
-    for i = 1:num_groups
+    for i = 1:num_groups %Same design as Swell
         if Urms(i) < Dip_tr && isDip == 0 && Urms(i) > Interruption_tr
             if isDip_legacy == 1
                 isDip = 1;
@@ -233,7 +235,7 @@ for docount = 1:5
         end
     end
     %Interruption
-    for i = 1:num_groups
+    for i = 1:num_groups %Ditto
         if Urms(i) < Interruption_tr && isInterruption == 0
             if isInterruption_legacy == 1
                 isInterruption = 1;
@@ -292,7 +294,7 @@ for docount = 1:5
     Temp = sum(P1(2:end).^2);
     Temp2 = sqrt(Temp);
     RDF = (Temp2 / P1(1)) *100;
-    RDF_eachwindow(docount) = RDF;
+    RDF_eachwindow(docount) = RDF; %I spilt the RDF calculation into steps to help debug
     
     %  Factors
     % Uripple = sqrt(Urms^2 / Udc^2);
@@ -308,5 +310,5 @@ for docount = 1:5
 
 end
 
-cd 'A:\Lin project\Individual_Project\'
+cd 'A:\Lin project\Individual_Project\' %This is the path of THIS file locate
 end
