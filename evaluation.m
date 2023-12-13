@@ -1,7 +1,8 @@
-function [Udc_mean_sample,Urms_mean_sample,RDF_eachwindow,Swell_timesum,Dip_timesum,...
+function [Udc_out,Urms_out,RDF_eachwindow,Swell_timesum,Dip_timesum,...
     Interruption_timesum,SampleDipCount,SampleSwellCount,SampleInterruptionCount,...
     Factor_peak_valley_sample,Factor_rms_sample,isSwell_legacy,isDip_legacy,isInterruption_legacy] = ...
-    evaluation(num,listing,isSwell_legacy,isDip_legacy,isInterruption_legacy)
+    evaluation(num,listing,isSwell_legacy,isDip_legacy,isInterruption_legacy,Fs,Ts,U_nominal,...
+    timescale,group_size,hysteresis,Dip_tr,Swell_tr,Interruption_tr)
 % evaluation(A)
 % Inputs:
 %   num                         = Number of the data
@@ -9,9 +10,18 @@ function [Udc_mean_sample,Urms_mean_sample,RDF_eachwindow,Swell_timesum,Dip_time
 %   isSwell_legacy              = Is Swell occuring last sample window?
 %   isDip_legacy                = Is Dip occuring last sample window?
 %   isInterruption_legacy       = Is Interruption occuring last sample window?
+%   Fs                          = Sampling frequency
+%   Ts                          = Sampling period
+%   U_nominal                   = Nominal Voltage
+%   timescale                   = Time duration of one sample file
+%   group_size                  = Evaluation resolution
+%   hysteresis                  = Hysteresis
+%   Dip_tr                      = Threshold of Dip
+%   Swell_tr                    = Threshold of Swell
+%   Interruption_tr             = Threshold of Interruption
 % Outputs:
-%   Udc_mean_sample             = Mean Udc of this sample
-%   Urms_mean_sample            = Mean Urms of this sample
+%   Udc_out                     = Udc of this sample
+%   Urms_out                    = Urms of this sample
 %   RDF_eachwindow              = RDF of each sample window (i.e.200ms) 
 %   Swell_timesum               = The total time length of Swell in this sample
 %   Dip_timesum                 = The total time length of Dip in this sample
@@ -24,15 +34,14 @@ function [Udc_mean_sample,Urms_mean_sample,RDF_eachwindow,Swell_timesum,Dip_time
 %   isSwell                     = Is Swell occuring last sample window?
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
-% Version: 1.1.5α
+% Version: 1.2.0α
 
-%% Evaluation Preparation
+%% Data Loading
 cd 'A:\Lin project\Data_Check'  % Here is the path of where Data file locate
+% cd 'A:\Lin project\ss'
 Name = listing(num).name; % Name of the files
 data = tdmsread(Name); 
 
-fs=1000000; % Sampling frequency
-Ts=1/fs;    % Sampling period
 Recordings=data{1,1};
 Recordings=table2array(Recordings);
 
@@ -62,14 +71,6 @@ L3_Current=L3_Current.*25;
 
 %% Evaluation Start
 
-U_nominal = 700; %The nominal voltage of the network
-timescale = 1000000; %The time length of this sample
-Fs = 1000000; %Sampling Frequency
-group_size = 5000; %resolution 5ms(5000us)
-hysteresis = 0.02*U_nominal;
-Dip_tr = 0.9*U_nominal; %Threashold_Dip
-Swell_tr = 1.1*U_nominal;
-Interruption_tr = 0.1*U_nominal;
 Udc_mean_sample = zeros(5,1);
 Urms_mean_sample = zeros(5,1);
 RDF_eachwindow = zeros(5,1);
@@ -85,7 +86,7 @@ Factor_peak_valley_sample = zeros(5,1);
 Factor_rms_sample = zeros(5,1);
 Uripple_mean = zeros(5,1);
 Uripple_variance = zeros(5,1);
-
+Udc_out = zeros(200,1);
 %Split one file to 5 samples (200ms each)
 voltage1 = L1_Voltage(1:200000);
 voltage2 = L1_Voltage(200001:400000);
@@ -112,7 +113,7 @@ for docount = 1:5
     k = 1;
     j = 1;
     temp = zeros(group_size,1);
-    for i = 1:timescale/group_size
+    for i = 1:timescale/5
         temp(k) = voltage(i);
         k = k+1;
         if k == (group_size + 1)
@@ -121,14 +122,13 @@ for docount = 1:5
             j = j + 1;
         end
     end
-    Udc_mean_sample(docount) = mean(Udc);
 
     %% U_rms
     Urms = zeros(num_groups, 1);
     k = 1;
     j = 1;
-    for i = 1:timescale/group_size
-        temp(k) = voltage(i)^2;
+    for i = 1:timescale/5
+        temp(k) = voltage(i);
         k = k+1;
         if k == (group_size + 1)
             % Urms(j) = sqrt(1/group_size * sum(temp)); %math formula ver.
@@ -137,7 +137,24 @@ for docount = 1:5
             j = j + 1;
         end
     end
-    Urms_mean_sample(docount) = mean(Urms);
+    if docount == 1
+        Urms_1 = Urms;
+        Udc_1 = Udc;
+    elseif docount == 2
+        Urms_2 = Urms;
+        Udc_2 = Udc;
+    elseif docount == 3
+        Urms_3 = Urms;
+        Udc_3 = Udc;
+    elseif docount == 4
+        Urms_4 = Urms;
+        Udc_4 = Udc;
+    else
+        Urms_5 = Urms;
+        Udc_5 = Udc;
+        Udc_out = cat(1,Udc_1,Udc_2,Udc_3,Udc_4,Udc_5);
+        Urms_out = cat(1,Urms_1,Urms_2,Urms_3,Urms_4,Urms_5);
+    end
 
     %% Detection
 
@@ -189,7 +206,7 @@ for docount = 1:5
         SampleSwellCount = SampleSwellCount + (SwellCount - 1);
         isSwell_legacy = isSwell;
         for i = 1:(SwellCount -1)
-            Swell_timesum = Swell_timesum + group_size * sum(SwellTime(:,i));
+            Swell_timesum = Swell_timesum + group_size * sum(SwellTime(:,i+1));
         end
     end
 
@@ -205,13 +222,13 @@ for docount = 1:5
                 isDip_legacy = 2;
             else
                 isDip = 1;
-                timecount = 1;
+                timecount = 1; 
                 DipCount = DipCount + 1;
                 DipTime(timecount,DipCount) = 1;
                 DipSpec(timecount,DipCount) = Urms(i);
                 isNonStatDistOccur(i) = 1;    
             end
-        elseif Urms(i) < (Dip_tr - hysteresis) && isDip == 1 && Urms(i) > Interruption_tr
+        elseif Urms(i) < (Dip_tr + hysteresis) && isDip == 1 && Urms(i) > Interruption_tr
             timecount = timecount + 1;
             DipTime(timecount,DipCount) = 1;
             DipSpec(timecount,DipCount) = Urms(i);
@@ -231,7 +248,7 @@ for docount = 1:5
         SampleDipCount = SampleDipCount + (DipCount - 1);
         isDip_legacy = isDip;
         for i = 1:(DipCount-1)
-            Dip_timesum = Dip_timesum + group_size * sum(DipTime(:,i));
+            Dip_timesum = Dip_timesum + group_size * sum(DipTime(:,i+1));
         end
     end
     %Interruption
@@ -260,7 +277,6 @@ for docount = 1:5
             InterruptionSpec(timecount,InterruptionCount) = Urms(i);
             isNonStatDistOccur(i) = 1;
         elseif Urms(i) > Interruption_tr && isInterruption == 1
-            InterruptionSpec(timecount,InterruptionCount) = Urms(i);
             isInterruption = 0;
         else
         end
@@ -275,15 +291,14 @@ for docount = 1:5
         SampleInterruptionCount = SampleInterruptionCount + (InterruptionCount - 1 );
         isInterruption_legacy = isInterruption;
         for i = 1:(InterruptionCount-1)
-            Interruption_timesum = Interruption_timesum + group_size * sum(InterruptionTime(:,i));
+            Interruption_timesum = Interruption_timesum + group_size * sum(InterruptionTime(:,i+1));
         end
     end
 
     %% U_ripple
     % RDF
-    T = 1/Fs;
     L = length(voltage);
-    t = (0:L-1)*T;    
+    t = (0:L-1)*Ts;    
     Y = fft(voltage);
     
     P2 = abs(Y/L);
