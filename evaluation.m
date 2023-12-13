@@ -34,11 +34,11 @@ function [Udc_out,Urms_out,RDF_eachwindow,Swell_timesum,Dip_timesum,...
 %   isSwell                     = Is Swell occuring last sample window?
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
-% Version: 1.2.0α
+% Version: 1.2.1β
 
 %% Data Loading
 cd 'A:\Lin project\Data_Check'  % Here is the path of where Data file locate
-% cd 'A:\Lin project\ss'
+
 Name = listing(num).name; % Name of the files
 data = tdmsread(Name); 
 
@@ -54,19 +54,7 @@ L1_Voltage=L1_Voltage.*1000;
 L1_Current=L1_Current.*100;
 L2_Current=L2_Current.*100;
 L3_Current=L3_Current.*25;
-% %% For debug
-% data = readtable(Name);
-% voltage = data.voltage1;
-% figure(1)
-% Time=(Ts:Ts:length(L1_Voltage)*Ts)'; % Time vector 
-% 
-% plot(Time,L1_Voltage)
-% hold on
-% plot(Time,L1_Current)
-% hold on
-% plot(Time,L2_Current)
-% hold on
-% plot(Time,L3_Current)
+
 
 
 %% Evaluation Start
@@ -87,6 +75,7 @@ Factor_rms_sample = zeros(5,1);
 Uripple_mean = zeros(5,1);
 Uripple_variance = zeros(5,1);
 Udc_out = zeros(200,1);
+
 %Split one file to 5 samples (200ms each)
 voltage1 = L1_Voltage(1:200000);
 voltage2 = L1_Voltage(200001:400000);
@@ -94,6 +83,7 @@ voltage3 = L1_Voltage(400001:600000);
 voltage4 = L1_Voltage(600001:800000);
 voltage5 = L1_Voltage(800001:1000000);
 
+% Evaluate is carried out sample by sample
 for docount = 1:5 
     if docount == 1
         voltage = voltage1;
@@ -107,8 +97,9 @@ for docount = 1:5
         voltage = voltage5;
     end
 
-    %% U_DC
-
+    %% U_DC & U_rms Calculation
+    
+    Urms = zeros(num_groups, 1);
     Udc = zeros(num_groups, 1);
     k = 1;
     j = 1;
@@ -118,25 +109,14 @@ for docount = 1:5
         k = k+1;
         if k == (group_size + 1)
             Udc(j) = mean(temp);
-            k = 1;
-            j = j + 1;
-        end
-    end
-
-    %% U_rms
-    Urms = zeros(num_groups, 1);
-    k = 1;
-    j = 1;
-    for i = 1:timescale/5
-        temp(k) = voltage(i);
-        k = k+1;
-        if k == (group_size + 1)
-            % Urms(j) = sqrt(1/group_size * sum(temp)); %math formula ver.
             Urms(j) = rms(temp);
             k = 1;
             j = j + 1;
         end
     end
+
+    %% U_rms & U_DC Storage
+
     if docount == 1
         Urms_1 = Urms;
         Udc_1 = Udc;
