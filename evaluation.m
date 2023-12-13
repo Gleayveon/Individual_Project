@@ -1,6 +1,7 @@
 function [Udc_out,Urms_out,RDF_eachwindow,Swell_timesum,Dip_timesum,...
     Interruption_timesum,SampleDipCount,SampleSwellCount,SampleInterruptionCount,...
-    Factor_peak_valley_sample,Factor_rms_sample,isSwell_legacy,isDip_legacy,isInterruption_legacy] = ...
+    Factor_peak_valley_sample,Factor_rms_sample,isSwell_legacy,isDip_legacy,isInterruption_legacy,...
+    RDF_eachwindow_i1,Factor_peak_valley_sample_i1,Factor_rms_sample_i1] = ...
     evaluation(num,listing,isSwell_legacy,isDip_legacy,isInterruption_legacy,Fs,Ts,U_nominal,...
     timescale,group_size,hysteresis,Dip_tr,Swell_tr,Interruption_tr)
 % evaluation(A)
@@ -34,7 +35,10 @@ function [Udc_out,Urms_out,RDF_eachwindow,Swell_timesum,Dip_timesum,...
 %   isSwell                     = Is Swell occuring last sample window?
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
-% Version: 1.2.0α
+%   RDF_eachwindow_i1           = RDF of Line 1 Current of each sample window (i.e.200ms) 
+%   Factor_peak_valley_sample_i1= The Line 1 Current Peak to Valley Factor of this sample
+%   Factor_rms_sample_i1        = The Line 1 Current mean RMS Factor of this sample
+% Version: 2.0.0α
 
 %% Data Loading
 cd 'A:\Lin project\Data_Check'  % Here is the path of where Data file locate
@@ -89,54 +93,59 @@ Uripple_variance = zeros(5,1);
 Udc_out = zeros(200,1);
 %Split one file to 5 samples (200ms each)
 voltage1 = L1_Voltage(1:200000);
+L1_Current_1 = L1_Current(1:200000);
 voltage2 = L1_Voltage(200001:400000);
+L1_Current_2 = L1_Current(200001:400000);
 voltage3 = L1_Voltage(400001:600000);
+L1_Current_3 = L1_Current(400001:600000);
 voltage4 = L1_Voltage(600001:800000);
+L1_Current_4 = L1_Current(600001:800000);
 voltage5 = L1_Voltage(800001:1000000);
+L1_Current_5 = L1_Current(800001:1000000);
 
 for docount = 1:5 
     if docount == 1
         voltage = voltage1;
+        Current_L1 = L1_Current_1;
     elseif docount == 2
         voltage = voltage2;
+        Current_L1 = L1_Current_2;
     elseif docount == 3
         voltage = voltage3;
+        Current_L1 = L1_Current_3;
     elseif docount == 4
         voltage = voltage4;
+        Current_L1 = L1_Current_4;
     else
         voltage = voltage5;
+        Current_L1 = L1_Current_5;
     end
 
-    %% U_DC
+    %% Mean and RMS Calculate
 
-    Udc = zeros(num_groups, 1);
-    k = 1;
-    j = 1;
-    temp = zeros(group_size,1);
-    for i = 1:timescale/5
-        temp(k) = voltage(i);
-        k = k+1;
-        if k == (group_size + 1)
-            Udc(j) = mean(temp);
-            k = 1;
-            j = j + 1;
-        end
-    end
-
-    %% U_rms
+    Udc = zeros(num_groups, 1);    
     Urms = zeros(num_groups, 1);
+    I_L1rms = zeros(num_groups, 1);
+    I_L1 = zeros(num_groups,1);
     k = 1;
     j = 1;
+    temp = zeros(group_size,2);
     for i = 1:timescale/5
-        temp(k) = voltage(i);
+        temp(k,1) = voltage(i);
+        temp(k,2) = Current_L1(i);
         k = k+1;
         if k == (group_size + 1)
-            % Urms(j) = sqrt(1/group_size * sum(temp)); %math formula ver.
-            Urms(j) = rms(temp);
+            Udc(j) = mean(temp(:,1));
+            Urms(j) = rms(temp(:,1));
+            I_L1(j) = mean(temp(:,2));
+            I_L1rms = rms(temp(:,2));
             k = 1;
             j = j + 1;
         end
     end
+
+    %% U_rms & U_DC storage
+
     if docount == 1
         Urms_1 = Urms;
         Udc_1 = Udc;
@@ -311,8 +320,7 @@ for docount = 1:5
     RDF = (Temp2 / P1(1)) *100;
     RDF_eachwindow(docount) = RDF; %I spilt the RDF calculation into steps to help debug
     
-    %  Factors
-    % Uripple = sqrt(Urms^2 / Udc^2);
+
     Uripple = sqrt(Urms.^2./Udc .^2);
     Peak = max(voltage);
     Valley = min(voltage);
@@ -321,6 +329,31 @@ for docount = 1:5
     Factor_rms_sample(docount) = mean(Uripple./Udc) * 100;
     Uripple_mean(docount) = mean(Uripple);
     Uripple_variance(docount) = var(Uripple);
+
+    %% I_ripple
+    % RDF
+    L_i1 = length(Current_L1);
+    t_i1 = (0:L_i1-1)*Ts;    
+    Y_i1 = fft(Current_L1);
+    
+    P2_i1 = abs(Y_i1/L_i1);
+    P1_i1 = P2_i1(1:round(L_i1/2));
+    P1_i1(2:end) = (2*P1_i1(2:end))/sqrt(2);
+    f_i1 = Fs*(0:(L_i1/2)-1)/L_i1;
+    
+    Temp = sum(P1_i1(2:end).^2);
+    Temp2 = sqrt(Temp);
+    RDF_i1 = (Temp2 / P1_i1(1)) *100;
+    RDF_eachwindow_i1(docount) = RDF_i1; %I spilt the RDF calculation into steps to help debug
+    
+    I_1_ripple = sqrt(I_L1rms.^2./I_L1 .^2);
+    Peak_i1 = max(Current_L1);
+    Valley_i1 = min(Current_L1);
+    PeaktoValley_i1(docount) = abs(Peak_i1 - Valley_i1);
+    Factor_peak_valley_sample_i1(docount) = PeaktoValley_i1(docount)/mean(I_L1) * 100;
+    Factor_rms_sample_i1(docount) = mean(I_1_ripple./I_L1) * 100;
+    Uripple_mean_i1(docount) = mean(I_1_ripple);
+    Uripple_variance_i1(docount) = var(I_1_ripple);
     
 
 end
