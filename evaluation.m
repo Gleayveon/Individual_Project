@@ -1,6 +1,9 @@
-function [Udc_out,Urms_out,RDF_eachwindow,Swell_timesum,Dip_timesum,...
+function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms_L3,...
+    RDF_V_eachwindow,RDF_L1_eachwindow,RDF_L2_eachwindow,RDF_L3_eachwindow,Swell_timesum,Dip_timesum,...
     Interruption_timesum,SampleDipCount,SampleSwellCount,SampleInterruptionCount,...
-    Factor_peak_valley_sample,Factor_rms_sample,isSwell_legacy,isDip_legacy,isInterruption_legacy] = ...
+    Factor_peak_valley_sample_V,Factor_rms_sample_V,Factor_peak_valley_sample_L1,Factor_rms_sample_L1,...
+    Factor_peak_valley_sample_L2,Factor_rms_sample_L2,Factor_peak_valley_sample_L3,Factor_rms_sample_L3,...
+    Ripple_V,Ripple_L1,Ripple_L2,Ripple_L3,isSwell_legacy,isDip_legacy,isInterruption_legacy] = ...
     evaluation(num,listing,isSwell_legacy,isDip_legacy,isInterruption_legacy,Fs,Ts,U_nominal,...
     timescale,group_size,hysteresis,Dip_tr,Swell_tr,Interruption_tr)
 % evaluation(A)
@@ -22,19 +25,34 @@ function [Udc_out,Urms_out,RDF_eachwindow,Swell_timesum,Dip_timesum,...
 % Outputs:
 %   Udc_out                     = Udc of this sample
 %   Urms_out                    = Urms of this sample
-%   RDF_eachwindow              = RDF of each sample window (i.e.200ms) 
+%   I_mean_L1                   = Mean Current of Line 1
+%   I_rms_L1                    = RMS Current of Line 1
+%   I_mean_L2                   = Mean Current of Line 2
+%   I_rms_L2                    = RMS Current of Line 2
+%   I_mean_L3                   = Mean Current of Line 3
+%   I_rms_L3                    = RMS Current of Line 3
+%   RDF_V_eachwindow            = RDF of voltage of each sample window (i.e.200ms)
+%   RDF_L1_eachwindow           = RDF of voltage of each sample window (i.e.200ms)
+%   RDF_L2_eachwindow           = RDF of voltage of each sample window (i.e.200ms)
+%   RDF_L3_eachwindow           = RDF of voltage of each sample window (i.e.200ms)
 %   Swell_timesum               = The total time length of Swell in this sample
 %   Dip_timesum                 = The total time length of Dip in this sample
 %   Interruption_timesum        = The total time length of Interruption in this sample
 %   SampleDipCount              = The total number of new Dip detected in this sample
 %   SampleSwellCount            = The total number of new Swell detected in this sample
 %   SampleInterruptionCount     = The total number of new Interruption detected in this sample
-%   Factor_peak_valley_sample   = The Peak to Valley Factor of this sample
-%   Factor_rms_sample           = The mean RMS Factor of this sample
+%   Factor_peak_valley_sample_V = The Peak to Valley Factor of Voltage of this sample
+%   Factor_rms_sample_V         = The mean RMS Factor of Voltage of this sample
+%   Factor_peak_valley_sample_L1= The Peak to Valley Factor of Curent of Line 1 of this sample
+%   Factor_rms_sample_L1        = The mean RMS Factor of Curent of Line 1 of this sample
+%   Factor_peak_valley_sample_L2= The Peak to Valley Factor of Curent of Line 2 of this sample
+%   Factor_rms_sample_L2        = The mean RMS Factor of Curent of Line 2 of this sample
+%   Factor_peak_valley_sample_L3= The Peak to Valley Factor of Curent of Line 3 of this sample
+%   Factor_rms_sample_L3        = The mean RMS Factor of Curent of Line 3 of this sample
 %   isSwell                     = Is Swell occuring last sample window?
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
-% Version: 1.2.1β
+% Version: 1.3.0β
 
 %% Data Loading
 cd 'A:\Lin project\Data_Check'  % Here is the path of where Data file locate
@@ -59,9 +77,10 @@ L3_Current=L3_Current.*25;
 
 %% Evaluation Start
 
-Udc_mean_sample = zeros(5,1);
-Urms_mean_sample = zeros(5,1);
-RDF_eachwindow = zeros(5,1);
+RDF_V_eachwindow = zeros(5,1);
+RDF_L1_eachwindow = zeros(5,1);
+RDF_L2_eachwindow = zeros(5,1);
+RDF_L3_eachwindow = zeros(5,1);
 num_groups = floor(200000 / group_size);
 Swell_timesum = 0;
 Dip_timesum = 0;
@@ -70,8 +89,8 @@ SampleDipCount = 0;
 SampleSwellCount = 0;
 SampleInterruptionCount = 0;
 PeaktoValley = zeros(5,1);
-Factor_peak_valley_sample = zeros(5,1);
-Factor_rms_sample = zeros(5,1);
+Factor_peak_valley_sample_V = zeros(5,1);
+Factor_rms_sample_V = zeros(5,1);
 Uripple_mean = zeros(5,1);
 Uripple_variance = zeros(5,1);
 Udc_out = zeros(200,1);
@@ -82,58 +101,82 @@ voltage2 = L1_Voltage(200001:400000);
 voltage3 = L1_Voltage(400001:600000);
 voltage4 = L1_Voltage(600001:800000);
 voltage5 = L1_Voltage(800001:1000000);
+current_L1_1 = L1_Current(1:200000);
+current_L1_2 = L1_Current(200001:400000);
+current_L1_3 = L1_Current(400001:600000);
+current_L1_4 = L1_Current(600001:800000);
+current_L1_5 = L1_Current(800001:1000000);
+current_L2_1 = L2_Current(1:200000);
+current_L2_2 = L2_Current(200001:400000);
+current_L2_3 = L2_Current(400001:600000);
+current_L2_4 = L2_Current(600001:800000);
+current_L2_5 = L2_Current(800001:1000000);
+current_L3_1 = L3_Current(1:200000);
+current_L3_2 = L3_Current(200001:400000);
+current_L3_3 = L3_Current(400001:600000);
+current_L3_4 = L3_Current(600001:800000);
+current_L3_5 = L3_Current(800001:1000000);
 
-% Evaluate is carried out sample by sample
+% Evaluate is carried out in each 200ms period
 for docount = 1:5 
     if docount == 1
         voltage = voltage1;
+        current_L1 = current_L1_1;
+        current_L2 = current_L2_1;
+        current_L3 = current_L3_1;
     elseif docount == 2
         voltage = voltage2;
+        current_L1 = current_L1_2;
+        current_L2 = current_L2_2;
+        current_L3 = current_L3_2;
     elseif docount == 3
         voltage = voltage3;
+        current_L1 = current_L1_3;
+        current_L2 = current_L2_3;
+        current_L3 = current_L3_3;
     elseif docount == 4
         voltage = voltage4;
+        current_L1 = current_L1_4;
+        current_L2 = current_L2_4;
+        current_L3 = current_L3_4;
     else
         voltage = voltage5;
+        current_L1 = current_L1_5;
+        current_L2 = current_L2_5;
+        current_L3 = current_L3_5;
     end
 
-    %% U_DC & U_rms Calculation
+    %% Mean & RMS Calculation
     
     Urms = zeros(num_groups, 1);
     Udc = zeros(num_groups, 1);
+    current_mean_L1 = zeros(num_groups, 1);
+    current_rms_L1 = zeros(num_groups, 1);
+    current_mean_L2 = zeros(num_groups, 1);
+    current_rms_L2 = zeros(num_groups, 1);
+    current_mean_L3 = zeros(num_groups, 1);
+    current_rms_L3 = zeros(num_groups, 1);
     k = 1;
     j = 1;
     temp = zeros(group_size,1);
     for i = 1:timescale/5
-        temp(k) = voltage(i);
+        temp(k,1) = voltage(i);
+        temp(k,2) = current_L1(i);
+        temp(k,3) = current_L2(i);
+        temp(k,4) = current_L3(i);
         k = k+1;
         if k == (group_size + 1)
-            Udc(j) = mean(temp);
-            Urms(j) = rms(temp);
+            Udc(j) = mean(temp(:,1));
+            Urms(j) = rms(temp(:,1));
+            current_mean_L1 = mean(temp(:,2));
+            current_rms_L1 = rms(temp(:,2));
+            current_mean_L2 = mean(temp(:,3));
+            current_rms_L2 = rms(temp(:,3));
+            current_mean_L3 = mean(temp(:,4));
+            current_rms_L3 = rms(temp(:,4));
             k = 1;
             j = j + 1;
         end
-    end
-
-    %% U_rms & U_DC Storage
-
-    if docount == 1
-        Urms_1 = Urms;
-        Udc_1 = Udc;
-    elseif docount == 2
-        Urms_2 = Urms;
-        Udc_2 = Udc;
-    elseif docount == 3
-        Urms_3 = Urms;
-        Udc_3 = Udc;
-    elseif docount == 4
-        Urms_4 = Urms;
-        Udc_4 = Udc;
-    else
-        Urms_5 = Urms;
-        Udc_5 = Udc;
-        Udc_out = cat(1,Udc_1,Udc_2,Udc_3,Udc_4,Udc_5);
-        Urms_out = cat(1,Urms_1,Urms_2,Urms_3,Urms_4,Urms_5);
     end
 
     %% Detection
@@ -275,10 +318,11 @@ for docount = 1:5
         end
     end
 
-    %% U_ripple
+    %% Ripple
     % RDF
     L = length(voltage);
-    t = (0:L-1)*Ts;    
+    t = (0:L-1)*Ts;  
+    % Voltage
     Y = fft(voltage);
     
     P2 = abs(Y/L);
@@ -289,19 +333,160 @@ for docount = 1:5
     Temp = sum(P1(2:end).^2);
     Temp2 = sqrt(Temp);
     RDF = (Temp2 / P1(1)) *100;
-    RDF_eachwindow(docount) = RDF; %I spilt the RDF calculation into steps to help debug
+    RDF_V_eachwindow(docount) = RDF; %I spilt the RDF calculation into steps to help debug
+    % Line 1
+    Y_L1 = fft(current_L1);
     
+    P2_L1 = abs(Y_L1/L);
+    P1_L1 = P2_L1(1:round(L/2));
+    P1_L1(2:end) = (2*P1_L1(2:end))/sqrt(2);
+    
+    Temp_L1 = sum(P1_L1(2:end).^2);
+    Temp2_L1 = sqrt(Temp_L1);
+    RDF_L1 = (Temp2_L1 / P1_L1(1)) *100;
+    RDF_L1_eachwindow(docount) = RDF_L1; %I spilt the RDF calculation into steps to help debug
+    % Line 2
+    Y_L2 = fft(current_L2);
+    
+    P2_L2 = abs(Y_L2/L);
+    P1_L2 = P2_L2(1:round(L/2));
+    P1_L2(2:end) = (2*P1_L2(2:end))/sqrt(2);
+    
+    Temp_L2 = sum(P1_L2(2:end).^2);
+    Temp2_L2 = sqrt(Temp_L2);
+    RDF_L2 = (Temp2_L2 / P1_L2(1)) *100;
+    RDF_L2_eachwindow(docount) = RDF_L2; %I spilt the RDF calculation into steps to help debug
+    % Line 3
+    Y_L3 = fft(current_L3);
+    
+    P2_L3 = abs(Y_L3/L);
+    P1_L3 = P2_L3(1:round(L/2));
+    P1_L3(2:end) = (2*P1_L3(2:end))/sqrt(2);
+    
+    Temp_L3 = sum(P1_L3(2:end).^2);
+    Temp2_L3 = sqrt(Temp_L3);
+    RDF_L3 = (Temp2_L3 / P1_L3(1)) *100;
+    RDF_L3_eachwindow(docount) = RDF_L3; %I spilt the RDF calculation into steps to help debug
     %  Factors
     % Uripple = sqrt(Urms^2 / Udc^2);
+    % mean and var. of ripple can extract, but didn't, if required, add it
+    % to the func. 
     Uripple = sqrt(Urms.^2./Udc .^2);
     Peak = max(voltage);
     Valley = min(voltage);
     PeaktoValley(docount) = abs(Peak - Valley);
-    Factor_peak_valley_sample(docount) = PeaktoValley(docount)/mean(Udc) * 100;
-    Factor_rms_sample(docount) = mean(Uripple./Udc) * 100;
+    Factor_peak_valley_sample_V(docount) = PeaktoValley(docount)/mean(Udc) * 100;
+    Factor_rms_sample_V(docount) = mean(Uripple./Udc) * 100;
     Uripple_mean(docount) = mean(Uripple);
     Uripple_variance(docount) = var(Uripple);
     
+    Iripple_L1 = sqrt(current_rms_L1.^2./current_mean_L1 .^2);
+    Peak_L1 = max(current_L1);
+    Valley_L1 = min(current_L1);
+    PeaktoValley_L1(docount) = abs(Peak_L1 - Valley_L1);
+    Factor_peak_valley_sample_L1(docount) = PeaktoValley_L1(docount)/mean(current_mean_L1) * 100;
+    Factor_rms_sample_L1(docount) = mean(Iripple_L1./current_mean_L1) * 100;
+    Iripple_L1_mean(docount) = mean(Iripple_L1);
+    Iripple_L1_variance(docount) = var(Iripple_L1);
+    
+    Iripple_L2 = sqrt(current_rms_L2.^2./current_mean_L2 .^2);
+    Peak_L2 = max(current_L2);
+    Valley_L2 = min(current_L2);
+    PeaktoValley_L2(docount) = abs(Peak_L2 - Valley_L2);
+    Factor_peak_valley_sample_L2(docount) = PeaktoValley_L2(docount)/mean(current_mean_L2) * 100;
+    Factor_rms_sample_L2(docount) = mean(Iripple_L2./current_mean_L2) * 100;
+    Iripple_L2_mean(docount) = mean(Iripple_L2);
+    Iripple_L2_variance(docount) = var(Iripple_L2);
+
+    Iripple_L3 = sqrt(current_rms_L3.^2./current_mean_L3 .^2);
+    Peak_L3 = max(current_L3);
+    Valley_L3 = min(current_L3);
+    PeaktoValley_L3(docount) = abs(Peak_L3 - Valley_L3);
+    Factor_peak_valley_sample_L3(docount) = PeaktoValley_L3(docount)/mean(current_mean_L3) * 100;
+    Factor_rms_sample_L3(docount) = mean(Iripple_L3./current_mean_L3) * 100;
+    Iripple_L3_mean(docount) = mean(Iripple_L3);
+    Iripple_L3_variance(docount) = var(Iripple_L3);
+
+    %% Storage
+    
+    if docount == 1
+        Urms_1 = Urms;
+        Udc_1 = Udc;
+        Uripple_1 = Uripple;
+        Iripple_L1_1 = Iripple_L1;
+        Iripple_L2_1 = Iripple_L2;
+        Iripple_L3_1 = Iripple_L3;
+        I_mean_L1_1 = current_mean_L1;
+        I_rms_L1_1 = current_rms_L1;
+        I_mean_L2_1 = current_mean_L2;
+        I_rms_L2_1 = current_rms_L2;
+        I_mean_L3_1 = current_mean_L3;
+        I_rms_L3_1 = current_rms_L3;
+    elseif docount == 2
+        Urms_2 = Urms;
+        Udc_2 = Udc;
+        Uripple_2 = Uripple;
+        Iripple_L1_2 = Iripple_L1;
+        Iripple_L2_2 = Iripple_L2;
+        Iripple_L3_2 = Iripple_L3;
+        I_mean_L1_2 = current_mean_L1;
+        I_rms_L1_2 = current_rms_L1;
+        I_mean_L2_2 = current_mean_L2;
+        I_rms_L2_2 = current_rms_L2;
+        I_mean_L3_2 = current_mean_L3;
+        I_rms_L3_2 = current_rms_L3;
+    elseif docount == 3
+        Urms_3 = Urms;
+        Udc_3 = Udc;
+        Uripple_3 = Uripple;
+        Iripple_L1_3 = Iripple_L1;
+        Iripple_L2_3 = Iripple_L2;
+        Iripple_L3_3 = Iripple_L3;
+        I_mean_L1_3 = current_mean_L1;
+        I_rms_L1_3 = current_rms_L1;
+        I_mean_L2_3 = current_mean_L2;
+        I_rms_L2_3 = current_rms_L2;
+        I_mean_L3_3 = current_mean_L3;
+        I_rms_L3_3 = current_rms_L3;
+    elseif docount == 4
+        Urms_4 = Urms;
+        Udc_4 = Udc;
+        Uripple_4 = Uripple;
+        Iripple_L1_4 = Iripple_L1;
+        Iripple_L2_4 = Iripple_L2;
+        Iripple_L3_4 = Iripple_L3;
+        I_mean_L1_4 = current_mean_L1;
+        I_rms_L1_4 = current_rms_L1;
+        I_mean_L2_4 = current_mean_L2;
+        I_rms_L2_4 = current_rms_L2;
+        I_mean_L3_4 = current_mean_L3;
+        I_rms_L3_4 = current_rms_L3;
+    else
+        Urms_5 = Urms;
+        Udc_5 = Udc;
+        Uripple_5 = Uripple;
+        Iripple_L1_5 = Iripple_L1;
+        Iripple_L2_5 = Iripple_L2;
+        Iripple_L3_5 = Iripple_L3;
+        I_mean_L1_5 = current_mean_L1;
+        I_rms_L1_5 = current_rms_L1;
+        I_mean_L2_5 = current_mean_L2;
+        I_rms_L2_5 = current_rms_L2;
+        I_mean_L3_5 = current_mean_L3;
+        I_rms_L3_5 = current_rms_L3;
+        Udc_out = cat(1,Udc_1,Udc_2,Udc_3,Udc_4,Udc_5);
+        Urms_out = cat(1,Urms_1,Urms_2,Urms_3,Urms_4,Urms_5);
+        Ripple_V = cat(1,Uripple_1,Uripple_2,Uripple_3,Uripple_4,Uripple_5);
+        Ripple_L1 = cat(1,Iripple_L1_1,Iripple_L1_2,Iripple_L1_3,Iripple_L1_4,Iripple_L1_5);
+        Ripple_L2 = cat(1,Iripple_L2_1,Iripple_L2_2,Iripple_L2_3,Iripple_L2_4,Iripple_L2_5);
+        Ripple_L3 = cat(1,Iripple_L3_1,Iripple_L3_2,Iripple_L3_3,Iripple_L3_4,Iripple_L3_5);
+        I_rms_L1 = cat(1,I_rms_L1_1,I_rms_L1_2,I_rms_L1_3,I_rms_L1_4,I_rms_L1_5);
+        I_rms_L2 = cat(1,I_rms_L2_1,I_rms_L2_2,I_rms_L2_3,I_rms_L2_4,I_rms_L2_5);
+        I_rms_L3 = cat(1,I_rms_L3_1,I_rms_L3_2,I_rms_L3_3,I_rms_L3_4,I_rms_L3_5);
+        I_mean_L1 = cat(1,I_mean_L1_1,I_mean_L1_2,I_mean_L1_3,I_mean_L1_4,I_mean_L1_5);
+        I_mean_L2 = cat(1,I_mean_L2_1,I_mean_L2_2,I_mean_L2_3,I_mean_L2_4,I_mean_L2_5);
+        I_mean_L3 = cat(1,I_mean_L3_1,I_mean_L3_2,I_mean_L3_3,I_mean_L3_4,I_mean_L3_5);
+    end
 
 end
 
