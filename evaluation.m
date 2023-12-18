@@ -52,10 +52,10 @@ function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms
 %   isSwell                     = Is Swell occuring last sample window?
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
-% Version: 1.3.0β
+% Version: 1.3.1β
 
 %% Data Loading
-cd 'A:\Lin project\Data_Check'  % Here is the path of where Data file locate
+cd 'A:\Lin project'\Data_Check\  % Here is the path of where Data file locate
 
 Name = listing(num).name; % Name of the files
 data = tdmsread(Name); 
@@ -168,12 +168,12 @@ for docount = 1:5
         if k == (group_size + 1)
             Udc(j) = mean(temp(:,1));
             Urms(j) = rms(temp(:,1));
-            current_mean_L1 = mean(temp(:,2));
-            current_rms_L1 = rms(temp(:,2));
-            current_mean_L2 = mean(temp(:,3));
-            current_rms_L2 = rms(temp(:,3));
-            current_mean_L3 = mean(temp(:,4));
-            current_rms_L3 = rms(temp(:,4));
+            current_mean_L1(j) = mean(temp(:,2));
+            current_rms_L1(j) = rms(temp(:,2));
+            current_mean_L2(j) = mean(temp(:,3));
+            current_rms_L2(j) = rms(temp(:,3));
+            current_mean_L3(j) = mean(temp(:,4));
+            current_rms_L3(j) = rms(temp(:,4));
             k = 1;
             j = j + 1;
         end
@@ -384,8 +384,8 @@ for docount = 1:5
     Peak_L1 = max(current_L1);
     Valley_L1 = min(current_L1);
     PeaktoValley_L1(docount) = abs(Peak_L1 - Valley_L1);
-    Factor_peak_valley_sample_L1(docount) = PeaktoValley_L1(docount)/mean(current_mean_L1) * 100;
-    Factor_rms_sample_L1(docount) = mean(Iripple_L1./current_mean_L1) * 100;
+    Factor_peak_valley_sample_L1(docount) = PeaktoValley_L1(docount)/abs(mean(current_mean_L1)) * 100;
+    Factor_rms_sample_L1(docount) = mean(abs(Iripple_L1)./abs(current_mean_L1)) * 100;
     Iripple_L1_mean(docount) = mean(Iripple_L1);
     Iripple_L1_variance(docount) = var(Iripple_L1);
     
@@ -393,8 +393,8 @@ for docount = 1:5
     Peak_L2 = max(current_L2);
     Valley_L2 = min(current_L2);
     PeaktoValley_L2(docount) = abs(Peak_L2 - Valley_L2);
-    Factor_peak_valley_sample_L2(docount) = PeaktoValley_L2(docount)/mean(current_mean_L2) * 100;
-    Factor_rms_sample_L2(docount) = mean(Iripple_L2./current_mean_L2) * 100;
+    Factor_peak_valley_sample_L2(docount) = PeaktoValley_L2(docount)/abs(mean(current_mean_L2)) * 100;
+    Factor_rms_sample_L2(docount) = mean(abs(Iripple_L2)./abs(current_mean_L2)) * 100;
     Iripple_L2_mean(docount) = mean(Iripple_L2);
     Iripple_L2_variance(docount) = var(Iripple_L2);
 
@@ -402,8 +402,8 @@ for docount = 1:5
     Peak_L3 = max(current_L3);
     Valley_L3 = min(current_L3);
     PeaktoValley_L3(docount) = abs(Peak_L3 - Valley_L3);
-    Factor_peak_valley_sample_L3(docount) = PeaktoValley_L3(docount)/mean(current_mean_L3) * 100;
-    Factor_rms_sample_L3(docount) = mean(Iripple_L3./current_mean_L3) * 100;
+    Factor_peak_valley_sample_L3(docount) = PeaktoValley_L3(docount)/abs(mean(current_mean_L3)) * 100;
+    Factor_rms_sample_L3(docount) = mean(abs(Iripple_L3)./abs(current_mean_L3)) * 100;
     Iripple_L3_mean(docount) = mean(Iripple_L3);
     Iripple_L3_variance(docount) = var(Iripple_L3);
 

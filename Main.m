@@ -1,9 +1,11 @@
+% Version: 1.3.1β
 clc
 clear
 close all
 cd 'A:\Lin project'\Data_Check\
 listing = dir('*.tdms');
 len = length(listing);
+start_time = datetime('13:48:00', 'Format', 'HH:mm:ss.SSS');
 Pie_Data = [0 0 0 0]; %[ Nomal Swell Dip Interruption ]
 Fs=1000000; % Sampling frequency
 Ts=1/Fs;    % Sampling period
@@ -22,9 +24,20 @@ DipCount = 0;
 InterruptionCount = 0;
 Udc_main = 0;
 Urms_main = 0;
-Factor_rms = 0;
-Factor_peak_valley = 0;
-RDF_total = 0;
+Factor_rms_V = 0;
+Factor_peak_valley_V = 0;
+I_rms_Line1 = 0;
+I_rms_Line2 = 0;
+I_rms_Line3 = 0;
+I_mean_Line1 = 0;
+I_mean_Line2 = 0;
+I_mean_Line3 = 0;
+RDF_total_V = 0;
+Ripple_Voltage = 0;
+Ripple_Line1 = 0;
+Ripple_Line2 = 0;
+Ripple_Line3 = 0;
+
 for num = 1:len
     cd 'A:\Lin project\Individual_Project'
     [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms_L3,...
@@ -43,8 +56,23 @@ for num = 1:len
     SwellCount = SwellCount + SampleSwellCount;
     DipCount = DipCount + SampleDipCount;
     InterruptionCount = InterruptionCount + SampleInterruptionCount;
-    Urms_main = cat(1,Urms_main,Urms);
-    Udc_main = cat(1,Udc_main, Udc);
+    Urms_main = cat(1,Urms_main,Urms_out);
+    Udc_main = cat(1,Udc_main, Udc_out);
+    I_rms_Line1 = cat(1,I_rms_Line1,I_rms_L1);
+    I_rms_Line2 = cat(1,I_rms_Line2,I_rms_L2);
+    I_rms_Line3 = cat(1,I_rms_Line3,I_rms_L3);
+    I_mean_Line1 = cat(1,I_mean_Line1,I_mean_L1);
+    I_mean_Line2 = cat(1,I_mean_Line2,I_mean_L2);
+    I_mean_Line3 = cat(1,I_mean_Line3,I_mean_L3);
+    Ripple_Voltage = cat(1,Ripple_Voltage,Ripple_V);
+    Ripple_Line1 = cat(1,Ripple_Line1,Ripple_L1);
+    Ripple_Line2 = cat(1,Ripple_Line2,Ripple_L2);
+    Ripple_Line3 = cat(1,Ripple_Line3,Ripple_L3);
+    Factor_rms_V = cat(1,Factor_rms_V, Factor_rms_sample_V);
+    Factor_peak_valley_V = cat(1,Factor_peak_valley_V,Factor_peak_valley_sample_V);
+    RDF_total_V = cat(1,RDF_total_V,RDF_V_eachwindow);
+end
+    % if rem(num,5) == 0
     figure(1)
     pie(Pie_Data,'%.3f%%');
     legend('Normal','Swell','Dip','Interruption');
@@ -53,43 +81,78 @@ for num = 1:len
     
     figure(2)
     subplot(2,1,1)
-    time = 5:5:5*(length(Udc_main)-1);
-    plot(time,Udc_main(2:end));
+    time_5MS_SS = 5:5:5*(length(Udc_main)-1);
+    time_5MS = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS);
+    plot(time_5MS,Udc_main(2:end));
     title('U_D_C mean');
     ylabel('U_D_C Magnitude');
     xlabel('Time (ms)')
     hold on
     subplot(2,1,2)
-    plot(time,Urms_main(2:end));
+    plot(time_5MS,Urms_main(2:end));
     title('U_r_m_s mean');
     ylabel('U_r_m_s Magnitude');
     xlabel('Time (ms)')
     yline(Dip_tr,'--','Color','#C31E2D','Label','Dip threshold');
     yline(Swell_tr,'--','Color','#2773C8','Label','Swell threshold');
     yline(Interruption_tr,'--','Color','#9CC38A','Label','Interruption threshold');
-    Factor_rms = cat(1,Factor_rms, Factor_rms_sample);
+    
     figure(3)
-    time = 0:200:200*(length(Factor_rms)-2);
-    plot(time,Factor_rms(2:end));
-    title('Factor_r_m_s');
+    time_200MS_SS = 200:200:200*(length(Factor_rms_V)-1);
+    time_200MS = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS);
+    plot(time_200MS,Factor_rms_V(2:end));
+    title('Factor_r_m_s Voltage');
     xlabel('Time (ms)');
     ylabel('Factor_r_m_s Magnitude (%)');
-    Factor_peak_valley = cat(1,Factor_peak_valley,Factor_peak_valley_sample);
+    
     figure(4)
-    plot(time,Factor_peak_valley(2:end));
-    title('Factor_p_e_a_k_-_v_a_l_l_e_y');
+    plot(time_200MS,Factor_peak_valley_V(2:end));
+    title('Factor_p_e_a_k_-_v_a_l_l_e_y Voltage');
     xlabel('Time (ms)');
     ylabel('Factor_p_e_a_k_-_v_a_l_l_e_y Magnitude (%)');
-    RDF_total = cat(1,RDF_total,RDF_eachwindow);
+    
     figure(5)
-    time = 0:200:200*(length(RDF_total)-2);
-    plot(time,RDF_total(2:end));
+    plot(time_200MS,RDF_total_V(2:end));
     title('RDF_V_o_l_t_a_g_e_1');
     xlabel('Time (ms)');
     ylabel('RDF_V_o_l_t_a_g_e_1 Magnitude');
+    figure(6)
+    plot(time_5MS,Ripple_Voltage(2:end),'Color','#633736');
+    hold on
+    plot(time_5MS,Ripple_Line1(2:end),'Color','#C31E2D');
+    hold on
+    plot(time_5MS,Ripple_Line2(2:end),'Color','#2773C8');
+    hold on
+    plot(time_5MS,Ripple_Line3(2:end),'Color','#9CC38A');
+    legend('Voltage','Line 1','Line 2','Line 3');
+    hold off
+    figure(7)
+    subplot(2,1,1)
+    plot(time_5MS,I_mean_Line1(2:end),'Color','#C31E2D');
+    hold on
+    plot(time_5MS,I_mean_Line2(2:end),'Color','#2773C8');
+    hold on
+    plot(time_5MS,I_mean_Line3(2:end),'Color','#9CC38A');
+    hold off
+    title('Current_m_e_a_m _o_f _e_v_e_r_y _5_m_s of all lines');
+    ylabel('Magnitude');
+    xlabel('Time (ms)');
+    legend('Line 1','Line 2','Line 3');
+    subplot(2,1,2)
+    plot(time_5MS,I_rms_Line1(2:end),'Color','#C31E2D');
+    hold on
+    plot(time_5MS,I_rms_Line2(2:end),'Color','#2773C8');
+    hold on
+    plot(time_5MS,I_rms_Line3(2:end),'Color','#9CC38A');
+    hold off
+    title('Current_r_m_s _o_f _e_v_e_r_y _5_m_s of all lines');
+    ylabel('Magnitude');
+    xlabel('Time (ms)');
+    legend('Line 1','Line 2','Line 3');
+    % else
+    % end
 
-
-end
+% end
 disp('=========Detection_Report=========');
 fprintf(['In these signals sampled,\n']);
 if SwellCount == 0;
