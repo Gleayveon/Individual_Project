@@ -1,4 +1,4 @@
-% Version: 1.3.3β
+% Version: 1.3.4β
 clc
 clear
 close all
@@ -77,7 +77,7 @@ end
     pie(Pie_Data,'%.3f%%');
     legend('Normal','Swell','Dip','Interruption');
     title('Chart of the data''s voltage status');
-    cd 'A:\Lin project\Data_Check'
+    
     
     figure(2)
     subplot(2,1,1)
