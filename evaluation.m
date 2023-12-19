@@ -52,7 +52,7 @@ function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms
 %   isSwell                     = Is Swell occuring last sample window?
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
-% Version: 1.3.1β
+% Version: 1.3.2β
 
 %% Data Loading
 cd 'A:\Lin project'\Data_Check\  % Here is the path of where Data file locate
