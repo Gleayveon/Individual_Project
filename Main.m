@@ -1,11 +1,11 @@
-% Version: 1.3.3β
+% Version: 1.3.4β
 clc
 clear
 close all
-cd 'A:\Lin project'\Data_Check\
+cd 'A:\Lin project'\Data\
 listing = dir('*.tdms');
 len = length(listing);
-start_time = datetime('13:48:00', 'Format', 'HH:mm:ss.SSS');
+start_time = datetime('13:47:47', 'Format', 'HH:mm:ss.SSS');
 Pie_Data = [0 0 0 0]; %[ Nomal Swell Dip Interruption ]
 Fs=1000000; % Sampling frequency
 Ts=1/Fs;    % Sampling period
@@ -77,7 +77,7 @@ end
     pie(Pie_Data,'%.3f%%');
     legend('Normal','Swell','Dip','Interruption');
     title('Chart of the data''s voltage status');
-    cd 'A:\Lin project\Data_Check'
+    cd 'A:\Lin project\Data'
     
     figure(2)
     subplot(2,1,1)

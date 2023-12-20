@@ -52,10 +52,10 @@ function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms
 %   isSwell                     = Is Swell occuring last sample window?
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
-% Version: 1.3.3β
+% Version: 1.3.4β
 
 %% Data Loading
-cd 'A:\Lin project'\Data_Check\  % Here is the path of where Data file locate
+cd 'A:\Lin project'\Data\  % Here is the path of where Data file locate
 
 Name = listing(num).name; % Name of the files
 data = tdmsread(Name); 
