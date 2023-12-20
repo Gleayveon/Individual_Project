@@ -1,11 +1,12 @@
-% Version: 1.3.4β
+% Version: 1.3.6β
 clc
 clear
 close all
 cd 'A:\Lin project'\Data_Check\
 listing = dir('*.tdms');
 len = length(listing);
-start_time = datetime('13:48:00', 'Format', 'HH:mm:ss.SSS');
+start_time = datetime('2023-09-26 13:48:00', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
+leftover = 0;
 Pie_Data = [0 0 0 0]; %[ Nomal Swell Dip Interruption ]
 Fs=1000000; % Sampling frequency
 Ts=1/Fs;    % Sampling period
@@ -42,32 +43,32 @@ for num = 1:len
     cd 'A:\Lin project\Individual_Project'
     [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms_L3,...
     RDF_V_eachwindow,RDF_L1_eachwindow,RDF_L2_eachwindow,RDF_L3_eachwindow,Swell_timesum,Dip_timesum,...
-    Interruption_timesum,SampleDipCount,SampleSwellCount,SampleInterruptionCount,...
+    Interruption_timesum,SampleDipCount,SampleSwellCount,SampleInterruptionCount,num_Sample,...
     Factor_peak_valley_sample_V,Factor_rms_sample_V,Factor_peak_valley_sample_L1,Factor_rms_sample_L1,...
     Factor_peak_valley_sample_L2,Factor_rms_sample_L2,Factor_peak_valley_sample_L3,Factor_rms_sample_L3,...
-    Ripple_V,Ripple_L1,Ripple_L2,Ripple_L3,isSwell_legacy,isDip_legacy,isInterruption_legacy] = ...
+    Ripple_V,Ripple_L1,Ripple_L2,Ripple_L3,isSwell_legacy,isDip_legacy,isInterruption_legacy,leftover] = ...
     evaluation(num,listing,isSwell_legacy,isDip_legacy,isInterruption_legacy,Fs,Ts,U_nominal,...
-    timescale,group_size,hysteresis,Dip_tr,Swell_tr,Interruption_tr);
+    timescale,group_size,hysteresis,Dip_tr,Swell_tr,Interruption_tr,leftover);
     
-    Pie_Data(1) = Pie_Data(1) + 1000000 - Dip_timesum - Swell_timesum - Interruption_timesum;
+    Pie_Data(1) = Pie_Data(1) + 200000*num_Sample - Dip_timesum - Swell_timesum - Interruption_timesum;
     Pie_Data(2) = Pie_Data(2) + Swell_timesum;
     Pie_Data(3) = Pie_Data(3) + Dip_timesum;
     Pie_Data(4) = Pie_Data(4) + Interruption_timesum;
     SwellCount = SwellCount + SampleSwellCount;
     DipCount = DipCount + SampleDipCount;
     InterruptionCount = InterruptionCount + SampleInterruptionCount;
-    Urms_main = cat(1,Urms_main,Urms_out);
-    Udc_main = cat(1,Udc_main, Udc_out);
-    I_rms_Line1 = cat(1,I_rms_Line1,I_rms_L1);
-    I_rms_Line2 = cat(1,I_rms_Line2,I_rms_L2);
-    I_rms_Line3 = cat(1,I_rms_Line3,I_rms_L3);
-    I_mean_Line1 = cat(1,I_mean_Line1,I_mean_L1);
-    I_mean_Line2 = cat(1,I_mean_Line2,I_mean_L2);
-    I_mean_Line3 = cat(1,I_mean_Line3,I_mean_L3);
-    Ripple_Voltage = cat(1,Ripple_Voltage,Ripple_V);
-    Ripple_Line1 = cat(1,Ripple_Line1,Ripple_L1);
-    Ripple_Line2 = cat(1,Ripple_Line2,Ripple_L2);
-    Ripple_Line3 = cat(1,Ripple_Line3,Ripple_L3);
+    Urms_main = cat(1,Urms_main,Urms_out(2:end));
+    Udc_main = cat(1,Udc_main, Udc_out(2:end));
+    I_rms_Line1 = cat(1,I_rms_Line1,I_rms_L1(2:end));
+    I_rms_Line2 = cat(1,I_rms_Line2,I_rms_L2(2:end));
+    I_rms_Line3 = cat(1,I_rms_Line3,I_rms_L3(2:end));
+    I_mean_Line1 = cat(1,I_mean_Line1,I_mean_L1(2:end));
+    I_mean_Line2 = cat(1,I_mean_Line2,I_mean_L2(2:end));
+    I_mean_Line3 = cat(1,I_mean_Line3,I_mean_L3(2:end));
+    Ripple_Voltage = cat(1,Ripple_Voltage,Ripple_V(2:end));
+    Ripple_Line1 = cat(1,Ripple_Line1,Ripple_L1(2:end));
+    Ripple_Line2 = cat(1,Ripple_Line2,Ripple_L2(2:end));
+    Ripple_Line3 = cat(1,Ripple_Line3,Ripple_L3(2:end));
     Factor_rms_V = cat(1,Factor_rms_V, Factor_rms_sample_V);
     Factor_peak_valley_V = cat(1,Factor_peak_valley_V,Factor_peak_valley_sample_V);
     RDF_total_V = cat(1,RDF_total_V,RDF_V_eachwindow);
@@ -77,7 +78,6 @@ end
     pie(Pie_Data,'%.3f%%');
     legend('Normal','Swell','Dip','Interruption');
     title('Chart of the data''s voltage status');
-    
     
     figure(2)
     subplot(2,1,1)

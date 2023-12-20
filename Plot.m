@@ -1,4 +1,4 @@
-% Version: 1.3.4β
+% Version: 1.3.6β
 disp('=========Detection_Report=========');
 fprintf(['In these signals sampled,\n']);
 if SwellCount == 0;
