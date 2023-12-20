@@ -1,11 +1,11 @@
 function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms_L3,...
     RDF_V_eachwindow,RDF_L1_eachwindow,RDF_L2_eachwindow,RDF_L3_eachwindow,Swell_timesum,Dip_timesum,...
-    Interruption_timesum,SampleDipCount,SampleSwellCount,SampleInterruptionCount,...
+    Interruption_timesum,SampleDipCount,SampleSwellCount,SampleInterruptionCount,num_Sample,...
     Factor_peak_valley_sample_V,Factor_rms_sample_V,Factor_peak_valley_sample_L1,Factor_rms_sample_L1,...
     Factor_peak_valley_sample_L2,Factor_rms_sample_L2,Factor_peak_valley_sample_L3,Factor_rms_sample_L3,...
-    Ripple_V,Ripple_L1,Ripple_L2,Ripple_L3,isSwell_legacy,isDip_legacy,isInterruption_legacy] = ...
+    Ripple_V,Ripple_L1,Ripple_L2,Ripple_L3,isSwell_legacy,isDip_legacy,isInterruption_legacy,leftover] = ...
     evaluation(num,listing,isSwell_legacy,isDip_legacy,isInterruption_legacy,Fs,Ts,U_nominal,...
-    timescale,group_size,hysteresis,Dip_tr,Swell_tr,Interruption_tr)
+    timescale,group_size,hysteresis,Dip_tr,Swell_tr,Interruption_tr,leftover)
 % evaluation(A)
 % Inputs:
 %   num                         = Number of the data
@@ -52,10 +52,10 @@ function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms
 %   isSwell                     = Is Swell occuring last sample window?
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
-% Version: 1.3.4β
+% Version: 1.3.5β
 
 %% Data Loading
-cd 'A:\Lin project'\Data\  % Here is the path of where Data file locate
+cd 'A:\Lin project'\Data_Check\  % Here is the path of where Data file locate
 
 Name = listing(num).name; % Name of the files
 data = tdmsread(Name); 
@@ -74,13 +74,31 @@ L2_Current=L2_Current.*100;
 L3_Current=L3_Current.*25;
 
 
+%%
+
+if num == 1;
+    Data_Voltage = L1_Voltage;
+    Data_L1_Current = L1_Current;
+    Data_L2_Current = L2_Current;
+    Data_L3_Current = L3_Current;
+else
+    Data_Voltage = cat(1,leftover(:,1),L1_Voltage);
+    Data_L1_Current = cat(1,leftover(:,2),L1_Current);
+    Data_L2_Current = cat(1,leftover(:,3),L2_Current);
+    Data_L3_Current = cat(1,leftover(:,4),L3_Current);
+end
+num_Sample = floor(length(Data_Voltage)/200000);
+
+    clear leftover;
+    leftover = horzcat(Data_Voltage(200000*num_Sample + 1:end), Data_L1_Current(200000*num_Sample + 1:end),...
+        Data_L2_Current(200000*num_Sample + 1:end),Data_L3_Current(200000*num_Sample + 1:end));
 
 %% Evaluation Start
 
-RDF_V_eachwindow = zeros(5,1);
-RDF_L1_eachwindow = zeros(5,1);
-RDF_L2_eachwindow = zeros(5,1);
-RDF_L3_eachwindow = zeros(5,1);
+RDF_V_eachwindow = zeros(num_Sample,1);
+RDF_L1_eachwindow = zeros(num_Sample,1);
+RDF_L2_eachwindow = zeros(num_Sample,1);
+RDF_L3_eachwindow = zeros(num_Sample,1);
 num_groups = floor(200000 / group_size);
 Swell_timesum = 0;
 Dip_timesum = 0;
@@ -89,62 +107,32 @@ SampleDipCount = 0;
 SampleSwellCount = 0;
 SampleInterruptionCount = 0;
 PeaktoValley = zeros(5,1);
-Factor_peak_valley_sample_V = zeros(5,1);
-Factor_rms_sample_V = zeros(5,1);
-Uripple_mean = zeros(5,1);
-Uripple_variance = zeros(5,1);
-Udc_out = zeros(200,1);
+Factor_peak_valley_sample_V = zeros(num_Sample,1);
+Factor_rms_sample_V = zeros(num_Sample,1);
+Uripple_mean = zeros(num_Sample,1);
+Uripple_variance = zeros(num_Sample,1);
 
-%Split one file to 5 samples (200ms each)
-voltage1 = L1_Voltage(1:200000);
-voltage2 = L1_Voltage(200001:400000);
-voltage3 = L1_Voltage(400001:600000);
-voltage4 = L1_Voltage(600001:800000);
-voltage5 = L1_Voltage(800001:1000000);
-current_L1_1 = L1_Current(1:200000);
-current_L1_2 = L1_Current(200001:400000);
-current_L1_3 = L1_Current(400001:600000);
-current_L1_4 = L1_Current(600001:800000);
-current_L1_5 = L1_Current(800001:1000000);
-current_L2_1 = L2_Current(1:200000);
-current_L2_2 = L2_Current(200001:400000);
-current_L2_3 = L2_Current(400001:600000);
-current_L2_4 = L2_Current(600001:800000);
-current_L2_5 = L2_Current(800001:1000000);
-current_L3_1 = L3_Current(1:200000);
-current_L3_2 = L3_Current(200001:400000);
-current_L3_3 = L3_Current(400001:600000);
-current_L3_4 = L3_Current(600001:800000);
-current_L3_5 = L3_Current(800001:1000000);
+Udc_out = 0;
+Urms_out = 0;
+Ripple_V = 0;
+Ripple_L1 = 0;
+Ripple_L2 = 0;
+Ripple_L3 = 0;
+I_rms_L1 = 0;
+I_rms_L2 = 0;
+I_rms_L3 = 0;
+I_mean_L1 = 0;
+I_mean_L2 = 0;
+I_mean_L3 = 0;
 
 % Evaluate is carried out in each 200ms period
-for docount = 1:5 
-    if docount == 1
-        voltage = voltage1;
-        current_L1 = current_L1_1;
-        current_L2 = current_L2_1;
-        current_L3 = current_L3_1;
-    elseif docount == 2
-        voltage = voltage2;
-        current_L1 = current_L1_2;
-        current_L2 = current_L2_2;
-        current_L3 = current_L3_2;
-    elseif docount == 3
-        voltage = voltage3;
-        current_L1 = current_L1_3;
-        current_L2 = current_L2_3;
-        current_L3 = current_L3_3;
-    elseif docount == 4
-        voltage = voltage4;
-        current_L1 = current_L1_4;
-        current_L2 = current_L2_4;
-        current_L3 = current_L3_4;
-    else
-        voltage = voltage5;
-        current_L1 = current_L1_5;
-        current_L2 = current_L2_5;
-        current_L3 = current_L3_5;
-    end
+for docount = 1:num_Sample
+
+    
+    voltage = Data_Voltage(1+(docount-1)*200000:docount*200000);
+    current_L1 = Data_L1_Current(1+(docount-1)*200000:docount*200000);
+    current_L2 = Data_L2_Current(1+(docount-1)*200000:docount*200000);
+    current_L3 = Data_L3_Current(1+(docount-1)*200000:docount*200000);
 
     %% Mean & RMS Calculation
     
@@ -159,7 +147,7 @@ for docount = 1:5
     k = 1;
     j = 1;
     temp = zeros(group_size,1);
-    for i = 1:timescale/5
+    for i = 1:200000
         temp(k,1) = voltage(i);
         temp(k,2) = current_L1(i);
         temp(k,3) = current_L2(i);
@@ -408,87 +396,22 @@ for docount = 1:5
     Iripple_L3_variance(docount) = var(Iripple_L3);
 
     %% Storage
-    
-    if docount == 1
-        Urms_1 = Urms;
-        Udc_1 = Udc;
-        Uripple_1 = Uripple;
-        Iripple_L1_1 = Iripple_L1;
-        Iripple_L2_1 = Iripple_L2;
-        Iripple_L3_1 = Iripple_L3;
-        I_mean_L1_1 = current_mean_L1;
-        I_rms_L1_1 = current_rms_L1;
-        I_mean_L2_1 = current_mean_L2;
-        I_rms_L2_1 = current_rms_L2;
-        I_mean_L3_1 = current_mean_L3;
-        I_rms_L3_1 = current_rms_L3;
-    elseif docount == 2
-        Urms_2 = Urms;
-        Udc_2 = Udc;
-        Uripple_2 = Uripple;
-        Iripple_L1_2 = Iripple_L1;
-        Iripple_L2_2 = Iripple_L2;
-        Iripple_L3_2 = Iripple_L3;
-        I_mean_L1_2 = current_mean_L1;
-        I_rms_L1_2 = current_rms_L1;
-        I_mean_L2_2 = current_mean_L2;
-        I_rms_L2_2 = current_rms_L2;
-        I_mean_L3_2 = current_mean_L3;
-        I_rms_L3_2 = current_rms_L3;
-    elseif docount == 3
-        Urms_3 = Urms;
-        Udc_3 = Udc;
-        Uripple_3 = Uripple;
-        Iripple_L1_3 = Iripple_L1;
-        Iripple_L2_3 = Iripple_L2;
-        Iripple_L3_3 = Iripple_L3;
-        I_mean_L1_3 = current_mean_L1;
-        I_rms_L1_3 = current_rms_L1;
-        I_mean_L2_3 = current_mean_L2;
-        I_rms_L2_3 = current_rms_L2;
-        I_mean_L3_3 = current_mean_L3;
-        I_rms_L3_3 = current_rms_L3;
-    elseif docount == 4
-        Urms_4 = Urms;
-        Udc_4 = Udc;
-        Uripple_4 = Uripple;
-        Iripple_L1_4 = Iripple_L1;
-        Iripple_L2_4 = Iripple_L2;
-        Iripple_L3_4 = Iripple_L3;
-        I_mean_L1_4 = current_mean_L1;
-        I_rms_L1_4 = current_rms_L1;
-        I_mean_L2_4 = current_mean_L2;
-        I_rms_L2_4 = current_rms_L2;
-        I_mean_L3_4 = current_mean_L3;
-        I_rms_L3_4 = current_rms_L3;
-    else
-        Urms_5 = Urms;
-        Udc_5 = Udc;
-        Uripple_5 = Uripple;
-        Iripple_L1_5 = Iripple_L1;
-        Iripple_L2_5 = Iripple_L2;
-        Iripple_L3_5 = Iripple_L3;
-        I_mean_L1_5 = current_mean_L1;
-        I_rms_L1_5 = current_rms_L1;
-        I_mean_L2_5 = current_mean_L2;
-        I_rms_L2_5 = current_rms_L2;
-        I_mean_L3_5 = current_mean_L3;
-        I_rms_L3_5 = current_rms_L3;
-        Udc_out = cat(1,Udc_1,Udc_2,Udc_3,Udc_4,Udc_5);
-        Urms_out = cat(1,Urms_1,Urms_2,Urms_3,Urms_4,Urms_5);
-        Ripple_V = cat(1,Uripple_1,Uripple_2,Uripple_3,Uripple_4,Uripple_5);
-        Ripple_L1 = cat(1,Iripple_L1_1,Iripple_L1_2,Iripple_L1_3,Iripple_L1_4,Iripple_L1_5);
-        Ripple_L2 = cat(1,Iripple_L2_1,Iripple_L2_2,Iripple_L2_3,Iripple_L2_4,Iripple_L2_5);
-        Ripple_L3 = cat(1,Iripple_L3_1,Iripple_L3_2,Iripple_L3_3,Iripple_L3_4,Iripple_L3_5);
-        I_rms_L1 = cat(1,I_rms_L1_1,I_rms_L1_2,I_rms_L1_3,I_rms_L1_4,I_rms_L1_5);
-        I_rms_L2 = cat(1,I_rms_L2_1,I_rms_L2_2,I_rms_L2_3,I_rms_L2_4,I_rms_L2_5);
-        I_rms_L3 = cat(1,I_rms_L3_1,I_rms_L3_2,I_rms_L3_3,I_rms_L3_4,I_rms_L3_5);
-        I_mean_L1 = cat(1,I_mean_L1_1,I_mean_L1_2,I_mean_L1_3,I_mean_L1_4,I_mean_L1_5);
-        I_mean_L2 = cat(1,I_mean_L2_1,I_mean_L2_2,I_mean_L2_3,I_mean_L2_4,I_mean_L2_5);
-        I_mean_L3 = cat(1,I_mean_L3_1,I_mean_L3_2,I_mean_L3_3,I_mean_L3_4,I_mean_L3_5);
-    end
+   
+    Udc_out = cat(1,Udc_out,Udc);
+    Urms_out = cat(1,Urms_out,Urms);
+    Ripple_V = cat(1,Ripple_V,Uripple);
+    Ripple_L1 = cat(1,Ripple_L1,Iripple_L1);
+    Ripple_L2 = cat(1,Ripple_L2,Iripple_L2);
+    Ripple_L3 = cat(1,Ripple_L3,Iripple_L3);
+    I_rms_L1 = cat(1,I_rms_L1,current_rms_L1);
+    I_rms_L2 = cat(1,I_rms_L2,current_rms_L2);
+    I_rms_L3 = cat(1,I_rms_L3,current_rms_L3);
+    I_mean_L1 = cat(1,I_mean_L1,current_mean_L1);
+    I_mean_L2 = cat(1,I_mean_L2,current_mean_L2);
+    I_mean_L3 = cat(1,I_mean_L3,current_mean_L3);
+
 
 end
-
+fprintf(['Finished No.%d.\n'],num);
 cd 'A:\Lin project\Individual_Project\' %This is the path of THIS file locate
 end
