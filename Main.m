@@ -1,8 +1,8 @@
-% Version: 1.3.7β
+% Version: 1.4.0β
 clc
 clear
 close all
-cd 'A:\Lin project'\Data_Check\
+cd 'A:\Lin project'\Data
 listing = dir('*.tdms');
 len = length(listing);
 start_time = datetime('2023-09-26 13:48:00', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
@@ -73,16 +73,37 @@ for num = 1:len
     Factor_peak_valley_V = cat(1,Factor_peak_valley_V,Factor_peak_valley_sample_V);
     RDF_total_V = cat(1,RDF_total_V,RDF_V_eachwindow);
 end
-    % if rem(num,5) == 0
-    figure(1)
+    disp('=========Detection_Report=========');
+fprintf(['In these signals sampled,\n']);
+if SwellCount == 0;
+    fprintf(['There is no Swell in these sample.\n'])
+else
+    fprintf(['%d Swell(s) have been identified.\n'],SwellCount);
+end
+if DipCount == 0
+    fprintf(['There is no Dip in these sample.\n'])
+else
+    fprintf(['%d Dip(s) have been identified.\n'],DipCount);
+end
+if InterruptionCount == 0
+    fprintf(['There is no Interruption in these sample.\n'])
+else
+    fprintf(['%d Interruption(s) have been identified.\n'],InterruptionCount);
+end
+fprintf('-------------------------------------\n');
+start_time = datetime('13:47:47', 'Format', 'HH:mm:ss.SSS');
+time_5MS_SS = 5:5:5*(length(Udc_main)-1);
+time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);
+time_5MS = cat(1, time_5MS_Cell{:});
+time_200MS_SS = 200:200:200*(length(Factor_rms_V)-1);
+time_200MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS, 'UniformOutput', false);
+time_200MS = cat(1, time_200MS_Cell{:});
+figure(1)
     pie(Pie_Data,'%.3f%%');
     legend('Normal','Swell','Dip','Interruption');
     title('Chart of the data''s voltage status');
-    
-    figure(2)
+figure(2)
     subplot(2,1,1)
-    time_5MS_SS = 5:5:5*(length(Udc_main)-1);
-    time_5MS = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS);
     plot(time_5MS,Udc_main(2:end));
     title('U_D_C mean');
     ylabel('U_D_C Magnitude');
@@ -96,27 +117,24 @@ end
     yline(Dip_tr,'--','Color','#C31E2D','Label','Dip threshold');
     yline(Swell_tr,'--','Color','#2773C8','Label','Swell threshold');
     yline(Interruption_tr,'--','Color','#9CC38A','Label','Interruption threshold');
-    
-    figure(3)
-    time_200MS_SS = 200:200:200*(length(Factor_rms_V)-1);
-    time_200MS = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS);
+figure(3)
     plot(time_200MS,Factor_rms_V(2:end));
     title('Factor_r_m_s Voltage');
     xlabel('Time (ms)');
     ylabel('Factor_r_m_s Magnitude (%)');
     
-    figure(4)
+figure(4)
     plot(time_200MS,Factor_peak_valley_V(2:end));
     title('Factor_p_e_a_k_-_v_a_l_l_e_y Voltage');
     xlabel('Time (ms)');
     ylabel('Factor_p_e_a_k_-_v_a_l_l_e_y Magnitude (%)');
     
-    figure(5)
+figure(5)
     plot(time_200MS,RDF_total_V(2:end));
     title('RDF_V_o_l_t_a_g_e_1');
     xlabel('Time (ms)');
     ylabel('RDF_V_o_l_t_a_g_e_1 Magnitude');
-    figure(6)
+figure(6)
     plot(time_5MS,Ripple_Voltage(2:end),'Color','#633736');
     hold on
     plot(time_5MS,Ripple_Line1(2:end),'Color','#C31E2D');
@@ -126,7 +144,7 @@ end
     plot(time_5MS,Ripple_Line3(2:end),'Color','#9CC38A');
     legend('Voltage','Line 1','Line 2','Line 3');
     hold off
-    figure(7)
+figure(7)
     subplot(2,1,1)
     plot(time_5MS,I_mean_Line1(2:end),'Color','#C31E2D');
     hold on
@@ -149,25 +167,3 @@ end
     ylabel('Magnitude');
     xlabel('Time (ms)');
     legend('Line 1','Line 2','Line 3');
-    % else
-    % end
-
-% end
-disp('=========Detection_Report=========');
-fprintf(['In these signals sampled,\n']);
-if SwellCount == 0;
-    fprintf(['There is no Swell in these sample.\n'])
-else
-    fprintf(['%d Swell(s) have been identified.\n'],SwellCount);
-end
-if DipCount == 0
-    fprintf(['There is no Dip in these sample.\n'])
-else
-    fprintf(['%d Dip(s) have been identified.\n'],DipCount);
-end
-if InterruptionCount == 0
-    fprintf(['There is no Interruption in these sample.\n'])
-else
-    fprintf(['%d Interruption(s) have been identified.\n'],InterruptionCount);
-end
-fprintf('-------------------------------------\n');

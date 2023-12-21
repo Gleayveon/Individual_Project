@@ -1,4 +1,4 @@
-% Version: 1.3.6β
+% Version: 1.4.0β
 disp('=========Detection_Report=========');
 fprintf(['In these signals sampled,\n']);
 if SwellCount == 0;
@@ -18,11 +18,11 @@ else
 end
 fprintf('-------------------------------------\n');
 start_time = datetime('13:47:47', 'Format', 'HH:mm:ss.SSS');
-% time_5MS_SS = 5:5:5*(length(Udc_main)-1);
-% time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);
-% time_5MS = cat(1, time_5MS_Cell{:});
-% time_200MS_SS = 200:200:200*(length(Factor_rms_V)-1);
-% time_200MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS, 'UniformOutput', false);
+time_5MS_SS = 5:5:5*(length(Udc_main)-1);
+time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);
+time_5MS = cat(1, time_5MS_Cell{:});
+time_200MS_SS = 200:200:200*(length(Factor_rms_V)-1);
+time_200MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS, 'UniformOutput', false);
 time_200MS = cat(1, time_200MS_Cell{:});
 figure(1)
     pie(Pie_Data,'%.3f%%');
