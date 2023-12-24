@@ -22,6 +22,8 @@ function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms
 %   Dip_tr                      = Threshold of Dip
 %   Swell_tr                    = Threshold of Swell
 %   Interruption_tr             = Threshold of Interruption
+%   leftover                    = The previous one file's left data that
+%                                   not long enough to 200 ms
 % Outputs:
 %   Udc_out                     = Udc of this sample
 %   Urms_out                    = Urms of this sample
@@ -52,7 +54,8 @@ function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms
 %   isSwell                     = Is Swell occuring last sample window?
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
-% Version: 1.4.1β
+%   leftover                    = This file's left data that not long enough to 200 ms
+% Version: 1.4.2β
 
 %% Data Loading
 cd 'A:\Lin project'\Data  % Here is the path of where Data file locate
@@ -76,7 +79,7 @@ L3_Current=L3_Current.*25;
 
 %%
 
-if num == 1;
+if num == 1; % The starting file is special as it has no previous file
     Data_Voltage = L1_Voltage;
     Data_L1_Current = L1_Current;
     Data_L2_Current = L2_Current;
@@ -87,11 +90,11 @@ else
     Data_L2_Current = cat(1,leftover(:,3),L2_Current);
     Data_L3_Current = cat(1,leftover(:,4),L3_Current);
 end
-num_Sample = floor(length(Data_Voltage)/200000);
+num_Sample = floor(length(Data_Voltage)/200000); % Cut the data to 200ms window
 
     clear leftover;
     leftover = horzcat(Data_Voltage(200000*num_Sample + 1:end), Data_L1_Current(200000*num_Sample + 1:end),...
-        Data_L2_Current(200000*num_Sample + 1:end),Data_L3_Current(200000*num_Sample + 1:end));
+        Data_L2_Current(200000*num_Sample + 1:end),Data_L3_Current(200000*num_Sample + 1:end)); % Generate this files's leftover
 
 %% Evaluation Start
 
@@ -106,7 +109,7 @@ Interruption_timesum = 0;
 SampleDipCount = 0;
 SampleSwellCount = 0;
 SampleInterruptionCount = 0;
-PeaktoValley = zeros(5,1);
+PeaktoValley = zeros(num_Sample,1);
 Factor_peak_valley_sample_V = zeros(num_Sample,1);
 Factor_rms_sample_V = zeros(num_Sample,1);
 Uripple_mean = zeros(num_Sample,1);
@@ -188,7 +191,7 @@ for docount = 1:num_Sample
                 SwellTime(timecount,SwellCount) = 1;
                 SwellSpec(timecount,SwellCount) = Urms(i);
                 isNonStatDistOccur(i) = 1;
-                isSwell_legacy = 2; %Change to 2 here to help further counting
+                isSwell_legacy = 2; %Change to 2 here to help further process
             else
                 isSwell = 1;
                 timecount = 1;
