@@ -1,4 +1,4 @@
-% Version: 1.4.2β
+% Version: 2.0.0β
 clc
 clear
 close all
@@ -72,6 +72,9 @@ for num = 1:len
     Factor_rms_V = cat(1,Factor_rms_V, Factor_rms_sample_V);
     Factor_peak_valley_V = cat(1,Factor_peak_valley_V,Factor_peak_valley_sample_V);
     RDF_total_V = cat(1,RDF_total_V,RDF_V_eachwindow);
+    RDF_total_L1 = cat(1,RDF_total_L1,RDF_L1_eachwindow);
+    RDF_total_L2 = cat(1,RDF_total_L2,RDF_L2_eachwindow);
+    RDF_total_L3 = cat(1,RDF_total_L3,RDF_L3_eachwindow);
 end
     disp('=========Detection_Report=========');
 fprintf(['In these signals sampled,\n']);
