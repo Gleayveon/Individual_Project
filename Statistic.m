@@ -1,13 +1,14 @@
 %% Statistical analysis
-% Version: 2.0.1β
-% start_time = datetime('13:47:47', 'Format', 'HH:mm:ss.SSS');
-% time_5MS_SS = 5:5:5*(length(Udc_main)-1);
-% time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);
-% time_5MS = cat(1, time_5MS_Cell{:});
-% time_200MS_SS = 200:200:200*(length(Factor_rms_V)-1);
-% time_200MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS, 'UniformOutput', false);
-% time_200MS = cat(1, time_200MS_Cell{:});
+% Version: 2.0.2β
 
+start_time = datetime('13:47:47', 'Format', 'HH:mm:ss.SSS');
+time_5MS_SS = 5:5:5*(length(Udc_main)-1);
+time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);
+time_5MS = cat(1, time_5MS_Cell{:});
+time_200MS_SS = 200:200:200*(length(Factor_rms_V)-1);
+time_200MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS, 'UniformOutput', false);
+time_200MS = cat(1, time_200MS_Cell{:});
+close all
 figure(1)
     subplot(2,2,1)
         time = time_5MS(1:10000);
@@ -21,7 +22,8 @@ figure(1)
         hold on
         plot(time_5MS(1:10000),I_mean_Line3(2:10001),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -36,7 +38,8 @@ figure(1)
         hold on
         plot(time_5MS(1:10000),I_rms_Line3(2:10001),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -51,7 +54,8 @@ figure(1)
         hold on
         plot(time_5MS(1:10000),Ripple_Line3(2:10001),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -61,13 +65,14 @@ figure(1)
         plot(time_200MS(1:250),RDF_total_V(2:251),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(1:250),RDF_total_L1(2:251),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(1:250),RDF_total_L2(2:251),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(1:250),RDF_total_L3(2:251),'Color','#9CC38A');
+        plot(time_200MS(1:250),RDF_total_L1(2:251),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(1:250),RDF_total_L2(2:251),'Color','#2773C8');
+        hold on
+        plot(time_200MS(1:250),RDF_total_L3(2:251),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple') 
@@ -84,7 +89,8 @@ figure(2)
         hold on
         plot(time_5MS(49600:169600),I_mean_Line3(49601:169601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -99,7 +105,8 @@ figure(2)
         hold on
         plot(time_5MS(49600:169600),I_rms_Line3(49601:169601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -114,7 +121,8 @@ figure(2)
         hold on
         plot(time_5MS(49600:169600),Ripple_Line3(49601:169601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -124,16 +132,17 @@ figure(2)
         plot(time_200MS(1240:4240),RDF_total_V(1241:4241),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(1240:4240),RDF_total_L1(1241:4241),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(1240:4240),RDF_total_L2(1241:4241),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(1240:4240),RDF_total_L3(1241:4241),'Color','#9CC38A');
+        plot(time_200MS(1240:4240),RDF_total_L1(1241:4241),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(1240:4240),RDF_total_L2(1241:4241),'Color','#2773C8');
+        hold on
+        plot(time_200MS(1240:4240),RDF_total_L3(1241:4241),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
-        title('Ripple')       
+        title('RDF')     
 figure(3)
     subplot(2,2,1)
 
@@ -147,7 +156,8 @@ figure(3)
         hold on
         plot(time_5MS(446600:506600),I_mean_Line3(446601:506601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -162,7 +172,8 @@ figure(3)
         hold on
         plot(time_5MS(446600:506600),I_rms_Line3(446601:506601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -177,7 +188,8 @@ figure(3)
         hold on
         plot(time_5MS(446600:506600),Ripple_Line3(446601:506601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -187,16 +199,17 @@ figure(3)
         plot(time_200MS(11165:12665),RDF_total_V(11166:12666),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(11165:12665),RDF_total_L1(11166:12666),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(11165:12665),RDF_total_L2(11166:12666),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(11165:12665),RDF_total_L3(11166:12666),'Color','#9CC38A');
+        plot(time_200MS(11165:12665),RDF_total_L1(11166:12666),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(11165:12665),RDF_total_L2(11166:12666),'Color','#2773C8');
+        hold on
+        plot(time_200MS(11165:12665),RDF_total_L3(11166:12666),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
-        title('Ripple')       
+        title('RDF')    
 figure(4)
     subplot(2,2,1)
 
@@ -210,7 +223,8 @@ figure(4)
         hold on
         plot(time_5MS(507600:710600),I_mean_Line3(507601:710601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -225,7 +239,8 @@ figure(4)
         hold on
         plot(time_5MS(507600:710600),I_rms_Line3(507601:710601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -240,7 +255,8 @@ figure(4)
         hold on
         plot(time_5MS(507600:710600),Ripple_Line3(507601:710601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -250,16 +266,17 @@ figure(4)
         plot(time_200MS(12690:17765),RDF_total_V(12691:17766),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(12690:17765),RDF_total_L1(12691:17766),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(12690:17765),RDF_total_L2(12691:17766),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(12690:17765),RDF_total_L3(12691:17766),'Color','#9CC38A');
+        plot(time_200MS(12690:17765),RDF_total_L1(12691:17766),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(12690:17765),RDF_total_L2(12691:17766),'Color','#2773C8');
+        hold on
+        plot(time_200MS(12690:17765),RDF_total_L3(12691:17766),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
-        title('Ripple')      
+        title('RDF')      
 figure(5)
     subplot(2,2,1)
 
@@ -273,7 +290,8 @@ figure(5)
         hold on
         plot(time_5MS(713600:770600),I_mean_Line3(713601:770601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -288,7 +306,8 @@ figure(5)
         hold on
         plot(time_5MS(713600:770600),I_rms_Line3(713601:770601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -303,7 +322,8 @@ figure(5)
         hold on
         plot(time_5MS(713600:770600),Ripple_Line3(713601:770601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -313,16 +333,17 @@ figure(5)
         plot(time_200MS(17840:19265),RDF_total_V(17841:19266),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(17840:19265),RDF_total_L1(17841:19266),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(17840:19265),RDF_total_L2(17841:19266),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(17840:19265),RDF_total_L3(17841:19266),'Color','#9CC38A');
+        plot(time_200MS(17840:19265),RDF_total_L1(17841:19266),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(17840:19265),RDF_total_L2(17841:19266),'Color','#2773C8');
+        hold on
+        plot(time_200MS(17840:19265),RDF_total_L3(17841:19266),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
-        title('Ripple')     
+        title('RDF')     
 figure(6)
     subplot(2,2,1)
 
@@ -336,7 +357,8 @@ figure(6)
         hold on
         plot(time_5MS(833000:844800),I_mean_Line3(833001:844801),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -351,7 +373,8 @@ figure(6)
         hold on
         plot(time_5MS(833000:844800),I_rms_Line3(833001:844801),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -366,7 +389,8 @@ figure(6)
         hold on
         plot(time_5MS(833000:844800),Ripple_Line3(833001:844801),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -376,16 +400,17 @@ figure(6)
         plot(time_200MS(20825:21120),RDF_total_V(20826:21121),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(20825:21120),RDF_total_L1(20826:21121),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(20825:21120),RDF_total_L2(20826:21121),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(20825:21120),RDF_total_L3(20826:21121),'Color','#9CC38A');
+        plot(time_200MS(20825:21120),RDF_total_L1(20826:21121),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(20825:21120),RDF_total_L2(20826:21121),'Color','#2773C8');
+        hold on
+        plot(time_200MS(20825:21120),RDF_total_L3(20826:21121),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
-        title('Ripple')       
+        title('RDF')       
 figure(7)
     subplot(2,2,1)
 
@@ -399,7 +424,8 @@ figure(7)
         hold on
         plot(time_5MS(845600:854600),I_mean_Line3(845601:854601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -414,7 +440,8 @@ figure(7)
         hold on
         plot(time_5MS(845600:854600),I_rms_Line3(845601:854601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -429,7 +456,8 @@ figure(7)
         hold on
         plot(time_5MS(845600:854600),Ripple_Line3(845601:854601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -439,15 +467,16 @@ figure(7)
         plot(time_200MS(21140:21365),RDF_total_V(21141:21366),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(21140:21365),RDF_total_L1(21141:21366),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(21140:21365),RDF_total_L2(21141:21366),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(21140:21365),RDF_total_L3(21141:21366),'Color','#9CC38A');
+        plot(time_200MS(21140:21365),RDF_total_L1(21141:21366),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(21140:21365),RDF_total_L2(21141:21366),'Color','#2773C8');
+        hold on
+        plot(time_200MS(21140:21365),RDF_total_L3(21141:21366),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
-
+        title('RDF')   
 figure(8)
     subplot(2,2,1)
 
@@ -461,7 +490,8 @@ figure(8)
         hold on
         plot(time_5MS(857600:866600),I_mean_Line3(857601:866601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -476,7 +506,8 @@ figure(8)
         hold on
         plot(time_5MS(857600:866600),I_rms_Line3(857601:866601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -491,7 +522,8 @@ figure(8)
         hold on
         plot(time_5MS(857600:866600),Ripple_Line3(857601:866601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -501,16 +533,17 @@ figure(8)
         plot(time_200MS(21400:21665),RDF_total_V(21401:21666),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(21400:21665),RDF_total_L1(21401:21666),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(21400:21665),RDF_total_L2(21401:21666),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(21400:21665),RDF_total_L3(21401:21666),'Color','#9CC38A');
+        plot(time_200MS(21400:21665),RDF_total_L1(21401:21666),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(21400:21665),RDF_total_L2(21401:21666),'Color','#2773C8');
+        hold on
+        plot(time_200MS(21400:21665),RDF_total_L3(21401:21666),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
-        title('Ripple')       
+        title('RDF')       
 figure(9)
     subplot(2,2,1)
 
@@ -524,7 +557,8 @@ figure(9)
         hold on
         plot(time_5MS(870400:920600),I_mean_Line3(870401:920601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -539,7 +573,8 @@ figure(9)
         hold on
         plot(time_5MS(870400:920600),I_rms_Line3(870401:920601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -554,7 +589,8 @@ figure(9)
         hold on
         plot(time_5MS(870400:920600),Ripple_Line3(870401:920601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -564,16 +600,17 @@ figure(9)
         plot(time_200MS(21760:23015),RDF_total_V(21761:23016),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(21760:23015),RDF_total_L1(21761:23016),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(21760:23015),RDF_total_L2(21761:23016),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(21760:23015),RDF_total_L3(21761:23016),'Color','#9CC38A');
+        plot(time_200MS(21760:23015),RDF_total_L1(21761:23016),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(21760:23015),RDF_total_L2(21761:23016),'Color','#2773C8');
+        hold on
+        plot(time_200MS(21760:23015),RDF_total_L3(21761:23016),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
-        title('Ripple')       
+        title('RDF')    
 figure(10)
     subplot(2,2,1)
 
@@ -587,7 +624,8 @@ figure(10)
         hold on
         plot(time_5MS(926600:968600),I_mean_Line3(926601:968601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -602,7 +640,8 @@ figure(10)
         hold on
         plot(time_5MS(926600:968600),I_rms_Line3(926601:968601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -617,7 +656,8 @@ figure(10)
         hold on
         plot(time_5MS(926600:968600),Ripple_Line3(926601:968601),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -627,16 +667,17 @@ figure(10)
         plot(time_200MS(23165:24215),RDF_total_V(23166:24216),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(23165:24215),RDF_total_L1(23166:24216),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(23165:24215),RDF_total_L2(23166:24216),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(23165:24215),RDF_total_L3(23166:24216),'Color','#9CC38A');
+        plot(time_200MS(23165:24215),RDF_total_L1(23166:24216),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(23165:24215),RDF_total_L2(23166:24216),'Color','#2773C8');
+        hold on
+        plot(time_200MS(23165:24215),RDF_total_L3(23166:24216),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
-        title('Ripple')       
+        title('RDF')      
 figure(11)
     subplot(2,2,1)
 
@@ -650,7 +691,8 @@ figure(11)
         hold on
         plot(time_5MS(984600:995200),I_mean_Line3(984601:995201),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -665,7 +707,8 @@ figure(11)
         hold on
         plot(time_5MS(984600:995200),I_rms_Line3(984601:995201),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -680,7 +723,8 @@ figure(11)
         hold on
         plot(time_5MS(984600:995200),Ripple_Line3(984601:995201),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -690,16 +734,17 @@ figure(11)
         plot(time_200MS(24615:24880),RDF_total_V(24616:24881),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(24615:24880),RDF_total_L1(24616:24881),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(24615:24880),RDF_total_L2(24616:24881),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(24615:24880),RDF_total_L3(24616:24881),'Color','#9CC38A');
+        plot(time_200MS(24615:24880),RDF_total_L1(24616:24881),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(24615:24880),RDF_total_L2(24616:24881),'Color','#2773C8');
+        hold on
+        plot(time_200MS(24615:24880),RDF_total_L3(24616:24881),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
-        title('Ripple')
+        title('RDF')   
 figure(12)
     subplot(2,2,1)
 
@@ -713,7 +758,8 @@ figure(12)
         hold on
         plot(time_5MS(1007000:1062000),I_mean_Line3(1007001:1062001),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -728,7 +774,8 @@ figure(12)
         hold on
         plot(time_5MS(1007000:1062000),I_rms_Line3(1007001:1062001),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -743,7 +790,8 @@ figure(12)
         hold on
         plot(time_5MS(1007000:1062000),Ripple_Line3(1007001:1062001),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -753,16 +801,17 @@ figure(12)
         plot(time_200MS(25175:26550),RDF_total_V(25176:26551),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(25175:26550),RDF_total_L1(25176:26551),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(25175:26550),RDF_total_L2(25176:26551),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(25175:26550),RDF_total_L3(25176:26551),'Color','#9CC38A');
+        plot(time_200MS(25175:26550),RDF_total_L1(25176:26551),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(25175:26550),RDF_total_L2(25176:26551),'Color','#2773C8');
+        hold on
+        plot(time_200MS(25175:26550),RDF_total_L3(25176:26551),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
-        title('Ripple')       
+        title('RDF')      
 figure(13)
     subplot(2,2,1)
 
@@ -776,7 +825,8 @@ figure(13)
         hold on
         plot(time_5MS(1274600:end),I_mean_Line3(1274601:end),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Average')
@@ -791,7 +841,8 @@ figure(13)
         hold on
         plot(time_5MS(1274600:end),I_rms_Line3(1274601:end),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('RMS')
@@ -806,7 +857,8 @@ figure(13)
         hold on
         plot(time_5MS(1274600:end),Ripple_Line3(1274601:end),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
         title('Ripple')    
@@ -816,13 +868,14 @@ figure(13)
         plot(time_200MS(31865:end),RDF_total_V(31866:end),'Color','#633736');
         ylabel('V')
         yyaxis right
-        % plot(time_200MS(31865:end),RDF_total_L1(31866:end),'Color','#C31E2D');
-        % hold on
-        % plot(time_200MS(31865:end),RDF_total_L2(31866:end),'Color','#2773C8');
-        % hold on
-        % plot(time_200MS(31865:end),RDF_total_L3(31866:end),'Color','#9CC38A');
+        plot(time_200MS(31865:end),RDF_total_L1(31866:end),'Color','#C31E2D');
+        hold on
+        plot(time_200MS(31865:end),RDF_total_L2(31866:end),'Color','#2773C8');
+        hold on
+        plot(time_200MS(31865:end),RDF_total_L3(31866:end),'Color','#9CC38A');
         ylabel('A')
-        xlabel('time')
+        xlabel('time')         
+        legend('Voltage','Line 1','Line 2','Line 3');
         hold off
 
-        title('Ripple')               
+        title('RDF')      

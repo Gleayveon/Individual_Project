@@ -55,7 +55,7 @@ function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
 %   leftover                    = This file's left data that not long enough to 200 ms
-% Version: 2.0.1β
+% Version: 2.0.2β
 
 %% Data Loading
 cd 'A:\Lin project'\Data  % Here is the path of where Data file locate
@@ -311,10 +311,10 @@ for docount = 1:num_Sample
 
     %% Ripple
     % RDF
-    L = length(voltage);
+    L = length(Urms);
     t = (0:L-1)*Ts;  
     % Voltage
-    Y = fft(voltage);
+    Y = fft(Urms);
     
     P2 = abs(Y/L);
     P1 = P2(1:round(L/2));
@@ -326,7 +326,7 @@ for docount = 1:num_Sample
     RDF = (Temp2 / P1(1)) *100;
     RDF_V_eachwindow(docount) = RDF; %I spilt the RDF calculation into steps to help debug
     % Line 1
-    Y_L1 = fft(current_L1);
+    Y_L1 = fft(current_rms_L1);
     
     P2_L1 = abs(Y_L1/L);
     P1_L1 = P2_L1(1:round(L/2));
@@ -337,7 +337,7 @@ for docount = 1:num_Sample
     RDF_L1 = (Temp2_L1 / P1_L1(1)) *100;
     RDF_L1_eachwindow(docount) = RDF_L1; %I spilt the RDF calculation into steps to help debug
     % Line 2
-    Y_L2 = fft(current_L2);
+    Y_L2 = fft(current_rms_L2);
     
     P2_L2 = abs(Y_L2/L);
     P1_L2 = P2_L2(1:round(L/2));
@@ -348,7 +348,7 @@ for docount = 1:num_Sample
     RDF_L2 = (Temp2_L2 / P1_L2(1)) *100;
     RDF_L2_eachwindow(docount) = RDF_L2; %I spilt the RDF calculation into steps to help debug
     % Line 3
-    Y_L3 = fft(current_L3);
+    Y_L3 = fft(current_rms_L3);
     
     P2_L3 = abs(Y_L3/L);
     P1_L3 = P2_L3(1:round(L/2));
@@ -358,45 +358,35 @@ for docount = 1:num_Sample
     Temp2_L3 = sqrt(Temp_L3);
     RDF_L3 = (Temp2_L3 / P1_L3(1)) *100;
     RDF_L3_eachwindow(docount) = RDF_L3; %I spilt the RDF calculation into steps to help debug
-    %  Factors
-    % Uripple = sqrt(Urms^2 / Udc^2);
-    % mean and var. of ripple can extract, but didn't, if required, add it
-    % to the func. 
-    Uripple = sqrt(Urms.^2./Udc .^2);
+
+
+    Uripple = sqrt((Urms.^2) - (Udc .^2));
     Peak = max(voltage);
     Valley = min(voltage);
     PeaktoValley(docount) = abs(Peak - Valley);
     Factor_peak_valley_sample_V(docount) = PeaktoValley(docount)/mean(Udc) * 100;
     Factor_rms_sample_V(docount) = mean(Uripple./Udc) * 100;
-    Uripple_mean(docount) = mean(Uripple);
-    Uripple_variance(docount) = var(Uripple);
-    
-    Iripple_L1 = sqrt(current_rms_L1.^2./current_mean_L1 .^2);
+
+    Iripple_L1 = sqrt((current_rms_L1.^2)-(current_mean_L1 .^2));
     Peak_L1 = max(current_L1);
     Valley_L1 = min(current_L1);
     PeaktoValley_L1(docount) = abs(Peak_L1 - Valley_L1);
     Factor_peak_valley_sample_L1(docount) = PeaktoValley_L1(docount)/abs(mean(current_mean_L1)) * 100;
     Factor_rms_sample_L1(docount) = mean(abs(Iripple_L1)./abs(current_mean_L1)) * 100;
-    Iripple_L1_mean(docount) = mean(Iripple_L1);
-    Iripple_L1_variance(docount) = var(Iripple_L1);
-    
-    Iripple_L2 = sqrt(current_rms_L2.^2./current_mean_L2 .^2);
+
+    Iripple_L2 = sqrt((current_rms_L2.^2)-(current_mean_L2 .^2));
     Peak_L2 = max(current_L2);
     Valley_L2 = min(current_L2);
     PeaktoValley_L2(docount) = abs(Peak_L2 - Valley_L2);
     Factor_peak_valley_sample_L2(docount) = PeaktoValley_L2(docount)/abs(mean(current_mean_L2)) * 100;
     Factor_rms_sample_L2(docount) = mean(abs(Iripple_L2)./abs(current_mean_L2)) * 100;
-    Iripple_L2_mean(docount) = mean(Iripple_L2);
-    Iripple_L2_variance(docount) = var(Iripple_L2);
 
-    Iripple_L3 = sqrt(current_rms_L3.^2./current_mean_L3 .^2);
+    Iripple_L3 = sqrt((current_rms_L3.^2)-(current_mean_L3 .^2));
     Peak_L3 = max(current_L3);
     Valley_L3 = min(current_L3);
     PeaktoValley_L3(docount) = abs(Peak_L3 - Valley_L3);
     Factor_peak_valley_sample_L3(docount) = PeaktoValley_L3(docount)/abs(mean(current_mean_L3)) * 100;
     Factor_rms_sample_L3(docount) = mean(abs(Iripple_L3)./abs(current_mean_L3)) * 100;
-    Iripple_L3_mean(docount) = mean(Iripple_L3);
-    Iripple_L3_variance(docount) = var(Iripple_L3);
 
     %% Storage
    
