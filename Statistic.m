@@ -1,5 +1,5 @@
 %% Statistical analysis
-% Version: 2.0.0β
+% Version: 2.0.1β
 % start_time = datetime('13:47:47', 'Format', 'HH:mm:ss.SSS');
 % time_5MS_SS = 5:5:5*(length(Udc_main)-1);
 % time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);

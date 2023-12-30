@@ -1,4 +1,4 @@
-% Version: 2.0.0β
+% Version: 2.0.1β
 clc
 clear
 close all
@@ -34,6 +34,9 @@ I_mean_Line1 = 0;
 I_mean_Line2 = 0;
 I_mean_Line3 = 0;
 RDF_total_V = 0;
+RDF_total_L1 = 0;
+RDF_total_L2 = 0;
+RDF_total_L3 = 0;
 Ripple_Voltage = 0;
 Ripple_Line1 = 0;
 Ripple_Line2 = 0;
