@@ -57,10 +57,10 @@ function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
 %   leftover                    = This file's left data that not long enough to 200 ms
-% Version: 2.0.3β
+% Version: 2.0.4β
 
 %% Data Loading
-cd 'A:\Lin project'\Data  % Here is the path of where Data file locate
+cd 'A:\Lin project'\Data\  % Here is the path of where Data file locate
 
 Name = listing(num).name; % Name of the files
 data = tdmsread(Name); 
@@ -132,9 +132,9 @@ I_mean_L3 = 0;
 Dip_sample_time = 0;
 Swell_sample_time = 0;
 Interruption_sample_time = 0;
-Dip_sample_spec = 0;
-Swell_sample_spec = 0;
-Interruption_sample_spec = 0;
+Dip_sample_spec = U_nominal;
+Swell_sample_spec = U_nominal;
+Interruption_sample_spec = U_nominal;
 
 % Evaluate is carried out in each 200ms period
 for docount = 1:num_Sample
@@ -187,6 +187,12 @@ for docount = 1:num_Sample
     DipCount = 1; %Not starts at 0 as previous sample may leave a flag of disturance and start from 0 will result a bug.
     SwellCount = 1;
     InterruptionCount = 1;
+    Swell_time = 0;
+    Swell_spec = 700;
+    Dip_time = 0;
+    Dip_spec = 700;
+    Interruption_time = 0;
+    Interruption_spec = 700;
 
     isNonStatDistOccur = zeros(num_groups,1);
     % Swell
@@ -223,18 +229,20 @@ for docount = 1:num_Sample
         isSwell_legacy = isSwell; %To pass this sample's status to next one
         for i = 1:SwellCount
             Swell_timesum = Swell_timesum + group_size * sum(SwellTime(:,i));
+            Swell_time(i) = group_size * sum(SwellTime(:,i));
+            Swell_spec(i) = max(SwellSpec(:,i));
         end        
     else
         SampleSwellCount = SampleSwellCount + (SwellCount - 1);
         isSwell_legacy = isSwell;
         for i = 1:(SwellCount -1)
             Swell_timesum = Swell_timesum + group_size * sum(SwellTime(:,i+1));
+            Swell_time(i+1) = group_size * sum(SwellTime(:,i+1));
+            Swell_spec(i+1) = max(SwellSpec(:,i+1));
         end
     end
-    for i = 1:SwellCount
-        Swell_time(i) = group_size * sum(SwellTime(:,i));
-        Swell_spec(i) = max(SwellSpec(:,i));
-    end
+
+
 
     for i = 1:num_groups %Same design as Swell
         if Urms(i) < Dip_tr && isDip == 0 && Urms(i) > Interruption_tr
@@ -269,18 +277,19 @@ for docount = 1:num_Sample
         isDip_legacy = isDip;
         for i = 1:DipCount
             Dip_timesum = Dip_timesum + group_size * sum(DipTime(:,i));
+            Dip_time(i) = group_size * sum(DipTime(:,i));
+            Dip_spec(i) = min(DipSpec(:,i));
         end
     else
         SampleDipCount = SampleDipCount + (DipCount - 1);
         isDip_legacy = isDip;
         for i = 1:(DipCount-1)
             Dip_timesum = Dip_timesum + group_size * sum(DipTime(:,i+1));
+            Dip_time(i+1) = group_size * sum(DipTime(:,i+1));
+            Dip_spec(i+1) = min(DipSpec(:,i+1));
         end
     end
-    for i = 1:DipCount
-        Dip_time(i) = group_size * sum(DipTime(:,i));
-        Dip_spec(i) = max(DipSpec(:,i));
-    end    
+  
     %Interruption
     for i = 1:num_groups %Ditto
         if Urms(i) < Interruption_tr && isInterruption == 0
@@ -316,19 +325,19 @@ for docount = 1:num_Sample
         isInterruption_legacy = isInterruption;
         for i = 1:InterruptionCount
             Interruption_timesum = Interruption_timesum + group_size * sum(InterruptionTime(:,i));
+            Interruption_time(i) = group_size * sum(InterruptionTime(:,i));
+            Interruption_spec(i) = min(InterruptionSpec(:,i));
         end
     else
         SampleInterruptionCount = SampleInterruptionCount + (InterruptionCount - 1 );
         isInterruption_legacy = isInterruption;
         for i = 1:(InterruptionCount-1)
             Interruption_timesum = Interruption_timesum + group_size * sum(InterruptionTime(:,i+1));
+            Interruption_time(i+1) = group_size * sum(InterruptionTime(:,i+1));
+            Interruption_spec(i+1) = min(InterruptionSpec(:,i+1));
         end
     end
-    for i = 1:InterruptionCount
-        Interruption_time(i) = group_size * sum(InterruptionTime(:,i));
-        Interruption_spec(i) = max(InterruptionSpec(:,i));
-    end  
-   
+
     %% Ripple
     % RDF
     L = length(Urms);
@@ -423,17 +432,17 @@ for docount = 1:num_Sample
     I_mean_L2 = cat(1,I_mean_L2,current_mean_L2);
     I_mean_L3 = cat(1,I_mean_L3,current_mean_L3);
     Dip_sample_time(1,width(Dip_sample_time))=Dip_sample_time(1,width(Dip_sample_time))+Dip_time(1,1);
-    horzcat(Dip_sample_time,Dip_time(2:end));
+    Dip_sample_time = horzcat(Dip_sample_time,Dip_time(2:end));
     Swell_sample_time(1,width(Swell_sample_time))=Swell_sample_time(1,width(Swell_sample_time))+Swell_time(1,1);
-    horzcat(Swell_sample_time,Swell_time(2:end));
+    Swell_sample_time = horzcat(Swell_sample_time,Swell_time(2:end));
     Interruption_sample_time(1,width(Interruption_sample_time))=Interruption_sample_time(1,width(Interruption_sample_time))+Interruption_time(1,1);
-    horzcat(Interruption_sample_time,Interruption_time(2:end));
-    Swell_sample_spec(1,width(Swell_sample_spec)) = max(Swell_sample_spec(1,width(Swell_sample_spec),Swell_spec(1,1)));
-    horzcat(Swell_sample_spec,Swell_spec(2:end));
-    Dip_sample_spec(1,width(Dip_sample_spec)) = max(Dip_sample_spec(1,width(Dip_sample_spec),Dip_spec(1,1)));
-    horzcat(Dip_sample_spec,Dip_spec(2:end));
-    Interruption_sample_spec(1,width(Interruption_sample_spec)) = max(Interruption_sample_spec(1,width(Interruption_sample_spec),Interruption_spec(1,1)));
-    horzcat(Interruption_sample_spec,Interruption_spec(2:end));
+    Interruption_sample_time = horzcat(Interruption_sample_time,Interruption_time(2:end));
+    Swell_sample_spec(1,width(Swell_sample_spec)) = max(Swell_sample_spec(1,width(Swell_sample_spec)),Swell_spec(1,1));
+    Swell_sample_spec = horzcat(Swell_sample_spec,Swell_spec(2:end));
+    Dip_sample_spec(1,width(Dip_sample_spec)) = min(Dip_sample_spec(1,width(Dip_sample_spec)),Dip_spec(1,1));
+    Dip_sample_spec = horzcat(Dip_sample_spec,Dip_spec(2:end));
+    Interruption_sample_spec(1,width(Interruption_sample_spec)) = min(Interruption_sample_spec(1,width(Interruption_sample_spec)),Interruption_spec(1,1));
+    Interruption_sample_spec = horzcat(Interruption_sample_spec,Interruption_spec(2:end));
 
 end
 fprintf(['Finished No.%d.\n'],num);

@@ -1,11 +1,11 @@
-% Version: 2.0.3β
+% Version: 2.0.4β
 clc
 clear
 close all
-cd 'A:\Lin project'\Data
+cd 'A:\Lin project'\Data\
 listing = dir('*.tdms');
 len = length(listing);
-start_time = datetime('2023-09-26 13:48:00', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
+start_time = datetime('2023-09-26 13:47:47', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
 leftover = 0;
 Pie_Data = [0 0 0 0]; %[ Nomal Swell Dip Interruption ]
 Fs=1000000; % Sampling frequency
@@ -44,9 +44,9 @@ Ripple_Line3 = 0;
 Dip_total_time = 0;
 Swell_total_time = 0;
 Interruption_total_time = 0;
-Dip_total_spec = 0;
-Swell_total_spec = 0;
-Interruption_total_spec = 0;
+Dip_total_spec = U_nominal;
+Swell_total_spec = U_nominal;
+Interruption_total_spec = U_nominal;
 
 for num = 1:len
     cd 'A:\Lin project\Individual_Project'
@@ -87,17 +87,17 @@ for num = 1:len
     RDF_total_L2 = cat(1,RDF_total_L2,RDF_L2_eachwindow);
     RDF_total_L3 = cat(1,RDF_total_L3,RDF_L3_eachwindow);
     Dip_total_time(1,width(Dip_total_time))=Dip_total_time(1,width(Dip_total_time))+Dip_sample_time(1,1);
-    horzcat(Dip_total_time,Dip_sample_time(2:end));
+    Dip_total_time = horzcat(Dip_total_time,Dip_sample_time(2:end));
     Swell_total_time(1,width(Swell_total_time))=Swell_total_time(1,width(Swell_total_time))+Swell_sample_time(1,1);
-    horzcat(Swell_total_time,Swell_sample_time(2:end));
+    Swell_total_time = horzcat(Swell_total_time,Swell_sample_time(2:end));
     Interruption_total_time(1,width(Interruption_total_time))=Interruption_total_time(1,width(Interruption_total_time))+Interruption_sample_time(1,1);
-    horzcat(Interruption_total_time,Interruption_sample_time(2:end));
-    Dip_total_spec(1,width(Dip_total_spec))=Dip_total_spec(1,width(Dip_total_spec))+Dip_sample_spec(1,1);
-    horzcat(Dip_total_spec,Dip_sample_spec(2:end));
-    Swell_total_spec(1,width(Swell_total_spec))=Swell_total_spec(1,width(Swell_total_spec))+Swell_sample_spec(1,1);
-    horzcat(Swell_total_spec,Swell_sample_spec(2:end));
-    Interruption_total_spec(1,width(Interruption_total_spec))=Interruption_total_spec(1,width(Interruption_total_spec))+Interruption_sample_spec(1,1);
-    horzcat(Interruption_total_spec,Interruption_sample_spec(2:end));
+    Interruption_total_time = horzcat(Interruption_total_time,Interruption_sample_time(2:end));
+    Dip_total_spec(1,width(Dip_total_spec))=min(Dip_total_spec(1,width(Dip_total_spec)),Dip_sample_spec(1,1));
+    Dip_total_spec = horzcat(Dip_total_spec,Dip_sample_spec(2:end));
+    Swell_total_spec(1,width(Swell_total_spec))=max(Swell_total_spec(1,width(Swell_total_spec)),Swell_sample_spec(1,1));
+    Swell_total_spec = horzcat(Swell_total_spec,Swell_sample_spec(2:end));
+    Interruption_total_spec(1,width(Interruption_total_spec))=min(Interruption_total_spec(1,width(Interruption_total_spec)),Interruption_sample_spec(1,1));
+    Interruption_total_spec = horzcat(Interruption_total_spec,Interruption_sample_spec(2:end));
 end
     disp('=========Detection_Report=========');
 fprintf(['In these signals sampled,\n']);
@@ -121,7 +121,7 @@ if SwellCount == 0;
     fprintf(['There is no Swell in these sample.\n'])
 else
     for i = 1:SwellCount
-    fprintf('Swell No.%d: Maximum Urms is %.4f V. Duration is %d ms.\n', i, Swell_total_spec(i),Swell_total_time(i));
+    fprintf('Swell No.%d: Maximum Urms is %.4f V. Duration is %d us.\n', i, Swell_total_spec(i+1),Swell_total_time(i+1));
     end
 end
 fprintf('----------------------------------\n\n');
@@ -130,7 +130,7 @@ if DipCount == 0;
     fprintf(['There is no Dip in these sample.\n'])
 else
     for i = 1:DipCount
-    fprintf('Dip No.%d: Minimum Urms is %.4f V. Duration is %d ms.\n', i, Dip_total_spec(i),Dip_total_time(i));
+    fprintf('Dip No.%d: Minimum Urms is %.4f V. Duration is %d us.\n', i, Dip_total_spec(i+1),Dip_total_time(i+1));
     end
 end
 fprintf('----------------------------------\n\n');
@@ -139,7 +139,7 @@ if InterruptionCount == 0;
     fprintf(['There is no Interruption in these sample.\n'])
 else
     for i = 1:InterruptionCount
-    fprintf('Interruption No.%d: Minimum Urms is %.4f V. Duration is %d ms.\n', i, Interruption_total_spec(i),Interruption_total_time(i));
+    fprintf('Interruption No.%d: Minimum Urms is %.4f V. Duration is %d us.\n', i, Interruption_total_spec(i+1),Interruption_total_time(i+1));
     end
 end
 fprintf('----------------------------------\n\n');

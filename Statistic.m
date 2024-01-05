@@ -1,5 +1,5 @@
 %% Statistical analysis
-% Version: 2.0.3β
+% Version: 2.0.4β
 
 start_time = datetime('13:47:47', 'Format', 'HH:mm:ss.SSS');
 time_5MS_SS = 5:5:5*(length(Urms_main)-1);
