@@ -1,4 +1,4 @@
-% Version: 2.0.2β
+% Version: 2.0.3β
 disp('=========Detection_Report=========');
 fprintf(['In these signals sampled,\n']);
 if SwellCount == 0;
@@ -9,7 +9,7 @@ end
 if DipCount == 0
     fprintf(['There is no Dip in these sample.\n'])
 else
-    fprintf(['%d Dip(s) have been identified.\n'],DipCount);
+    fprintf(['%d Dip(s) have been identified.\n'],(DipCount-InterruptionCount));%each interruption will conterbute to 2 dip
 end
 if InterruptionCount == 0
     fprintf(['There is no Interruption in these sample.\n'])

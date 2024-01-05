@@ -1,8 +1,8 @@
 %% Statistical analysis
-% Version: 2.0.2β
+% Version: 2.0.3β
 
 start_time = datetime('13:47:47', 'Format', 'HH:mm:ss.SSS');
-time_5MS_SS = 5:5:5*(length(Udc_main)-1);
+time_5MS_SS = 5:5:5*(length(Urms_main)-1);
 time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);
 time_5MS = cat(1, time_5MS_Cell{:});
 time_200MS_SS = 200:200:200*(length(Factor_rms_V)-1);
@@ -13,7 +13,7 @@ figure(1)
     subplot(2,2,1)
         time = time_5MS(1:10000);
         yyaxis left
-        plot(time_5MS(1:10000),Udc_main(2:10001),'Color','#633736');
+        plot(time_5MS(1:10000),Urms_main(2:10001),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(1:10000),I_mean_Line1(2:10001),'Color','#C31E2D');
@@ -80,7 +80,7 @@ figure(2)
     subplot(2,2,1)
 
         yyaxis left
-        plot(time_5MS(49600:169600),Udc_main(49601:169601),'Color','#633736');
+        plot(time_5MS(49600:169600),Urms_main(49601:169601),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(49600:169600),I_mean_Line1(49601:169601),'Color','#C31E2D');
@@ -147,7 +147,7 @@ figure(3)
     subplot(2,2,1)
 
         yyaxis left
-        plot(time_5MS(446600:506600),Udc_main(446601:506601),'Color','#633736');
+        plot(time_5MS(446600:506600),Urms_main(446601:506601),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(446600:506600),I_mean_Line1(446601:506601),'Color','#C31E2D');
@@ -214,7 +214,7 @@ figure(4)
     subplot(2,2,1)
 
         yyaxis left
-        plot(time_5MS(507600:710600),Udc_main(507601:710601),'Color','#633736');
+        plot(time_5MS(507600:710600),Urms_main(507601:710601),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(507600:710600),I_mean_Line1(507601:710601),'Color','#C31E2D');
@@ -281,7 +281,7 @@ figure(5)
     subplot(2,2,1)
 
         yyaxis left
-        plot(time_5MS(713600:770600),Udc_main(713601:770601),'Color','#633736');
+        plot(time_5MS(713600:770600),Urms_main(713601:770601),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(713600:770600),I_mean_Line1(713601:770601),'Color','#C31E2D');
@@ -348,7 +348,7 @@ figure(6)
     subplot(2,2,1)
 
         yyaxis left
-        plot(time_5MS(833000:844800),Udc_main(833001:844801),'Color','#633736');
+        plot(time_5MS(833000:844800),Urms_main(833001:844801),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(833000:844800),I_mean_Line1(833001:844801),'Color','#C31E2D');
@@ -415,7 +415,7 @@ figure(7)
     subplot(2,2,1)
 
         yyaxis left
-        plot(time_5MS(845600:854600),Udc_main(845601:854601),'Color','#633736');
+        plot(time_5MS(845600:854600),Urms_main(845601:854601),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(845600:854600),I_mean_Line1(845601:854601),'Color','#C31E2D');
@@ -481,7 +481,7 @@ figure(8)
     subplot(2,2,1)
 
         yyaxis left
-        plot(time_5MS(857600:866600),Udc_main(857601:866601),'Color','#633736');
+        plot(time_5MS(857600:866600),Urms_main(857601:866601),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(857600:866600),I_mean_Line1(857601:866601),'Color','#C31E2D');
@@ -548,7 +548,7 @@ figure(9)
     subplot(2,2,1)
 
         yyaxis left
-        plot(time_5MS(870400:920600),Udc_main(870401:920601),'Color','#633736');
+        plot(time_5MS(870400:920600),Urms_main(870401:920601),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(870400:920600),I_mean_Line1(870401:920601),'Color','#C31E2D');
@@ -615,7 +615,7 @@ figure(10)
     subplot(2,2,1)
 
         yyaxis left
-        plot(time_5MS(926600:968600),Udc_main(926601:968601),'Color','#633736');
+        plot(time_5MS(926600:968600),Urms_main(926601:968601),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(926600:968600),I_mean_Line1(926601:968601),'Color','#C31E2D');
@@ -682,7 +682,7 @@ figure(11)
     subplot(2,2,1)
 
         yyaxis left
-        plot(time_5MS(984600:995200),Udc_main(984601:995201),'Color','#633736');
+        plot(time_5MS(984600:995200),Urms_main(984601:995201),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(984600:995200),I_mean_Line1(984601:995201),'Color','#C31E2D');
@@ -749,7 +749,7 @@ figure(12)
     subplot(2,2,1)
 
         yyaxis left
-        plot(time_5MS(1007000:1062000),Udc_main(1007001:1062001),'Color','#633736');
+        plot(time_5MS(1007000:1062000),Urms_main(1007001:1062001),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(1007000:1062000),I_mean_Line1(1007001:1062001),'Color','#C31E2D');
@@ -816,7 +816,7 @@ figure(13)
     subplot(2,2,1)
 
         yyaxis left
-        plot(time_5MS(1274600:end),Udc_main(1274601:end),'Color','#633736');
+        plot(time_5MS(1274600:end),Urms_main(1274601:end),'Color','#633736');
         ylabel('V')
         yyaxis right
         plot(time_5MS(1274600:end),I_mean_Line1(1274601:end),'Color','#C31E2D');

@@ -1,4 +1,4 @@
-% Version: 2.0.2β
+% Version: 2.0.3β
 clc
 clear
 close all
@@ -41,6 +41,12 @@ Ripple_Voltage = 0;
 Ripple_Line1 = 0;
 Ripple_Line2 = 0;
 Ripple_Line3 = 0;
+Dip_total_time = 0;
+Swell_total_time = 0;
+Interruption_total_time = 0;
+Dip_total_spec = 0;
+Swell_total_spec = 0;
+Interruption_total_spec = 0;
 
 for num = 1:len
     cd 'A:\Lin project\Individual_Project'
@@ -49,7 +55,9 @@ for num = 1:len
     Interruption_timesum,SampleDipCount,SampleSwellCount,SampleInterruptionCount,num_Sample,...
     Factor_peak_valley_sample_V,Factor_rms_sample_V,Factor_peak_valley_sample_L1,Factor_rms_sample_L1,...
     Factor_peak_valley_sample_L2,Factor_rms_sample_L2,Factor_peak_valley_sample_L3,Factor_rms_sample_L3,...
-    Ripple_V,Ripple_L1,Ripple_L2,Ripple_L3,isSwell_legacy,isDip_legacy,isInterruption_legacy,leftover] = ...
+    Ripple_V,Ripple_L1,Ripple_L2,Ripple_L3,isSwell_legacy,isDip_legacy,isInterruption_legacy,leftover,...
+    Dip_sample_time,Swell_sample_time,Interruption_sample_time,Dip_sample_spec,Swell_sample_spec,...
+    Interruption_sample_spec] = ...
     evaluation(num,listing,isSwell_legacy,isDip_legacy,isInterruption_legacy,Fs,Ts,U_nominal,...
     timescale,group_size,hysteresis,Dip_tr,Swell_tr,Interruption_tr,leftover);
     
@@ -78,6 +86,18 @@ for num = 1:len
     RDF_total_L1 = cat(1,RDF_total_L1,RDF_L1_eachwindow);
     RDF_total_L2 = cat(1,RDF_total_L2,RDF_L2_eachwindow);
     RDF_total_L3 = cat(1,RDF_total_L3,RDF_L3_eachwindow);
+    Dip_total_time(1,width(Dip_total_time))=Dip_total_time(1,width(Dip_total_time))+Dip_sample_time(1,1);
+    horzcat(Dip_total_time,Dip_sample_time(2:end));
+    Swell_total_time(1,width(Swell_total_time))=Swell_total_time(1,width(Swell_total_time))+Swell_sample_time(1,1);
+    horzcat(Swell_total_time,Swell_sample_time(2:end));
+    Interruption_total_time(1,width(Interruption_total_time))=Interruption_total_time(1,width(Interruption_total_time))+Interruption_sample_time(1,1);
+    horzcat(Interruption_total_time,Interruption_sample_time(2:end));
+    Dip_total_spec(1,width(Dip_total_spec))=Dip_total_spec(1,width(Dip_total_spec))+Dip_sample_spec(1,1);
+    horzcat(Dip_total_spec,Dip_sample_spec(2:end));
+    Swell_total_spec(1,width(Swell_total_spec))=Swell_total_spec(1,width(Swell_total_spec))+Swell_sample_spec(1,1);
+    horzcat(Swell_total_spec,Swell_sample_spec(2:end));
+    Interruption_total_spec(1,width(Interruption_total_spec))=Interruption_total_spec(1,width(Interruption_total_spec))+Interruption_sample_spec(1,1);
+    horzcat(Interruption_total_spec,Interruption_sample_spec(2:end));
 end
     disp('=========Detection_Report=========');
 fprintf(['In these signals sampled,\n']);
@@ -97,4 +117,29 @@ else
     fprintf(['%d Interruption(s) have been identified.\n'],InterruptionCount);
 end
 fprintf('-------------------------------------\n');
+if SwellCount == 0;
+    fprintf(['There is no Swell in these sample.\n'])
+else
+    for i = 1:SwellCount
+    fprintf('Swell No.%d: Maximum Urms is %.4f V. Duration is %d ms.\n', i, Swell_total_spec(i),Swell_total_time(i));
+    end
+end
+fprintf('----------------------------------\n\n');
 
+if DipCount == 0;
+    fprintf(['There is no Dip in these sample.\n'])
+else
+    for i = 1:DipCount
+    fprintf('Dip No.%d: Minimum Urms is %.4f V. Duration is %d ms.\n', i, Dip_total_spec(i),Dip_total_time(i));
+    end
+end
+fprintf('----------------------------------\n\n');
+
+if InterruptionCount == 0;
+    fprintf(['There is no Interruption in these sample.\n'])
+else
+    for i = 1:InterruptionCount
+    fprintf('Interruption No.%d: Minimum Urms is %.4f V. Duration is %d ms.\n', i, Interruption_total_spec(i),Interruption_total_time(i));
+    end
+end
+fprintf('----------------------------------\n\n');

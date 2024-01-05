@@ -3,7 +3,9 @@ function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms
     Interruption_timesum,SampleDipCount,SampleSwellCount,SampleInterruptionCount,num_Sample,...
     Factor_peak_valley_sample_V,Factor_rms_sample_V,Factor_peak_valley_sample_L1,Factor_rms_sample_L1,...
     Factor_peak_valley_sample_L2,Factor_rms_sample_L2,Factor_peak_valley_sample_L3,Factor_rms_sample_L3,...
-    Ripple_V,Ripple_L1,Ripple_L2,Ripple_L3,isSwell_legacy,isDip_legacy,isInterruption_legacy,leftover] = ...
+    Ripple_V,Ripple_L1,Ripple_L2,Ripple_L3,isSwell_legacy,isDip_legacy,isInterruption_legacy,leftover,...
+    Dip_sample_time,Swell_sample_time,Interruption_sample_time,Dip_sample_spec,Swell_sample_spec,...
+    Interruption_sample_spec] = ...
     evaluation(num,listing,isSwell_legacy,isDip_legacy,isInterruption_legacy,Fs,Ts,U_nominal,...
     timescale,group_size,hysteresis,Dip_tr,Swell_tr,Interruption_tr,leftover)
 % evaluation(A)
@@ -55,7 +57,7 @@ function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
 %   leftover                    = This file's left data that not long enough to 200 ms
-% Version: 2.0.2β
+% Version: 2.0.3β
 
 %% Data Loading
 cd 'A:\Lin project'\Data  % Here is the path of where Data file locate
@@ -127,6 +129,12 @@ I_rms_L3 = 0;
 I_mean_L1 = 0;
 I_mean_L2 = 0;
 I_mean_L3 = 0;
+Dip_sample_time = 0;
+Swell_sample_time = 0;
+Interruption_sample_time = 0;
+Dip_sample_spec = 0;
+Swell_sample_spec = 0;
+Interruption_sample_spec = 0;
 
 % Evaluate is carried out in each 200ms period
 for docount = 1:num_Sample
@@ -223,6 +231,10 @@ for docount = 1:num_Sample
             Swell_timesum = Swell_timesum + group_size * sum(SwellTime(:,i+1));
         end
     end
+    for i = 1:SwellCount
+        Swell_time(i) = group_size * sum(SwellTime(:,i));
+        Swell_spec(i) = max(SwellSpec(:,i));
+    end
 
     for i = 1:num_groups %Same design as Swell
         if Urms(i) < Dip_tr && isDip == 0 && Urms(i) > Interruption_tr
@@ -265,6 +277,10 @@ for docount = 1:num_Sample
             Dip_timesum = Dip_timesum + group_size * sum(DipTime(:,i+1));
         end
     end
+    for i = 1:DipCount
+        Dip_time(i) = group_size * sum(DipTime(:,i));
+        Dip_spec(i) = max(DipSpec(:,i));
+    end    
     %Interruption
     for i = 1:num_groups %Ditto
         if Urms(i) < Interruption_tr && isInterruption == 0
@@ -308,7 +324,11 @@ for docount = 1:num_Sample
             Interruption_timesum = Interruption_timesum + group_size * sum(InterruptionTime(:,i+1));
         end
     end
-
+    for i = 1:InterruptionCount
+        Interruption_time(i) = group_size * sum(InterruptionTime(:,i));
+        Interruption_spec(i) = max(InterruptionSpec(:,i));
+    end  
+   
     %% Ripple
     % RDF
     L = length(Urms);
@@ -402,7 +422,18 @@ for docount = 1:num_Sample
     I_mean_L1 = cat(1,I_mean_L1,current_mean_L1);
     I_mean_L2 = cat(1,I_mean_L2,current_mean_L2);
     I_mean_L3 = cat(1,I_mean_L3,current_mean_L3);
-
+    Dip_sample_time(1,width(Dip_sample_time))=Dip_sample_time(1,width(Dip_sample_time))+Dip_time(1,1);
+    horzcat(Dip_sample_time,Dip_time(2:end));
+    Swell_sample_time(1,width(Swell_sample_time))=Swell_sample_time(1,width(Swell_sample_time))+Swell_time(1,1);
+    horzcat(Swell_sample_time,Swell_time(2:end));
+    Interruption_sample_time(1,width(Interruption_sample_time))=Interruption_sample_time(1,width(Interruption_sample_time))+Interruption_time(1,1);
+    horzcat(Interruption_sample_time,Interruption_time(2:end));
+    Swell_sample_spec(1,width(Swell_sample_spec)) = max(Swell_sample_spec(1,width(Swell_sample_spec),Swell_spec(1,1)));
+    horzcat(Swell_sample_spec,Swell_spec(2:end));
+    Dip_sample_spec(1,width(Dip_sample_spec)) = max(Dip_sample_spec(1,width(Dip_sample_spec),Dip_spec(1,1)));
+    horzcat(Dip_sample_spec,Dip_spec(2:end));
+    Interruption_sample_spec(1,width(Interruption_sample_spec)) = max(Interruption_sample_spec(1,width(Interruption_sample_spec),Interruption_spec(1,1)));
+    horzcat(Interruption_sample_spec,Interruption_spec(2:end));
 
 end
 fprintf(['Finished No.%d.\n'],num);
