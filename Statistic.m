@@ -1,5 +1,5 @@
 %% Statistical analysis
-% Version: 2.0.5β
+% Version: 2.0.6β
 
 % start_time = datetime('2023-09-26 13:47:47', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
 % time_5MS_SS = 5:5:5*(length(Urms_main)-1);

@@ -1,4 +1,4 @@
-% Version: 2.0.5β
+% Version: 2.0.6β
 clc
 clear
 close all
