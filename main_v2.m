@@ -1,11 +1,11 @@
-%% Version: 2.0.6β
-% clc
-% clear
-% close all
+%% Version: 2.0.7β
+clc
+clear
+close all
 
-% cd 'A:\Lin project\Data\'
-% listing = dir('*.tdms');
-% len = length(listing);
+cd 'A:\Lin project\Data\'
+listing = dir('*.tdms');
+len = length(listing);
 start_time = datetime('2023-09-26 13:47:47', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
 Fs=1000000; % Sampling frequency
 Ts=1/Fs;    % Sampling period
@@ -17,28 +17,37 @@ Swell_tr = 1.1*U_nominal;
 Interruption_tr = 0.1*U_nominal;
 
 leftover = 0;
-% for num = 1:len
-%     [Udc_out,Urms_out,I_mean_L1_out,I_rms_L1_out,I_mean_L2_out,...
-%     I_rms_L2_out,I_mean_L3_out,I_rms_L3_out,leftover] = ...
-%     evaluate(num,listing,group_size,leftover);
-%     Urms = cat(1,Urms,Urms_out(2:end));
-%     Udc = cat(1,Udc, Udc_out(2:end));
-%     I_rms_Line1 = cat(1,I_rms_Line1,I_rms_L1_out(2:end));
-%     I_rms_Line2 = cat(1,I_rms_Line2,I_rms_L2_out(2:end));
-%     I_rms_Line3 = cat(1,I_rms_Line3,I_rms_L3_out(2:end));
-%     I_mean_Line1 = cat(1,I_mean_Line1,I_mean_L1_out(2:end));
-%     I_mean_Line2 = cat(1,I_mean_Line2,I_mean_L2_out(2:end));
-%     I_mean_Line3 = cat(1,I_mean_Line3,I_mean_L2_out(2:end));
-% end
-
-% Urms(1,:) = [];
-% Udc(1,:) = [];
-% I_rms_Line1(1,:) = [];
-% I_rms_Line2(1,:) = [];
-% I_rms_Line3(1,:) = [];
-% I_mean_Line1(1,:) = [];
-% I_mean_Line2(1,:) = [];
-% I_mean_Line3(1,:) = [];
+Urms = 0;
+Udc = 0;
+I_rms_Line1 = 0;
+I_rms_Line2 = 0;
+I_rms_Line3 = 0;
+I_mean_Line1 = 0;
+I_mean_Line2 = 0;
+I_mean_Line3 = 0;
+for num = 1:len
+    cd 'A:\Lin project\Individual_Project'
+    [Udc_out,Urms_out,I_mean_L1_out,I_rms_L1_out,I_mean_L2_out,...
+    I_rms_L2_out,I_mean_L3_out,I_rms_L3_out,leftover] = ...
+    evaluate(num,listing,group_size,leftover);
+    Urms = cat(1,Urms,Urms_out(2:end));
+    Udc = cat(1,Udc, Udc_out(2:end));
+    I_rms_Line1 = cat(1,I_rms_Line1,I_rms_L1_out(2:end));
+    I_rms_Line2 = cat(1,I_rms_Line2,I_rms_L2_out(2:end));
+    I_rms_Line3 = cat(1,I_rms_Line3,I_rms_L3_out(2:end));
+    I_mean_Line1 = cat(1,I_mean_Line1,I_mean_L1_out(2:end));
+    I_mean_Line2 = cat(1,I_mean_Line2,I_mean_L2_out(2:end));
+    I_mean_Line3 = cat(1,I_mean_Line3,I_mean_L2_out(2:end));
+end
+fprintf(['Finished\n']);
+Urms(1,:) = [];
+Udc(1,:) = [];
+I_rms_Line1(1,:) = [];
+I_rms_Line2(1,:) = [];
+I_rms_Line3(1,:) = [];
+I_mean_Line1(1,:) = [];
+I_mean_Line2(1,:) = [];
+I_mean_Line3(1,:) = [];
 
 %% Detection
 timecount = 0;
@@ -218,9 +227,9 @@ fprintf('----------------------------------\n\n');
 time_5MS_SS = 5:5:5*(length(Udc));
 time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);
 time_5MS = cat(1, time_5MS_Cell{:});
-% time_200MS_SS = 200:200:200*(length(Factor_rms_V)-1);
-% time_200MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS, 'UniformOutput', false);
-% time_200MS = cat(1, time_200MS_Cell{:});
+time_200MS_SS = 200:200:200*(length(Factor_rms_V)-1);
+time_200MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS, 'UniformOutput', false);
+time_200MS = cat(1, time_200MS_Cell{:});
 
 figure(1)
     pie(Pie_Data,'%.3f%%');

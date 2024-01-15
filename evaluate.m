@@ -2,8 +2,8 @@ function [Udc_out,Urms_out,I_mean_L1_out,I_rms_L1_out,I_mean_L2_out,...
     I_rms_L2_out,I_mean_L3_out,I_rms_L3_out,leftover] = ...
     evaluate(num,listing,group_size,leftover)
 %% Data Loading
-% Version: 2.0.6β
-cd 'A:\Lin project'\Data\  % Here is the path of where Data file locate
+% Version: 2.0.7β
+cd 'A:\Lin project\Data\'  % Here is the path of where Data file locate
 
 Name = listing(num).name; % Name of the files
 data = tdmsread(Name); 
@@ -20,6 +20,16 @@ L1_Voltage=L1_Voltage.*1000;
 L1_Current=L1_Current.*100;
 L2_Current=L2_Current.*100;
 L3_Current=L3_Current.*25;
+
+num_groups = floor(200000 / group_size);
+Udc_out = 0;
+Urms_out = 0;
+I_rms_L1_out = 0;
+I_rms_L2_out = 0;
+I_rms_L3_out = 0;
+I_mean_L1_out = 0;
+I_mean_L2_out = 0;
+I_mean_L3_out = 0;
 
 
 %% Leftover
