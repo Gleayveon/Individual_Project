@@ -17,7 +17,7 @@ function [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
     RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,leftover)
 
 %% Data Loading
-% Version: 3.0.0α
+% Version: 3.0.1
 cd 'A:\Lin project\Data\'  % Here is the path of where Data file locate
 
 Name = listing(num).name; % Name of the files
@@ -156,7 +156,7 @@ for docount = 1:num_Sample
     end
 
     %% RDF & 2 Factors
-    L = sample_window_length / 1000;
+    L = sample_window_length / group_size;
     t = (0:L-1)*Ts;
 
     RDF_Voltage_sample = 0;

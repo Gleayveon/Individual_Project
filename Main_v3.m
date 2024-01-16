@@ -1,4 +1,4 @@
-%% Version: 3.0.0α
+%% Version: 3.0.1
 clc
 clear
 close all
@@ -89,7 +89,7 @@ end
     Interruption_time = 0;
     Interruption_spec = U_nominal;
     Swell_timesum = 0;
-    Dip_timesum = 0;
+    Dip_timesum = 0;D
     Interruption_timesum = 0;
 
 for i = 1:SwellCount
