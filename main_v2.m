@@ -1,11 +1,11 @@
-%% Version: 2.0.7β
-clc
-clear
-close all
-
-cd 'A:\Lin project\Data\'
-listing = dir('*.tdms');
-len = length(listing);
+%% Version: 3.0.0α
+% clc
+% clear
+% close all
+% 
+% cd 'A:\Lin project\Data\'
+% listing = dir('*.tdms');
+% len = length(listing);
 start_time = datetime('2023-09-26 13:47:47', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
 Fs=1000000; % Sampling frequency
 Ts=1/Fs;    % Sampling period
@@ -16,30 +16,30 @@ Dip_tr = 0.9*U_nominal; %Threashold_Dip
 Swell_tr = 1.1*U_nominal;
 Interruption_tr = 0.1*U_nominal;
 
-leftover = 0;
-Urms = 0;
-Udc = 0;
-I_rms_Line1 = 0;
-I_rms_Line2 = 0;
-I_rms_Line3 = 0;
-I_mean_Line1 = 0;
-I_mean_Line2 = 0;
-I_mean_Line3 = 0;
-for num = 1:len
-    cd 'A:\Lin project\Individual_Project'
-    [Udc_out,Urms_out,I_mean_L1_out,I_rms_L1_out,I_mean_L2_out,...
-    I_rms_L2_out,I_mean_L3_out,I_rms_L3_out,leftover] = ...
-    evaluate(num,listing,group_size,leftover);
-    Urms = cat(1,Urms,Urms_out(2:end));
-    Udc = cat(1,Udc, Udc_out(2:end));
-    I_rms_Line1 = cat(1,I_rms_Line1,I_rms_L1_out(2:end));
-    I_rms_Line2 = cat(1,I_rms_Line2,I_rms_L2_out(2:end));
-    I_rms_Line3 = cat(1,I_rms_Line3,I_rms_L3_out(2:end));
-    I_mean_Line1 = cat(1,I_mean_Line1,I_mean_L1_out(2:end));
-    I_mean_Line2 = cat(1,I_mean_Line2,I_mean_L2_out(2:end));
-    I_mean_Line3 = cat(1,I_mean_Line3,I_mean_L2_out(2:end));
-end
-fprintf(['Finished\n']);
+% leftover = 0;
+% Urms = 0;
+% Udc = 0;
+% I_rms_Line1 = 0;
+% I_rms_Line2 = 0;
+% I_rms_Line3 = 0;
+% I_mean_Line1 = 0;
+% I_mean_Line2 = 0;
+% I_mean_Line3 = 0;
+% for num = 1:len
+%     cd 'A:\Lin project\Individual_Project'
+%     [Udc_out,Urms_out,I_mean_L1_out,I_rms_L1_out,I_mean_L2_out,...
+%     I_rms_L2_out,I_mean_L3_out,I_rms_L3_out,leftover] = ...
+%     evaluate(num,listing,group_size,leftover);
+%     Urms = cat(1,Urms,Urms_out(2:end));
+%     Udc = cat(1,Udc, Udc_out(2:end));
+%     I_rms_Line1 = cat(1,I_rms_Line1,I_rms_L1_out(2:end));
+%     I_rms_Line2 = cat(1,I_rms_Line2,I_rms_L2_out(2:end));
+%     I_rms_Line3 = cat(1,I_rms_Line3,I_rms_L3_out(2:end));
+%     I_mean_Line1 = cat(1,I_mean_Line1,I_mean_L1_out(2:end));
+%     I_mean_Line2 = cat(1,I_mean_Line2,I_mean_L2_out(2:end));
+%     I_mean_Line3 = cat(1,I_mean_Line3,I_mean_L2_out(2:end));
+% end
+% fprintf(['Finished\n']);
 Urms(1,:) = [];
 Udc(1,:) = [];
 I_rms_Line1(1,:) = [];
@@ -224,29 +224,29 @@ else
 end
 fprintf('----------------------------------\n\n');
 
-time_5MS_SS = 5:5:5*(length(Udc));
-time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);
-time_5MS = cat(1, time_5MS_Cell{:});
-time_200MS_SS = 200:200:200*(length(Factor_rms_V)-1);
-time_200MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS, 'UniformOutput', false);
-time_200MS = cat(1, time_200MS_Cell{:});
-
+% time_5MS_SS = 5:5:5*(length(Udc));
+% time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);
+% time_5MS = cat(1, time_5MS_Cell{:});
+% time_200MS_SS = 200:200:200*(length(Factor_rms_V)-1);
+% time_200MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS, 'UniformOutput', false);
+% time_200MS = cat(1, time_200MS_Cell{:});
+% 
 figure(1)
     pie(Pie_Data,'%.3f%%');
     legend('Normal','Swell','Dip','Interruption');
     title('Chart of the data''s voltage status');
-figure(2)
-    subplot(2,1,1)
-    plot(time_5MS,Udc(1:end));
-    title('U_D_C mean');
-    ylabel('U_D_C Magnitude');
-    xlabel('Time (ms)')
-    hold on
-    subplot(2,1,2)
-    plot(time_5MS,Urms(1:end));
-    title('U_r_m_s mean');
-    ylabel('U_r_m_s Magnitude');
-    xlabel('Time (ms)')
-    yline(Dip_tr,'--','Color','#C31E2D','Label','Dip threshold');
-    yline(Swell_tr,'--','Color','#2773C8','Label','Swell threshold');
-    yline(Interruption_tr,'--','Color','#9CC38A','Label','Interruption threshold');
+% figure(2)
+%     subplot(2,1,1)
+%     plot(time_5MS,Udc(1:end));
+%     title('U_D_C mean');
+%     ylabel('U_D_C Magnitude');
+%     xlabel('Time (ms)')
+%     hold on
+%     subplot(2,1,2)
+%     plot(time_5MS,Urms(1:end));
+%     title('U_r_m_s mean');
+%     ylabel('U_r_m_s Magnitude');
+%     xlabel('Time (ms)')
+%     yline(Dip_tr,'--','Color','#C31E2D','Label','Dip threshold');
+%     yline(Swell_tr,'--','Color','#2773C8','Label','Swell threshold');
+%     yline(Interruption_tr,'--','Color','#9CC38A','Label','Interruption threshold');

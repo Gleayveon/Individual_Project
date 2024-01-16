@@ -2,7 +2,7 @@ function [Udc_out,Urms_out,I_mean_L1_out,I_rms_L1_out,I_mean_L2_out,...
     I_rms_L2_out,I_mean_L3_out,I_rms_L3_out,leftover] = ...
     evaluate(num,listing,group_size,leftover)
 %% Data Loading
-% Version: 2.0.7β
+% Version: 3.0.0α
 cd 'A:\Lin project\Data\'  % Here is the path of where Data file locate
 
 Name = listing(num).name; % Name of the files
