@@ -57,7 +57,7 @@ function [Udc_out,Urms_out,I_mean_L1,I_rms_L1,I_mean_L2,I_rms_L2,I_mean_L3,I_rms
 %   isDip                       = Is Dip occuring last sample window?
 %   isInterruption              = Is Interruption occuring last sample window?
 %   leftover                    = This file's left data that not long enough to 200 ms
-% Version: 3.0.1
+% Version: 3.0.2
 
 %% Data Loading
 cd 'A:\Lin project'\Data\  % Here is the path of where Data file locate
