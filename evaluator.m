@@ -17,7 +17,7 @@ function [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
     RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,leftover)
 
 %% Data Loading
-% Version: 3.0.2
+% Version: 3.0.3
 cd 'A:\Lin project\Data\'  % Here is the path of where Data file locate
 
 Name = listing(num).name; % Name of the files
@@ -185,8 +185,7 @@ for docount = 1:num_Sample
     
     Temp = sum(P1(2:end).^2);
     Temp2 = sqrt(Temp);
-    RDF = (Temp2 / P1(1)) *100;
-    RDF_Voltage_sample = RDF; %I spilt the RDF calculation into steps to help debug
+    RDF_Voltage_sample = (Temp2 / P1(1)) *100;
 
     Peak = max(Urms_sample);
     Valley = min(Urms_sample);
@@ -203,8 +202,7 @@ for docount = 1:num_Sample
     
     Temp_L1 = sum(P1_L1(2:end).^2);
     Temp2_L1 = sqrt(Temp_L1);
-    RDF_L1 = (Temp2_L1 / P1_L1(1)) *100;
-    RDF_L1_sample = RDF_L1; %I spilt the RDF calculation into steps to help debug
+    RDF_L1_sample = (Temp2_L1 / P1_L1(1)) *100;
 
     Peak = max(current_rms_sample_L1);
     Valley = min(current_rms_sample_L1);
@@ -221,8 +219,7 @@ for docount = 1:num_Sample
 
     Temp_L2 = sum(P1_L2(2:end).^2);
     Temp2_L2 = sqrt(Temp_L2);
-    RDF_L2 = (Temp2_L2 / P1_L2(1)) *100;
-    RDF_L2_sample = RDF_L2; %I spilt the RDF calculation into steps to help debug
+    RDF_L2_sample = (Temp2_L2 / P1_L2(1)) *100;
 
     Peak = max(current_rms_sample_L2);
     Valley = min(current_rms_sample_L2);
@@ -239,8 +236,7 @@ for docount = 1:num_Sample
 
     Temp_L3 = sum(P1_L3(2:end).^2);
     Temp2_L3 = sqrt(Temp_L3);
-    RDF_L3 = (Temp2_L3 / P1_L3(1)) *100;
-    RDF_L3_sample = RDF_L3; %I spilt the RDF calculation into steps to help debug
+    RDF_L3_sample = (Temp2_L3 / P1_L3(1)) *100;
 
     Peak = max(current_rms_sample_L3);
     Valley = min(current_rms_sample_L3);
@@ -250,7 +246,7 @@ for docount = 1:num_Sample
     RMS_Ripple_Factor_L3_sample = mean(Iripple_L3./abs(current_mean_sample_L3)) * 100;
 
     %% Storage
-if num == 1
+if num == 1 && docount == 1
     U_avg = cat(1,U_avg,Uavg_sample);
     U_rms = cat(1,U_rms,Urms_sample);
     I_rms_L1 = cat(1,I_rms_L1,current_rms_sample_L1);
@@ -290,18 +286,18 @@ if num == 1
     RDF_Voltage(1,:) = [];
     RMS_Ripple_Factor_Voltage(1,:) = [];
     Peak_Ripple_Factor_Voltage(1,:) = [];
-    I_ripple_L1 = []; 
-    RDF_L1 = []; 
-    RMS_Ripple_Factor_L1 = []; 
-    Peak_Ripple_Factor_L1 = []; 
-    I_ripple_L2 = []; 
-    RDF_L2 = []; 
-    RMS_Ripple_Factor_L2 = []; 
-    Peak_Ripple_Factor_L2 = []; 
-    I_ripple_L3 = []; 
-    RDF_L3 = []; 
-    RMS_Ripple_Factor_L3 = []; 
-    Peak_Ripple_Factor_L3 = []; 
+    I_ripple_L1(1,:) = [];
+    RDF_L1(1,:) = [];
+    RMS_Ripple_Factor_L1(1,:) = [];
+    Peak_Ripple_Factor_L1(1,:) = [];
+    I_ripple_L2(1,:) = [];
+    RDF_L2(1,:) = [];
+    RMS_Ripple_Factor_L2(1,:) = [];
+    Peak_Ripple_Factor_L2(1,:) = [];
+    I_ripple_L3(1,:) = [];
+    RDF_L3(1,:) = [];
+    RMS_Ripple_Factor_L3(1,:) = [];
+    Peak_Ripple_Factor_L3(1,:) = [];
 else
     U_avg = cat(1,U_avg,Uavg_sample);
     U_rms = cat(1,U_rms,Urms_sample);
