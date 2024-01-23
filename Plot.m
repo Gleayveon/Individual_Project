@@ -1,4 +1,4 @@
-% Version: 3.0.2
+% Version: 3.0.4
 
 % start_time = datetime('2023-09-26 13:47:47', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
 % time_5MS_SS = 5:5:5*length(U_avg);
@@ -13,73 +13,73 @@
 % Pie_Data(3) = Dip_timesum;
 % Pie_Data(4) = Interruption_timesum;
 
-figure(1)
-    pie(Pie_Data,'%.3f%%');
-    legend('Normal','Swell','Dip','Interruption');
-    title('Chart of the data''s voltage status');
-figure(2)
-    plot(time_5MS,U_avg);
-    title('Voltage');
-    ylabel('Magnitude');
-    xlabel('Time (ms)')
-    hold on
-    plot(time_5MS,U_rms);
-    xlabel('Time (ms)')
-    legend('U_a_v_e_r_a_g_e','U_r_m_s')
-    yline(Dip_tr,'--','Color','#C31E2D','Label','Dip threshold');
-    yline(Swell_tr,'--','Color','#2773C8','Label','Swell threshold');
-    yline(Interruption_tr,'--','Color','#9CC38A','Label','Interruption threshold');
-figure(3)
-    plot(time_200MS,RMS_Ripple_Factor_Voltage);
-    title('Factor_r_m_s Voltage');
-    xlabel('Time (ms)');
-    ylabel('Factor_r_m_s Magnitude (%)');
-    
-figure(4)
-    plot(time_200MS,Peak_Ripple_Factor_Voltage);
-    title('Factor_p_e_a_k_-_v_a_l_l_e_y Voltage');
-    xlabel('Time (ms)');
-    ylabel('Factor_p_e_a_k_-_v_a_l_l_e_y Magnitude (%)');
-    
-figure(5)
-    plot(time_200MS,RDF_Voltage);
-    title('RDF_V_o_l_t_a_g_e_1');
-    xlabel('Time (ms)');
-    ylabel('RDF_V_o_l_t_a_g_e_1 Magnitude');
-figure(6)
-    plot(time_5MS,U_ripple,'Color','#633736');
-    hold on
-    plot(time_5MS,I_ripple_L1,'Color','#C31E2D');
-    hold on
-    plot(time_5MS,I_ripple_L2,'Color','#2773C8');
-    hold on
-    plot(time_5MS,I_ripple_L3,'Color','#9CC38A');
-    legend('Voltage','Line 1','Line 2','Line 3');
-    title('Ripple');
-    hold off
-figure(7)
-    subplot(2,1,1)
-    plot(time_5MS,I_avg_L1,'Color','#C31E2D');
-    hold on
-    plot(time_5MS,I_avg_L2,'Color','#2773C8');
-    hold on
-    plot(time_5MS,I_avg_L3,'Color','#9CC38A');
-    hold off
-    title('Current_m_e_a_m _o_f _e_v_e_r_y _5_m_s of all lines');
-    ylabel('Magnitude');
-    xlabel('Time (ms)');
-    legend('Line 1','Line 2','Line 3');
-    subplot(2,1,2)
-    plot(time_5MS,I_rms_L1,'Color','#C31E2D');
-    hold on
-    plot(time_5MS,I_rms_L2,'Color','#2773C8');
-    hold on
-    plot(time_5MS,I_rms_L3,'Color','#9CC38A');
-    hold off
-    title('Current_r_m_s _o_f _e_v_e_r_y _5_m_s of all lines');
-    ylabel('Magnitude');
-    xlabel('Time (ms)');
-    legend('Line 1','Line 2','Line 3');
+% figure(1)
+%     pie(Pie_Data,'%.3f%%');
+%     legend('Normal','Swell','Dip','Interruption');
+%     title('Chart of the data''s voltage status');
+% figure(2)
+%     plot(time_5MS,U_avg);
+%     title('Voltage');
+%     ylabel('Magnitude');
+%     xlabel('Time (ms)')
+%     hold on
+%     plot(time_5MS,U_rms);
+%     xlabel('Time (ms)')
+%     legend('U_a_v_e_r_a_g_e','U_r_m_s')
+%     yline(Dip_tr,'--','Color','#C31E2D','Label','Dip threshold');
+%     yline(Swell_tr,'--','Color','#2773C8','Label','Swell threshold');
+%     yline(Interruption_tr,'--','Color','#9CC38A','Label','Interruption threshold');
+% figure(3)
+%     plot(time_200MS,RMS_Ripple_Factor_Voltage);
+%     title('Factor_r_m_s Voltage');
+%     xlabel('Time (ms)');
+%     ylabel('Factor_r_m_s Magnitude (%)');
+% 
+% figure(4)
+%     plot(time_200MS,Peak_Ripple_Factor_Voltage);
+%     title('Factor_p_e_a_k_-_v_a_l_l_e_y Voltage');
+%     xlabel('Time (ms)');
+%     ylabel('Factor_p_e_a_k_-_v_a_l_l_e_y Magnitude (%)');
+% 
+% figure(5)
+%     plot(time_200MS,RDF_Voltage);
+%     title('RDF_V_o_l_t_a_g_e_1');
+%     xlabel('Time (ms)');
+%     ylabel('RDF_V_o_l_t_a_g_e_1 Magnitude');
+% figure(6)
+%     plot(time_5MS,U_ripple,'Color','#633736');
+%     hold on
+%     plot(time_5MS,I_ripple_L1,'Color','#C31E2D');
+%     hold on
+%     plot(time_5MS,I_ripple_L2,'Color','#2773C8');
+%     hold on
+%     plot(time_5MS,I_ripple_L3,'Color','#9CC38A');
+%     legend('Voltage','Line 1','Line 2','Line 3');
+%     title('Ripple');
+%     hold off
+% figure(7)
+%     subplot(2,1,1)
+%     plot(time_5MS,I_avg_L1,'Color','#C31E2D');
+%     hold on
+%     plot(time_5MS,I_avg_L2,'Color','#2773C8');
+%     hold on
+%     plot(time_5MS,I_avg_L3,'Color','#9CC38A');
+%     hold off
+%     title('Current_m_e_a_m _o_f _e_v_e_r_y _5_m_s of all lines');
+%     ylabel('Magnitude');
+%     xlabel('Time (ms)');
+%     legend('Line 1','Line 2','Line 3');
+%     subplot(2,1,2)
+%     plot(time_5MS,I_rms_L1,'Color','#C31E2D');
+%     hold on
+%     plot(time_5MS,I_rms_L2,'Color','#2773C8');
+%     hold on
+%     plot(time_5MS,I_rms_L3,'Color','#9CC38A');
+%     hold off
+%     title('Current_r_m_s _o_f _e_v_e_r_y _5_m_s of all lines');
+%     ylabel('Magnitude');
+%     xlabel('Time (ms)');
+%     legend('Line 1','Line 2','Line 3');
 figure(8)
  plot(time_5MS,U_rms);
     title('U_r_m_s mean');
@@ -110,38 +110,45 @@ figure(8)
     xline(datetime('2023-09-26 15:18:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:18');
     xline(datetime('2023-09-26 15:32:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:32');
     xline(datetime('2023-09-26 15:33:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:33');
-figure(9)
-    plot(time_200MS,RMS_Ripple_Factor_L1);
     hold on
-    plot(time_200MS,RMS_Ripple_Factor_L2);
+    plot(time_5MS,I_rms_L1)
     hold on
-    plot(time_200MS,RMS_Ripple_Factor_L3);
+    plot(time_5MS,I_rms_L2)
     hold on
-    title('Factor_r_m_s Current');
-    xlabel('Time (ms)');
-    ylabel('Factor_r_m_s Magnitude (%)');
-    legend('Line 1','Line 2','Line 3')
-    
-figure(10)
-    plot(time_200MS,Peak_Ripple_Factor_L1);
-    hold on
-    plot(time_200MS,Peak_Ripple_Factor_L2);
-    hold on
-    plot(time_200MS,Peak_Ripple_Factor_L3);
-    hold on
-    title('Factor_p_e_a_k_-_v_a_l_l_e_y Current');
-    xlabel('Time (ms)');
-    ylabel('Magnitude (%)');
-    legend('Line 1','Line 2','Line 3')
-    
-figure(11)
-    plot(time_200MS,RDF_L1);
-    hold on
-    plot(time_200MS,RDF_L2);
-    hold on
-    plot(time_200MS,RDF_L3);
-    hold on
-    title('RDF_C_u_r_r_e_n_t');
-    xlabel('Time (ms)');
-    ylabel('Magnitude');
-    legend('Line 1','Line 2','Line 3')
+    plot(time_5MS,I_rms_L3)
+    hold off
+% figure(9)
+%     plot(time_200MS,RMS_Ripple_Factor_L1);
+%     hold on
+%     plot(time_200MS,RMS_Ripple_Factor_L2);
+%     hold on
+%     plot(time_200MS,RMS_Ripple_Factor_L3);
+%     hold on
+%     title('Factor_r_m_s Current');
+%     xlabel('Time (ms)');
+%     ylabel('Factor_r_m_s Magnitude (%)');
+%     legend('Line 1','Line 2','Line 3')
+% 
+% figure(10)
+%     plot(time_200MS,Peak_Ripple_Factor_L1);
+%     hold on
+%     plot(time_200MS,Peak_Ripple_Factor_L2);
+%     hold on
+%     plot(time_200MS,Peak_Ripple_Factor_L3);
+%     hold on
+%     title('Factor_p_e_a_k_-_v_a_l_l_e_y Current');
+%     xlabel('Time (ms)');
+%     ylabel('Magnitude (%)');
+%     legend('Line 1','Line 2','Line 3')
+% 
+% figure(11)
+%     plot(time_200MS,RDF_L1);
+%     hold on
+%     plot(time_200MS,RDF_L2);
+%     hold on
+%     plot(time_200MS,RDF_L3);
+%     hold on
+%     title('RDF_C_u_r_r_e_n_t');
+%     xlabel('Time (ms)');
+%     ylabel('Magnitude');
+%     legend('Line 1','Line 2','Line 3')

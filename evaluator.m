@@ -17,7 +17,7 @@ function [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
     RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,leftover)
 
 %% Data Loading
-% Version: 3.0.3
+% Version: 3.0.4
 cd 'A:\Lin project\Data\'  % Here is the path of where Data file locate
 
 Name = listing(num).name; % Name of the files
@@ -111,6 +111,15 @@ for docount = 1:num_Sample
             SwellTime(timecount,SwellCount) = 1;
             SwellSpec(timecount,SwellCount) = Urms_sample(i);
             isNonStatDistOccur_sample(i) = 1;
+            if num == 1
+                Swell(SwellCount,1) = 0;
+                Swell(SwellCount,2) = i;
+                Swell(SwellCount,3) = ducount;
+            else
+                Swell(SwellCount,1) = length(U_rms);
+                Swell(SwellCount,2) = i;
+                Swell(SwellCount,3) = docount;
+            end
 
         elseif Urms_sample(i) > (Swell_tr - hysteresis) && isSwell == 1
             timecount = timecount + 1;
@@ -119,6 +128,15 @@ for docount = 1:num_Sample
             isNonStatDistOccur_sample(i) = 1;
         elseif Urms_sample(i) < (Swell_tr - hysteresis) && isSwell == 1
             isSwell = 0;
+            if num == 1
+                Swell(SwellCount,4) = 0;
+                Swell(SwellCount,5) = i;
+                Swell(SwellCount,6) = docount;
+            else
+                Swell(SwellCount,4) = length(U_rms);
+                Swell(SwellCount,5) = i;
+                Swell(SwellCount,6) = docount;
+            end
         end
 
         if Urms_sample(i) < Dip_tr && isDip == 0 && Urms_sample(i) > Interruption_tr
@@ -128,6 +146,15 @@ for docount = 1:num_Sample
             DipTime(timecount,DipCount) = 1;
             DipSpec(timecount,DipCount) = Urms_sample(i);
             isNonStatDistOccur_sample(i) = 2;
+            if num == 1
+                Dip(DipCount,1) = 0;
+                Dip(DipCount,2) = i;
+                Dip(DipCount,3) = ducount;
+            else
+                Dip(DipCount,1) = length(U_rms);
+                Dip(DipCount,2) = i;
+                Dip(DipCount,3) = docount;
+            end
         elseif Urms_sample(i) < (Dip_tr + hysteresis) && isDip == 1 && Urms_sample(i) > Interruption_tr
             timecount = timecount + 1;
             DipTime(timecount,DipCount) = 1;
@@ -135,6 +162,26 @@ for docount = 1:num_Sample
             isNonStatDistOccur_sample(i) = 2;
         elseif Urms_sample(i) > (Dip_tr + hysteresis) && isDip == 1
             isDip = 0;
+            if num == 1
+                Dip(DipCount,4) = 0;
+                Dip(DipCount,5) = i;
+                Dip(DipCount,6) = docount;
+            else
+                Dip(DipCount,4) = length(U_rms);
+                Dip(DipCount,5) = i;
+                Dip(DipCount,6) = docount;
+            end
+        elseif Urms_sample(1) < Interruption_tr && isDip == 1
+            isDip = 0;
+            if num == 1
+                Dip(DipCount,4) = 0;
+                Dip(DipCount,5) = i;
+                Dip(DipCount,6) = docount;
+            else
+                Dip(DipCount,4) = length(U_rms);
+                Dip(DipCount,5) = i;
+                Dip(DipCount,6) = docount;
+            end
         end
 
         if Urms_sample(i) < Interruption_tr && isInterruption == 0
@@ -144,7 +191,15 @@ for docount = 1:num_Sample
             InterruptionTime(timecount,InterruptionCount) = 1;
             InterruptionSpec(timecount,InterruptionCount) = Urms_sample(i);
             isNonStatDistOccur_sample(i) = 3;
-            isDip = 0;
+            if num == 1
+                Interruption(InterruptionCount,1) = 0;
+                Interruption(InterruptionCount,2) = i;
+                Interruption(InterruptionCount,3) = ducount;
+            else
+                Interruption(InterruptionCount,1) = length(U_rms);
+                Interruption(InterruptionCount,2) = i;
+                Interruption(InterruptionCount,3) = docount;
+            end
         elseif Urms_sample(i) < Interruption_tr && isInterruption == 1
             timecount = timecount + 1;
             InterruptionTime(timecount,InterruptionCount) = 1;
@@ -152,6 +207,15 @@ for docount = 1:num_Sample
             isNonStatDistOccur_sample(i) = 3;
         elseif Urms_sample(i) > Interruption_tr && isInterruption == 1
             isInterruption = 0;
+            if num == 1
+                Interruption(InterruptionCount,4) = 0;
+                Interruption(InterruptionCount,5) = i;
+                Interruption(InterruptionCount,6) = docount;
+            else
+                Interruption(InterruptionCount,4) = length(U_rms);
+                Interruption(InterruptionCount,5) = i;
+                Interruption(InterruptionCount,6) = docount;
+            end
         end
     end
 

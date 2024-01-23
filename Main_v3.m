@@ -1,4 +1,4 @@
-%% Version: 3.0.3
+%% Version: 3.0.4
 clc
 clear
 close all
@@ -152,3 +152,21 @@ else
     end
 end
 fprintf('----------------------------------\n\n');
+
+I_Atool_start =("Do you want to start the interactive tool? (Y/N)\n");
+Usr_input = input(I_Atool_start,"s");
+if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == "是" ...
+        || Usr_input == "Oui" || Usr_input == "oui" || Usr_input == "Sí" || Usr_input == "sí" ||...
+        Usr_input == "Да" || Usr_input == "да" || Usr_input == "da" || Usr_input == "y" || Usr_input == "نعم" 
+    I_Atool_end =("Which kinds of distortion do you want to analysis? (Dip/Interruption/Swell)\nEnter any other thing to exit\n");
+    Usr_input_2 = input(I_Atool_end,"s");
+    while Usr_input_2 == Dip || Usr_input_2 == Interruption || Usr_input_2 == Swell
+        fprintf('You have chosen %s.\n',Usr_input_2);
+        I_Atool("Which number of this kind disturbance do you want to have a look?\n (e.g. For No.1, type 1)\n ");
+        Usr_input_3 = input(I_Atool,"s");
+        fprintf('----------------------------------\n\n');
+        I_Atool_end =("Which kinds of distortion do you want to analysis? (Dip/Interruption/Swell)\nEnter any other thing to exit\n");
+        Usr_input_2 = input(I_Atool_end,"s");
+    end
+else
+end
