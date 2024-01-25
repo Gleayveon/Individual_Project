@@ -1,4 +1,4 @@
-%% Version: 3.0.5a
+%% Version: 3.0.5b
 clc
 clear
 close all
@@ -246,11 +246,99 @@ if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == 
                 fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s,      EVC is %s.\n'...
                     ,k,Setting(i+k-1,1),Setting(i+k-1,2),Setting(i+k-1,3),Setting(i+k-1,4));
             end
-            
+            dist_len = Swell_time(Usr_input_3);
+            x_data=SwellSpec(1:dist_len,Usr_input_3);
+            pd = fitdist(x_data,'Normal');
+            pd_avg = mean(pd);
+            x_pdf = [1:0.1:100];
+            y_data = pdf(pd,x_pdf);
+
+            figure
+            histogram(x_data,'Normalization','pdf')
+            line(x_pdf,y_data)
+            title('Distribution of this disturbance')
         elseif Usr_input_2 == "Interruption"
+            fprintf('----------------------------------\n\n');
+            fprintf('Interruption No.%d \n',Usr_input_3);
+            if Setting_Time(Usr_input_3,1) == 0 ...
+                disp_starttime = time_5MS(40*Interruption(Usr_input_3,3)+Interruption(Usr_input_3,2)); % 40 here as 5ms is used
+                disp_endtime = time_5MS(40*Interruption(Usr_input_3,6)+Interruption(Usr_input_3,5));
+            else 
+                disp_starttime = time_5MS(Interruption(Usr_input_3,1)+Interruption(Usr_input_3,2));
+                disp_endtime = time_5MS(Interruption(Usr_input_3,4)+Interruption(Usr_input_3,5));
+            end
+            fprintf('Start time: %s\n End time: %s\n',disp_starttime, disp_endtime);
+            for i = 1:length(Setting)
+                if Setting_Time(i) < disp_starttime
+                    continue
+                else
+                break
+                end
+            end
+            for j = 1:length(Setting)
+                if Setting_Time(j) < disp_endtime
+                    continue
+                else
+                break
+                end
+            end
+            fprintf('During thie disturbance, the network is under the following setting(s)\n');
+            for k = 1:(j-i+1)
+                fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s,      EVC is %s.\n'...
+                    ,k,Setting(i+k-1,1),Setting(i+k-1,2),Setting(i+k-1,3),Setting(i+k-1,4));
+            end
+            dist_len = Interruption_time(Usr_input_3);
+            x_data=InterruptionSpec(1:dist_len,Usr_input_3);
+            pd = fitdist(x_data,'Normal');
+            pd_avg = mean(pd);
+            x_pdf = [1:0.1:100];
+            y_data = pdf(pd,x_pdf);
 
+            figure
+            histogram(x_data,'Normalization','pdf')
+            line(x_pdf,y_data)
+            title('Distribution of this disturbance')
         else
+            fprintf('----------------------------------\n\n');
+            fprintf('Dip No.%d \n',Usr_input_3);
+            if Setting_Time(Usr_input_3,1) == 0 ...
+                disp_starttime = time_5MS(40*Dip(Usr_input_3,3)+Dip(Usr_input_3,2)); % 40 here as 5ms is used
+                disp_endtime = time_5MS(40*Dip(Usr_input_3,6)+Dip(Usr_input_3,5));
+            else 
+                disp_starttime = time_5MS(Dip(Usr_input_3,1)+Dip(Usr_input_3,2));
+                disp_endtime = time_5MS(Dip(Usr_input_3,4)+Dip(Usr_input_3,5));
+            end
+            fprintf('Start time: %s\n End time: %s\n',disp_starttime, disp_endtime);
+            for i = 1:length(Setting)
+                if Setting_Time(i) < disp_starttime
+                    continue
+                else
+                break
+                end
+            end
+            for j = 1:length(Setting)
+                if Setting_Time(j) < disp_endtime
+                    continue
+                else
+                break
+                end
+            end
+            fprintf('During thie disturbance, the network is under the following setting(s)\n');
+            for k = 1:(j-i+1)
+                fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s,      EVC is %s.\n'...
+                    ,k,Setting(i+k-1,1),Setting(i+k-1,2),Setting(i+k-1,3),Setting(i+k-1,4));
+            end
+            dist_len = Dip_time(Usr_input_3);
+            x_data=DipSpec(1:dist_len,Usr_input_3);
+            pd = fitdist(x_data,'Normal');
+            pd_avg = mean(pd);
+            x_pdf = [1:0.1:100];
+            y_data = pdf(pd,x_pdf);
 
+            figure
+            histogram(x_data,'Normalization','pdf')
+            line(x_pdf,y_data)
+            title('Distribution of this disturbance')
         end
         fprintf('----------------------------------\n\n');
         I_Atool_end =("Which kinds of distortion do you want to analysis? (Dip/Interruption/Swell)\nEnter any other thing to exit\n");
