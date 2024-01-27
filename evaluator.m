@@ -5,7 +5,7 @@ function [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
     RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
     RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
     RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
-    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,leftover]...
+    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,leftover]...
     = evaluator(num,listing,sample_window_length,group_size,Fs,Ts,U_avg,U_rms,...
     I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,isNonStatDistOccur,...
     hysteresis,Swell_tr,Dip_tr,Interruption_tr,timecount,isSwell,isDip,...
@@ -14,11 +14,11 @@ function [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
     RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
     RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
     RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
-    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,leftover)
+    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,leftover)
 
 %% Data Loading
 % Version: 3.0.4
-cd 'A:\Lin project\Data\'  % Here is the path of where Data file locate
+cd 'A:\Lin project'\Data\  % Here is the path of where Data file locate
 
 Name = listing(num).name; % Name of the files
 data = tdmsread(Name); 
@@ -253,6 +253,10 @@ for docount = 1:num_Sample
         RDF_L3_sample = NaN;
         Peak_Ripple_Factor_L3_sample = NaN;
         RMS_Ripple_Factor_L3_sample = NaN;
+        Uripple = NaN(length(Urms_sample),1);
+        Iripple_L1 = NaN(length(current_rms_sample_L1),1);
+        Iripple_L2 = NaN(length(current_rms_sample_L2),1);
+        Iripple_L3 = NaN(length(current_rms_sample_L3),1);
     else
         % Voltage
         Y = fft(Urms_sample);
@@ -324,6 +328,24 @@ for docount = 1:num_Sample
         Iripple_L3 = sqrt((current_rms_sample_L3.^2) - (current_mean_sample_L3 .^2));
         RMS_Ripple_Factor_L3_sample = mean(Iripple_L3./abs(current_mean_sample_L3)) * 100;
     end
+    if num == length(listing) && docount == num_Sample
+        if isDip == 1
+            Dip(DipCount,4) = length(U_rms);
+            Dip(DipCount,5) = i;
+            Dip(DipCount,6) = docount;
+        elseif isInterruption == 1
+            Interruption(InterruptionCount,4) = length(U_rms);
+            Interruption(InterruptionCount,5) = i;
+            Interruption(InterruptionCount,6) = docount;
+        elseif isSwell == 1
+            Swell(SwellCount,4) = length(U_rms);
+            Swell(SwellCount,5) = i;
+            Swell(SwellCount,6) = docount;
+        else
+            break
+        end
+    end
+        
     %% Storage
 if num == 1 && docount == 1
     U_avg = cat(1,U_avg,Uavg_sample);

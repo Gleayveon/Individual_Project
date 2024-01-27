@@ -3,14 +3,14 @@ clc
 clear
 close all
 
-cd 'A:\Lin project\Data\'
+cd 'A:\Lin project'\Data\
 listing = dir('*.tdms');
 len = length(listing);
 start_time = datetime('2023-09-26 13:47:47', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
 sample_window_length = 200000;  %unit is microsecond
 Fs=1000000; % Sampling frequency
 Ts=1/Fs;    % Sampling period
-group_size = 5000;  %unit is microsecond
+group_size = 10000;  %unit is microsecond
 U_nominal = 700;
 
 U_avg =  0;
@@ -23,13 +23,7 @@ I_avg_L3 = 0;
 I_rms_L3 = 0;
 
 leftover = 0;
-% Time Stamp
-time_5MS_SS = 5:5:5*length(U_avg);
-time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);
-time_5MS = cat(1, time_5MS_Cell{:});
-time_200MS_SS = 200:200:200*length(RDF_L1);
-time_200MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS, 'UniformOutput', false);
-time_200MS = cat(1, time_200MS_Cell{:});
+fprintf('Starting...\n\n');
 % Network Settings
 Setting_Time(1)=datetime('2023-09-26 13:47:47', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
 Setting_Time(2)=datetime('2023-09-26 13:48:37', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
@@ -74,6 +68,7 @@ Setting(18,:)=["off" "off" "on" "off"];
 Setting(19,:)=["off" "off" "on" "Charging Nissan at EVCS3"];
 Setting(20,:)=["Reset system" "Reset system" "Reset system" "Reset system"];
 Setting(21,:)=["on" "on" "on" "off"];
+fprintf('System Settings Loaded.\n\n');
 % NonStationary
     isNonStatDistOccur = 0;
     hysteresis = 0.02*U_nominal;
@@ -93,6 +88,9 @@ Setting(21,:)=["on" "on" "on" "off"];
     DipSpec = 0;
     SwellSpec = 0;
     InterruptionSpec = 0;
+    Dip = 0;
+    Swell = 0;
+    Interruption = 0;
 %Stationaty
     U_ripple = 0;
     RDF_Voltage = 0;
@@ -120,7 +118,7 @@ for num = 1:len
     RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
     RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
     RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
-    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,leftover]...
+    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,leftover]...
     = evaluator(num,listing,sample_window_length,group_size,Fs,Ts,U_avg,U_rms,...
     I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,isNonStatDistOccur,...
     hysteresis,Swell_tr,Dip_tr,Interruption_tr,timecount,isSwell,isDip,...
@@ -129,8 +127,9 @@ for num = 1:len
     RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
     RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
     RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
-    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,leftover);
+    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,leftover);
 end
+    fprintf('Data Analysis Finished.\n\n');
 
     Swell_time = 0;
     Swell_spec = U_nominal;
@@ -141,6 +140,15 @@ end
     Swell_timesum = 0;
     Dip_timesum = 0;
     Interruption_timesum = 0;
+
+% Time Stamp
+    time_5MS_SS = 10:10:10*length(U_avg);
+    time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);
+    time_5MS = cat(1, time_5MS_Cell{:});
+    time_200MS_SS = 200:200:200*length(RDF_L1);
+    time_200MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS, 'UniformOutput', false);
+    time_200MS = cat(1, time_200MS_Cell{:});
+    fprintf('Time Stemps Allocated.\n\n');
 
 for i = 1:SwellCount
     Swell_timesum = Swell_timesum + group_size * sum(SwellTime(:,i));
@@ -221,14 +229,14 @@ if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == 
         else
         end
         fprintf('You have chosen %s.\n',Usr_input_2);
-        I_Atool("Which number of this kind disturbance do you want to have a look?\n (e.g. For No.1, type 1)\n ");
-        Usr_input_3 = input(I_Atool,"s");
+        I_Atool = ("Which number of this kind disturbance do you want to have a look?\n (e.g. For No.1, type 1)\n ");
+        Usr_input_3 = input(I_Atool);
         if Usr_input_2 == "Swell"
             fprintf('----------------------------------\n\n');
             fprintf('Swell No.%d \n',Usr_input_3);
-            if Setting_Time(Usr_input_3,1) == 0 ...
-                disp_starttime = time_5MS(40*Swell(Usr_input_3,3)+Swell(Usr_input_3,2)); % 40 here as 5ms is used
-                disp_endtime = time_5MS(40*Swell(Usr_input_3,6)+Swell(Usr_input_3,5));
+            if Swell(Usr_input_3,1) == 0 ...
+                disp_starttime = time_5MS(20*Swell(Usr_input_3,3)+Swell(Usr_input_3,2)); % 40 here as 5ms is used
+                disp_endtime = time_5MS(20*Swell(Usr_input_3,6)+Swell(Usr_input_3,5));
             else 
                 disp_starttime = time_5MS(Swell(Usr_input_3,1)+Swell(Usr_input_3,2));
                 disp_endtime = time_5MS(Swell(Usr_input_3,4)+Swell(Usr_input_3,5));
@@ -267,9 +275,9 @@ if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == 
         elseif Usr_input_2 == "Interruption"
             fprintf('----------------------------------\n\n');
             fprintf('Interruption No.%d \n',Usr_input_3);
-            if Setting_Time(Usr_input_3,1) == 0 ...
-                disp_starttime = time_5MS(40*Interruption(Usr_input_3,3)+Interruption(Usr_input_3,2)); % 40 here as 5ms is used
-                disp_endtime = time_5MS(40*Interruption(Usr_input_3,6)+Interruption(Usr_input_3,5));
+            if Interruption(Usr_input_3,1) == 0 ...
+                disp_starttime = time_5MS(20*Interruption(Usr_input_3,3)+Interruption(Usr_input_3,2)); % 40 here as 5ms is used
+                disp_endtime = time_5MS(20*Interruption(Usr_input_3,6)+Interruption(Usr_input_3,5));
             else 
                 disp_starttime = time_5MS(Interruption(Usr_input_3,1)+Interruption(Usr_input_3,2));
                 disp_endtime = time_5MS(Interruption(Usr_input_3,4)+Interruption(Usr_input_3,5));
@@ -308,9 +316,9 @@ if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == 
         else
             fprintf('----------------------------------\n\n');
             fprintf('Dip No.%d \n',Usr_input_3);
-            if Setting_Time(Usr_input_3,1) == 0 ...
-                disp_starttime = time_5MS(40*Dip(Usr_input_3,3)+Dip(Usr_input_3,2)); % 40 here as 5ms is used
-                disp_endtime = time_5MS(40*Dip(Usr_input_3,6)+Dip(Usr_input_3,5));
+            if Dip(Usr_input_3,1) == 0 ...
+                disp_starttime = time_5MS(20*Dip(Usr_input_3,3)+Dip(Usr_input_3,2)); % 40 here as 5ms is used
+                disp_endtime = time_5MS(20*Dip(Usr_input_3,6)+Dip(Usr_input_3,5));
             else 
                 disp_starttime = time_5MS(Dip(Usr_input_3,1)+Dip(Usr_input_3,2));
                 disp_endtime = time_5MS(Dip(Usr_input_3,4)+Dip(Usr_input_3,5));
@@ -335,7 +343,7 @@ if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == 
                 fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s,      EVC is %s.\n'...
                     ,k,Setting(i+k-1,1),Setting(i+k-1,2),Setting(i+k-1,3),Setting(i+k-1,4));
             end
-            dist_len = Dip_time(Usr_input_3);
+            dist_len = Dip_time(Usr_input_3)/group_size;
             x_data=DipSpec(1:dist_len,Usr_input_3);
             pd = fitdist(x_data,'Normal');
             pd_avg = mean(pd);
