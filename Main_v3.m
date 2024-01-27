@@ -1,4 +1,4 @@
-%% Version: 3.0.5b
+%% Version: 3.0.5c
 clc
 clear
 close all
@@ -7,10 +7,10 @@ cd 'A:\Lin project\Data\'
 listing = dir('*.tdms');
 len = length(listing);
 start_time = datetime('2023-09-26 13:47:47', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
-sample_window_length = 200000;  %unit is us
+sample_window_length = 200000;  %unit is microsecond
 Fs=1000000; % Sampling frequency
 Ts=1/Fs;    % Sampling period
-group_size = 5000;  %unit is us
+group_size = 5000;  %unit is microsecond
 U_nominal = 700;
 
 U_avg =  0;
@@ -23,6 +23,13 @@ I_avg_L3 = 0;
 I_rms_L3 = 0;
 
 leftover = 0;
+% Time Stamp
+time_5MS_SS = 5:5:5*length(U_avg);
+time_5MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_5MS_SS, 'UniformOutput', false);
+time_5MS = cat(1, time_5MS_Cell{:});
+time_200MS_SS = 200:200:200*length(RDF_L1);
+time_200MS_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_200MS_SS, 'UniformOutput', false);
+time_200MS = cat(1, time_200MS_Cell{:});
 % Network Settings
 Setting_Time(1)=datetime('2023-09-26 13:47:47', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
 Setting_Time(2)=datetime('2023-09-26 13:48:37', 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
@@ -254,9 +261,9 @@ if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == 
             y_data = pdf(pd,x_pdf);
 
             figure
-            histogram(x_data,'Normalization','pdf')
+            histogram(x_data,'Normalization','pdf');
             line(x_pdf,y_data)
-            title('Distribution of this disturbance')
+            title('Distribution of the selected disturbance');
         elseif Usr_input_2 == "Interruption"
             fprintf('----------------------------------\n\n');
             fprintf('Interruption No.%d \n',Usr_input_3);
