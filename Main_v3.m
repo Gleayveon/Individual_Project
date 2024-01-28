@@ -1,4 +1,4 @@
-%% Version: 4.0.0
+%% Version: 4.0.1
 % clc
 % clear
 % close all
@@ -501,7 +501,7 @@ if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == 
                 end
             end
             figure
-            subplot(3,2,1)
+            subplot(2,3,1)
             time = time_5MS(start_5MS:termin_5MS);
             yyaxis left
             plot(time_5MS(start_5MS:termin_5MS),U_rms(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
@@ -517,7 +517,7 @@ if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == 
             legend('Voltage','Line 1','Line 2','Line 3');
             hold off
             title("RMS value of voltage and current during this period")
-            subplot(3,2,2)
+            subplot(2,3,2)
             yyaxis left
             plot(time_5MS(start_5MS:termin_5MS),U_ripple(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
             ylabel('V')
@@ -532,7 +532,7 @@ if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == 
             legend('Voltage','Line 1','Line 2','Line 3');
             hold off
             title('Ripple value of voltage and current during this period')
-            subplot(3,2,3)
+            subplot(2,3,3)
             yyaxis left
             plot(time_5MS(start_5MS:termin_5MS),U_avg(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
             ylabel('V')
@@ -547,7 +547,7 @@ if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == 
             legend('Voltage','Line 1','Line 2','Line 3');
             hold off
             title("Average value of voltage and current during this period");
-            subplot(3,2,4)
+            subplot(2,3,4)
             time = time_200MS(start_200MS:termin_200MS);
             yyaxis left
             plot(time_200MS(start_200MS:termin_200MS),RDF_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
@@ -563,7 +563,7 @@ if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == 
             legend('Voltage','Line 1','Line 2','Line 3');
             hold off
             title('RDF value of voltage and current during this period');
-            subplot(3,2,5)
+            subplot(2,3,5)
             yyaxis left
             plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
             ylabel('Percent (%)')
@@ -578,7 +578,7 @@ if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == 
             legend('Voltage','Line 1','Line 2','Line 3');
             hold off
             title('Peak Ripple Factor value of voltage and current during this period');
-            subplot(3,2,6)
+            subplot(2,3,6)
             yyaxis left
             plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
             ylabel('Percent (%)')
@@ -844,7 +844,7 @@ elseif Usr_input == "uuddlrlrab" || Usr_input == "UUDDLRLRAB"
             end
         end
         figure(Yuki)
-        subplot(3,2,1)
+        subplot(2,3,1)
         time = time_5MS(start_5MS:termin_5MS);
         yyaxis left
         plot(time_5MS(start_5MS:termin_5MS),U_rms(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
@@ -860,7 +860,7 @@ elseif Usr_input == "uuddlrlrab" || Usr_input == "UUDDLRLRAB"
         legend('Voltage','Line 1','Line 2','Line 3');
         hold off
         title("RMS value of voltage and current during this period")
-        subplot(3,2,2)
+        subplot(2,3,2)
         yyaxis left
         plot(time_5MS(start_5MS:termin_5MS),U_ripple(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
         ylabel('V')
@@ -875,7 +875,7 @@ elseif Usr_input == "uuddlrlrab" || Usr_input == "UUDDLRLRAB"
         legend('Voltage','Line 1','Line 2','Line 3');
         hold off
         title('Ripple value of voltage and current during this period')
-        subplot(3,2,3)
+        subplot(2,3,3)
         yyaxis left
         plot(time_5MS(start_5MS:termin_5MS),U_avg(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
         ylabel('V')
@@ -890,7 +890,7 @@ elseif Usr_input == "uuddlrlrab" || Usr_input == "UUDDLRLRAB"
         legend('Voltage','Line 1','Line 2','Line 3');
         hold off
         title("Average value of voltage and current during this period");
-        subplot(3,2,4)
+        subplot(2,3,4)
         time = time_200MS(start_200MS:termin_200MS);
         yyaxis left
         plot(time_200MS(start_200MS:termin_200MS),RDF_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
@@ -906,7 +906,7 @@ elseif Usr_input == "uuddlrlrab" || Usr_input == "UUDDLRLRAB"
         legend('Voltage','Line 1','Line 2','Line 3');
         hold off
         title('RDF value of voltage and current during this period');
-        subplot(3,2,5)
+        subplot(2,3,5)
         yyaxis left
         plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
         ylabel('Percent (%)')
@@ -921,7 +921,7 @@ elseif Usr_input == "uuddlrlrab" || Usr_input == "UUDDLRLRAB"
         legend('Voltage','Line 1','Line 2','Line 3');
         hold off
         title('Peak Ripple Factor value of voltage and current during this period');
-        subplot(3,2,6)
+        subplot(2,3,6)
         yyaxis left
         plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
         ylabel('Percent (%)')
