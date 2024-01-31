@@ -5,7 +5,7 @@ function [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
     RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
     RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
     RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
-    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,leftover]...
+    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,MLPath,DTPath,leftover]...
     = evaluator(num,listing,sample_window_length,group_size,Fs,Ts,U_avg,U_rms,...
     I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,isNonStatDistOccur,...
     hysteresis,Swell_tr,Dip_tr,Interruption_tr,timecount,isSwell,isDip,...
@@ -14,11 +14,11 @@ function [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
     RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
     RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
     RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
-    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,leftover)
+    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,MLPath,DTPath,leftover)
 
 %% Data Loading
-% Version: 3.0.4
-cd 'A:\Lin project'\Data\  % Here is the path of where Data file locate
+% Version: 4.1.0
+cd(string(DTPath)) % Here is the path of where Data file locate
 
 Name = listing(num).name; % Name of the files
 data = tdmsread(Name); 
@@ -51,19 +51,19 @@ else
     Data_L2_Current = cat(1,leftover(:,3),L2_Current);
     Data_L3_Current = cat(1,leftover(:,4),L3_Current);
 end
-num_Sample = floor(length(Data_Voltage)/200000); % Cut the data to 200ms window
+num_Sample = floor(length(Data_Voltage)/sample_window_length); % Cut the data to 200ms window
 
     clear leftover;
-    leftover = horzcat(Data_Voltage(200000*num_Sample + 1:end), Data_L1_Current(200000*num_Sample + 1:end),...
-        Data_L2_Current(200000*num_Sample + 1:end),Data_L3_Current(200000*num_Sample + 1:end)); % Generate this files's leftover
+    leftover = horzcat(Data_Voltage(sample_window_length*num_Sample + 1:end), Data_L1_Current(sample_window_length*num_Sample + 1:end),...
+        Data_L2_Current(sample_window_length*num_Sample + 1:end),Data_L3_Current(sample_window_length*num_Sample + 1:end)); % Generate this files's leftover
 
 %% Calculation
 for docount = 1:num_Sample
     
-    voltage = Data_Voltage(1+(docount-1)*200000:docount*200000);
-    current_L1 = Data_L1_Current(1+(docount-1)*200000:docount*200000);
-    current_L2 = Data_L2_Current(1+(docount-1)*200000:docount*200000);
-    current_L3 = Data_L3_Current(1+(docount-1)*200000:docount*200000);
+    voltage = Data_Voltage(1+(docount-1)*sample_window_length:docount*sample_window_length);
+    current_L1 = Data_L1_Current(1+(docount-1)*sample_window_length:docount*sample_window_length);
+    current_L2 = Data_L2_Current(1+(docount-1)*sample_window_length:docount*sample_window_length);
+    current_L3 = Data_L3_Current(1+(docount-1)*sample_window_length:docount*sample_window_length);
 
     %% Mean & RMS Calculation
     
@@ -78,7 +78,7 @@ for docount = 1:num_Sample
     k = 1;
     j = 1;
     temp = zeros(group_size,1);
-    for i = 1:200000
+    for i = 1:sample_window_length
         temp(k,1) = voltage(i);
         temp(k,2) = current_L1(i);
         temp(k,3) = current_L2(i);
@@ -272,7 +272,7 @@ for docount = 1:num_Sample
 
         Peak = max(Urms_sample);
         Valley = min(Urms_sample);
-        Peak_Ripple_Factor_Voltage_sample = (Peak - Valley)/mean(Uavg_sample);
+        Peak_Ripple_Factor_Voltage_sample = (Peak - Valley)/mean(Uavg_sample);%should change to U_nominal
 
         Uripple = sqrt((Urms_sample.^2) - (Uavg_sample .^2));
         RMS_Ripple_Factor_Voltage_sample = mean(Uripple./Uavg_sample) * 100;
@@ -428,5 +428,5 @@ else
 end
 end
 fprintf(['Finished No.%d. So far, %d Swell(s), %d Dip(s), %d Interruption(s)\n'],num,SwellCount,DipCount,InterruptionCount);
-cd 'A:\Lin project\Individual_Project\' %This is the path of THIS file locate
+cd(string(MLPath)) %This is the path of THIS file locate
 end

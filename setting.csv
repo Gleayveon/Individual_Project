@@ -1,0 +1,21 @@
+﻿on,on,on,off
+off,off,on,off
+off,off,on,Hyundai Ioniq at EVCS3 (Charging did not work)
+Reset system,Reset system,Reset system,Reset system
+on,on,on,Charging Ioniq at EVCS3
+on,on,on,Discharging Nissan Leaf at EVCS 3
+on,on,off,Discharging Nissan Leaf at EVCS 3
+on,on,off,Charging Nissan at EVCS3
+on,on,on,Charging Nissan at EVCS3
+on,on,on,off
+off,on,off,off
+off,off,off,off
+off,off,on,off
+off,off,on,Charging Nissan at EVCS3
+on,on,on,Charging Nissan at EVCS3
+on,on,on,off
+off,off?,on,Charging Ioniq at EVCS3
+off,off,on,off
+off,off,on,Charging Nissan at EVCS3
+Reset system,Reset system,Reset system,Reset system
+on,on,on,off
