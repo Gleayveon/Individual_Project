@@ -2,20 +2,23 @@
 % clc
 % clear
 % close all
-% config = readlines("config.csv");
-% MLPath = config(2);
-% DTPath = config(3);
-% U_nominal = double(config(4));
-% group_size = double(config(5));
-% sample_window_length = double(config(6));
-% Fs = double(config(7));
-% GENRPT = double(config(8));
-% start_time = datetime(string(config(8)), 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
+config = readlines("config.csv");
+MLPath = config(2);
+DTPath = config(3);
+U_nominal = double(config(4));
+group_size = double(config(5));
+sample_window_length = double(config(6));
+Fs = double(config(7));
+GENRPT = str2num(config(9));
+start_time = datetime(string(config(8)), 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
+Ts=1/Fs;    % Sampling period
+
 % cd(string(DTPath))
 % listing = dir('*.tdms');
 % len = length(listing);
-% Ts=1/Fs;    % Sampling period
+
 % 
+% GENRPT = 0;
 % U_avg =  0;
 % U_rms = 0;
 % I_avg_L1 = 0;
@@ -29,15 +32,15 @@
 % fprintf('Starting...\n\n');
 % Network Settings
 % cd(string(MLPath))
-% if exist("setting_time.csv", 'file') == 2 && exist("setting.csv",'file') == 2
-%     Setting_Times = readlines("setting_time.csv");
-%     for i = 1:length(Setting_Times)
-%         Setting_Time(i) = datetime(string(Setting_Times(i)), 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
-%     end
-%     Setting = readtable("setting.csv",'ReadVariableNames', false);
-% else
-% end
-% fprintf('System Settings Loaded.\n\n');
+if exist("setting_time.csv", 'file') == 2 && exist("setting.csv",'file') == 2
+    Setting_Times = readlines("setting_time.csv");
+    for i = 1:length(Setting_Times)
+        Setting_Time(i) = datetime(string(Setting_Times(i)), 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
+    end
+    Setting = readtable("setting.csv",'ReadVariableNames', false);
+else
+end
+fprintf('System Settings Loaded.\n\n');
 % % NonStationary
 %     isNonStatDistOccur = 0;
 %     hysteresis = 0.02*U_nominal;
@@ -307,7 +310,6 @@ if GENRPT == 1
     else
     end
     ylim([1 3.5]);
-    Setting = table2array(Setting);
     exportgraphics(fig,'RMS_AVG_Plot.jpg');
     RMS_AVG_Plot = Image('RMS_AVG_Plot.jpg');
     RMS_AVG_Plot.Height = "3in";
@@ -370,16 +372,28 @@ if GENRPT == 1
                         end
                     end
                     if sum(Tolerance_Within1) < 1000000 && sum(Tolerance_Within2) < 100000 && sum(Tolerance_Without) == 0
-                        CH_3 = sprintf(['\n·-·-·-·-·-·-·-·-·-·-\nAll samples during this distortion are within the tolerance of Voltage Dip\nTherefore, this distortion can be tolerate.\n\n' ...
-                            '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
-                            '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+                        CH_3 = sprintf(['\n·-·-·-·-·-·-·-·-·-·-']);
+                        append(rpt,CH_3);
+                        Ch_3 = sprintf(['\nAll samples during this distortion are within the tolerance of Voltage Dip\nTherefore, this distortion can be tolerate.\n\n']);
+                        append(rpt,Ch_3);
+                        Ch_3 = sprintf(['(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n']);
+                        append(rpt,Ch_3);
+                        Ch_3 = sprintf(['(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+                        append(rpt,Ch_3);
                     else
-                        CH_3 = sprintf(['\n·-·-·-·-·-·-·-·-·-·-\nThis distortion is severe and can not be tolerate.\n\n' ...
-                            '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
-                            '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+                        CH_3 = sprintf(['\n·-·-·-·-·-·-·-·-·-·-\n']);
+                        append(rpt,CH_3);
+                        Ch_3 = sprintf(['\nThis distortion is severe and can not be tolerate.\n\n']);
+                        append(rpt,Ch_3);
+                        Ch_3 = sprintf(['(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n']);
+                        append(rpt,Ch_3);
+                        Ch_3 = sprintf(['(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+                        append(rpt,Ch_3);
                     end
-                    append(rpt,CH_3);
-                    CH_4 = sprintf('·-·-·-·-·-·-·-·-·-·-\nDuring this disturbance, the network is under the following setting(s)\n');
+                    
+                    CH_4 = sprintf('·-·-·-·-·-·-·-·-·-·-\n');
+                    append(rpt,CH_4);
+                    CH_4 = sprintf('During this disturbance, the network is under the following setting(s)\n');
                     append(rpt,CH_4);
                     for k = 1:(j-i+1)
                         CH_5 = sprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
@@ -457,17 +471,29 @@ if GENRPT == 1
                         end
                     end
                     if sum(Tolerance_Within1) < 1000000 && sum(Tolerance_Within2) < 100000 && sum(Tolerance_Without) == 0
-                        CH_3 = sprintf(['\n·-·-·-·-·-·-·-·-·-·-\nAll samples during this distortion are within the tolerance of Voltage Swell\nTherefore, this distortion can be tolerate.\n\n' ...
-                            '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
-                            '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+                        CH_3 = sprintf(['\n·-·-·-·-·-·-·-·-·-·-']);
+                        append(rpt,CH_3);
+                        Ch_3 = sprintf(['\nAll samples during this distortion are within the tolerance of Voltage Dip\nTherefore, this distortion can be tolerate.\n\n']);
+                        append(rpt,Ch_3);
+                        Ch_3 = sprintf(['(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n']);
+                        append(rpt,Ch_3);
+                        Ch_3 = sprintf(['(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+                        append(rpt,Ch_3);
                     else
-                        CH_3 = sprintf(['\n·-·-·-·-·-·-·-·-·-·-\nThis distortion is severe and can not be tolerate.\n\n' ...
-                            '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
-                            '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+                        CH_3 = sprintf(['\n·-·-·-·-·-·-·-·-·-·-\n']);
+                        append(rpt,CH_3);
+                        Ch_3 = sprintf(['\nThis distortion is severe and can not be tolerate.\n\n']);
+                        append(rpt,Ch_3);
+                        Ch_3 = sprintf(['(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n']);
+                        append(rpt,Ch_3);
+                        Ch_3 = sprintf(['(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+                        append(rpt,Ch_3);
                     end
-                    append(rpt,CH_3);
-                    CH_4 = sprintf('·-·-·-·-·-·-·-·-·-·-\nDuring this disturbance, the network is under the following setting(s)\n');
-                    append(rpt,CH_4)
+                    
+                    CH_4 = sprintf('·-·-·-·-·-·-·-·-·-·-\n');
+                    append(rpt,CH_4);
+                    CH_4 = sprintf('During this disturbance, the network is under the following setting(s)\n');
+                    append(rpt,CH_4);
                     for k = 1:(j-i+1)
                         CH_5 = sprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
                             ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
@@ -524,16 +550,28 @@ if GENRPT == 1
                         end
                     end
                     if Interruption_time(Usr_input_3) < 10000
-                        CH_3 = sprintf(['\n·-·-·-·-·-·-·-·-·-·-\nAll samples during this distortion are within the tolerance of Voltage Swell\nTherefore, this distortion can be tolerate.\n\n' ...
-                            '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
-                            '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+                        CH_3 = sprintf(['\n·-·-·-·-·-·-·-·-·-·-']);
+                        append(rpt,CH_3);
+                        Ch_3 = sprintf(['\nAll samples during this distortion are within the tolerance of Voltage Dip\nTherefore, this distortion can be tolerate.\n\n']);
+                        append(rpt,Ch_3);
+                        Ch_3 = sprintf(['(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n']);
+                        append(rpt,Ch_3);
+                        Ch_3 = sprintf(['(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+                        append(rpt,Ch_3);
                     else
-                        CH_3 = sprintf(['\n·-·-·-·-·-·-·-·-·-·-\nThis distortion is severe and can not be tolerate.\n\n' ...
-                            '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
-                            '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+                        CH_3 = sprintf(['\n·-·-·-·-·-·-·-·-·-·-\n']);
+                        append(rpt,CH_3);
+                        Ch_3 = sprintf(['\nThis distortion is severe and can not be tolerate.\n\n']);
+                        append(rpt,Ch_3);
+                        Ch_3 = sprintf(['(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n']);
+                        append(rpt,Ch_3);
+                        Ch_3 = sprintf(['(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+                        append(rpt,Ch_3);
                     end
-                    append(rpt,CH_3);
-                    CH_4 = sprintf('·-·-·-·-·-·-·-·-·-·-\nDuring this disturbance, the network is under the following setting(s)\n');
+                    
+                    CH_4 = sprintf('·-·-·-·-·-·-·-·-·-·-\n');
+                    append(rpt,CH_4);
+                    CH_4 = sprintf('During this disturbance, the network is under the following setting(s)\n');
                     append(rpt,CH_4);
                     for k = 1:(j-i+1)
                         CH_5 = sprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
