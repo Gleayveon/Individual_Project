@@ -1,4 +1,5 @@
-﻿on,on,on,off
+﻿AFE,Capacitor,PV,EVC
+on,on,on,off
 off,off,on,off
 off,off,on,Hyundai Ioniq at EVCS3 (Charging did not work)
 Reset system,Reset system,Reset system,Reset system

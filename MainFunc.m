@@ -1,4 +1,4 @@
-%% Version: 4.1.1
+%% Version: 4.2.0
 % clc
 % clear
 % close all
@@ -338,14 +338,14 @@ if GENRPT == 1
                     end
                     CH_2 = sprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
                     append(rpt,CH_2);
-                    for i = 1:length(Setting)
+                    for i = 1:length(Setting)-1
                         if Setting_Time(i) < disp_starttime
                             continue
                         else
                             break
                         end
                     end
-                    for j = 1:length(Setting)
+                    for j = 1:length(Setting)-1
                         if Setting_Time(j) < disp_endtime
                             continue
                         else
@@ -397,7 +397,7 @@ if GENRPT == 1
                     append(rpt,CH_4);
                     for k = 1:(j-i+1)
                         CH_5 = sprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
-                            ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
+                            ,k,string(Setting(i+k,1)),string(Setting(i+k,2)),string(Setting(i+k,3)),string(Setting(i+k,4)));
                         append(rpt,CH_5);
                     end
                     dist_len = Dip_time(Usr_input_3)/group_size;
@@ -437,14 +437,14 @@ if GENRPT == 1
                     end
                     CH_2 = sprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
                     append(rpt,CH_2);
-                    for i = 1:length(Setting)
+                    for i = 1:length(Setting)-1
                         if Setting_Time(i) < disp_starttime
                             continue
                         else
                             break
                         end
                     end
-                    for j = 1:length(Setting)
+                    for j = 1:length(Setting)-1
                         if Setting_Time(j) < disp_endtime
                             continue
                         else
@@ -496,7 +496,7 @@ if GENRPT == 1
                     append(rpt,CH_4);
                     for k = 1:(j-i+1)
                         CH_5 = sprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
-                            ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
+                            ,k,string(Setting(i+k,1)),string(Setting(i+k,2)),string(Setting(i+k,3)),string(Setting(i+k,4)));
                         append(rpt,CH_5);
                     end
                     dist_len = Swell_time(Usr_input_3)/group_size;
@@ -535,14 +535,14 @@ if GENRPT == 1
                     end
                     CH_2 = sprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
                     append(rpt,CH_2);
-                    for i = 1:length(Setting)
+                    for i = 1:length(Setting)-1
                         if Setting_Time(i) < disp_starttime
                             continue
                         else
                             break
                         end
                     end
-                    for j = 1:length(Setting)
+                    for j = 1:length(Setting)-1
                         if Setting_Time(j) < disp_endtime
                             continue
                         else
@@ -575,7 +575,7 @@ if GENRPT == 1
                     append(rpt,CH_4);
                     for k = 1:(j-i+1)
                         CH_5 = sprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
-                            ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
+                            ,k,string(Setting(i+k,1)),string(Setting(i+k,2)),string(Setting(i+k,3)),string(Setting(i+k,4)));
                         append(rpt,CH_5);
                     end
                     dist_len = Interruption_time(Usr_input_3)/group_size;
@@ -601,9 +601,314 @@ if GENRPT == 1
                         append(rpt,InterruptionChart);
                     end
                 end
-            case 'SystemSetting_OA'
-
+            case 'SystemSettings_OA'
+                        CH_7 = sprintf('The system seeting during the analysis peroiod are shown in the following table:');
+                        append(rpt,CH_7);
+                        Table2Disp = horzcat(Setting_Times,Setting(2:end,:));
+                        TableTitle = ['Time'];
+                        TableTitle = horzcat(TableTitle,Setting(1,:));
+                        Table2Disp = cat(1,TableTitle,Table2Disp);
+                        table1 =  FormalTable(Table2Disp);
+                        table1.StyleName = 'myTableStyle';
+                        table1.Style = [table1.Style,{ResizeToFitContents(true),Width('6in')}, ...
+                            {HAlign('center')}];
+                        append(rpt,table1);
             case 'SystemSetting_Sec'
+                % Small_interval = zeros(length(U_rms),1);
+                % Large_interval = zeros(length(RMS_Ripple_Factor_Voltage),1);
+                % for Usr_input_3  = 1:length(Setting_Times)
+                % 
+                %     if Usr_input_3 == 1
+                %         start_5MS = 1;
+                %         start_200MS = 1;
+                %     else
+                %         temp = 0;
+                %         for j = 1:length(time_5MS)
+                %             if time_5MS(j) <= Setting_Time(Usr_input_3)
+                %                 temp = temp + 1;
+                %             else
+                %                 start_5MS = temp;
+                %                 start_200MS = floor(start_5MS/(sample_window_length/group_size));
+                %                 if floor(start_5MS/(sample_window_length/group_size)) == 0
+                %                     start_200MS = 1;
+                %                 end
+                %                 break
+                %             end
+                %         end
+                %     end
+                %     if Usr_input_3 == length(Setting_Time)
+                %         termin_5MS = length(time_5MS);
+                %         termin_200MS = floor(length(time_5MS)/(sample_window_length/group_size));
+                %     else
+                %         temp = 0;
+                %         for j = 1:length(time_5MS)
+                %             if time_5MS(j) <= Setting_Time(Usr_input_3 + 1)
+                %                 temp = temp + 1;
+                %             else
+                %                 termin_5MS = temp;
+                %                 termin_200MS = floor(termin_5MS/(sample_window_length/group_size));
+                %                 break
+                %             end
+                %         end
+                %     end
+                %     Small_interval(start_5MS:termin_5MS) = Usr_input_3;
+                %     Large_interval(start_200MS:termin_200MS) = Usr_input_3;
+                % end
+
+                CH_8 = sprintf('The following figures are the boxplot of RMS Voltage of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(U_rms,Small_interval);
+                title('RMS Voltage');
+                filename = sprintf('boxplot_RMS.png');
+                exportgraphics(fig,filename);
+                boxplot_RMSChart = Image(filename);
+                boxplot_RMSChart.Height = "2.6in";
+                boxplot_RMSChart.Width = "2.5in";
+                append(rpt,boxplot_RMSChart);
+
+                CH_8 = sprintf('The following figures are the boxplot of average Voltage of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(U_avg,Small_interval);
+                title('Average Voltage');
+                filename = sprintf('boxplot_avg.png');
+                exportgraphics(fig,filename);
+                boxplot_avgChart = Image(filename);
+                boxplot_avgChart.Height = "2.6in";
+                boxplot_avgChart.Width = "2.5in";
+                append(rpt,boxplot_avgChart);
+
+                CH_8 = sprintf('The following figures are the boxplot of ripple Voltage of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(U_ripple,Small_interval);
+                title('Ripple Voltage');
+                filename = sprintf('boxplot_ripple.png');
+                exportgraphics(fig,filename);
+                boxplot_rippleChart = Image(filename);
+                boxplot_rippleChart.Height = "2.6in";
+                boxplot_rippleChart.Width = "2.5in";
+                append(rpt,boxplot_rippleChart);
+
+                CH_8 = sprintf('The following figures are the boxplot of ripple current of line 1 different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(I_ripple_L1,Small_interval);
+                title('Ripple Voltage');
+                filename = sprintf('boxplot_ripple_L1.png');
+                exportgraphics(fig,filename);
+                boxplot_ripple_L1Chart = Image(filename);
+                boxplot_ripple_L1Chart.Height = "2.6in";
+                boxplot_ripple_L1Chart.Width = "2.5in";
+                append(rpt,boxplot_ripple_L1Chart);
+
+                CH_8 = sprintf('The following figures are the boxplot of ripple current of line 2 different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(I_ripple_L2,Small_interval);
+                title('Ripple Voltage');
+                filename = sprintf('boxplot_ripple_L2.png');
+                exportgraphics(fig,filename);
+                boxplot_ripple_L2Chart = Image(filename);
+                boxplot_ripple_L2Chart.Height = "2.6in";
+                boxplot_ripple_L2Chart.Width = "2.5in";
+                append(rpt,boxplot_ripple_L2Chart);
+
+                CH_8 = sprintf('The following figures are the boxplot of ripple current of line 3 different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(I_ripple_L3,Small_interval);
+                title('Ripple Voltage');
+                filename = sprintf('boxplot_ripple_L3.png');
+                exportgraphics(fig,filename);
+                boxplot_ripple_L3Chart = Image(filename);
+                boxplot_ripple_L3Chart.Height = "2.6in";
+                boxplot_ripple_L3Chart.Width = "2.5in";
+                append(rpt,boxplot_ripple_L3Chart);
+
+                % for i = 1:length(RDF_Voltage)
+                %     if RDF_Voltage(i) > 100
+                %         RDF_Voltage(i) = 100;
+                %     end
+                %     if RDF_L1(i) > 100
+                %         RDF_L1(i) = 100;
+                %     end
+                %     if RDF_L2(i) > 100
+                %         RDF_L2(i) = 100;
+                %     end
+                %     if RDF_L3(i) > 100
+                %         RDF_L3(i) = 100;
+                %     end
+                %     if RMS_Ripple_Factor_Voltage(i) > 100
+                %         RMS_Ripple_Factor_Voltage(i) = 100;
+                %     end
+                %     if RMS_Ripple_Factor_L1(i) > 100
+                %         RMS_Ripple_Factor_L1(i) = 100;
+                %     end
+                %     if RMS_Ripple_Factor_L2(i) > 100
+                %         RMS_Ripple_Factor_L2(i) = 100;
+                %     end
+                %     if RMS_Ripple_Factor_L3(i) > 100
+                %         RMS_Ripple_Factor_L3(i) = 100;
+                %     end
+                %     if Peak_Ripple_Factor_Voltage(i) > 100
+                %         Peak_Ripple_Factor_Voltage(i) = 100;
+                %     end
+                %     if Peak_Ripple_Factor_L1(i) > 100
+                %         Peak_Ripple_Factor_L1(i) = 100;
+                %     end
+                %     if Peak_Ripple_Factor_L2(i) > 100
+                %         Peak_Ripple_Factor_L2(i) = 100;
+                %     end
+                %     if Peak_Ripple_Factor_L3(i) > 100
+                %         Peak_Ripple_Factor_L3(i) = 100;
+                %     end
+                % end
+                CH_8 = sprintf('The following figures are the boxplot of RDF of voltage of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(RDF_Voltage,Large_interval);
+                title('RDF Voltage');
+                filename = sprintf('boxplot_RDF_V.png');
+                exportgraphics(fig,filename);
+                boxplot_RDF_VChart = Image(filename);
+                boxplot_RDF_VChart.Height = "2.6in";
+                boxplot_RDF_VChart.Width = "2.5in";
+                append(rpt,boxplot_RDF_VChart);
+
+                CH_8 = sprintf('The following figures are the boxplot of RDF of current of line 1 of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(RDF_L1,Large_interval);
+                title('RDF Current');
+                filename = sprintf('boxplot_RDF_L1.png');
+                exportgraphics(fig,filename);
+                boxplot_RDF_L1Chart = Image(filename);
+                boxplot_RDF_L1Chart.Height = "2.6in";
+                boxplot_RDF_L1Chart.Width = "2.5in";
+                append(rpt,boxplot_RDF_L1Chart);
+
+                CH_8 = sprintf('The following figures are the boxplot of RDF of current of line 2 of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(RDF_L2,Large_interval);
+                title('RDF Current');
+                filename = sprintf('boxplot_RDF_L2.png');
+                exportgraphics(fig,filename);
+                boxplot_RDF_L2Chart = Image(filename);
+                boxplot_RDF_L2Chart.Height = "2.6in";
+                boxplot_RDF_L2Chart.Width = "2.5in";
+                append(rpt,boxplot_RDF_L2Chart);
+
+                CH_8 = sprintf('The following figures are the boxplot of RDF of current of line 3 of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(RDF_L3,Large_interval);
+                title('RDF Current');
+                filename = sprintf('boxplot_RDF_L3.png');
+                exportgraphics(fig,filename);
+                boxplot_RDF_L3Chart = Image(filename);
+                boxplot_RDF_L3Chart.Height = "2.6in";
+                boxplot_RDF_L3Chart.Width = "2.5in";
+                append(rpt,boxplot_RDF_L3Chart);
+
+                CH_8 = sprintf('The following figures are the boxplot of RMS ripple factor of voltage of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(RMS_Ripple_Factor_Voltage,Large_interval);
+                title('RMS Factor Voltage');
+                filename = sprintf('boxplot_RRF_V.png');
+                exportgraphics(fig,filename);
+                boxplot_RRF_VChart = Image(filename);
+                boxplot_RRF_VChart.Height = "2.6in";
+                boxplot_RRF_VChart.Width = "2.5in";
+                append(rpt,boxplot_RRF_VChart);
+
+                CH_8 = sprintf('The following figures are the boxplot of RMS ripple factor of current of line 1 of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(RMS_Ripple_Factor_L1,Large_interval);
+                title('RMS Factor Current');
+                filename = sprintf('boxplot_RRF_L1.png');
+                exportgraphics(fig,filename);
+                boxplot_RRF_L1Chart = Image(filename);
+                boxplot_RRF_L1Chart.Height = "2.6in";
+                boxplot_RRF_L1Chart.Width = "2.5in";
+                append(rpt,boxplot_RRF_L1Chart);
+
+                CH_8 = sprintf('The following figures are the boxplot of RMS ripple factor of current of line 2 of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(RMS_Ripple_Factor_L2,Large_interval);
+                title('RMS Factor Current');
+                filename = sprintf('boxplot_RRF_L2.png');
+                exportgraphics(fig,filename);
+                boxplot_RRF_L2Chart = Image(filename);
+                boxplot_RRF_L2Chart.Height = "2.6in";
+                boxplot_RRF_L2Chart.Width = "2.5in";
+                append(rpt,boxplot_RRF_L2Chart);
+
+                CH_8 = sprintf('The following figures are the boxplot of RMS ripple factor of current of line 3 of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(RMS_Ripple_Factor_L3,Large_interval);
+                title('RMS Factor Current');
+                filename = sprintf('boxplot_RRF_L3.png');
+                exportgraphics(fig,filename);
+                boxplot_RRF_L3Chart = Image(filename);
+                boxplot_RRF_L3Chart.Height = "2.6in";
+                boxplot_RRF_L3Chart.Width = "2.5in";
+                append(rpt,boxplot_RRF_L3Chart);
+
+                CH_8 = sprintf('The following figures are the boxplot of peak valley factor of voltage of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(Peak_Ripple_Factor_Voltage,Large_interval);
+                title('Peak Valley Factor Voltage');
+                filename = sprintf('boxplot_PVF_V.png');
+                exportgraphics(fig,filename);
+                boxplot_PVF_VChart = Image(filename);
+                boxplot_PVF_VChart.Height = "2.6in";
+                boxplot_PVF_VChart.Width = "2.5in";
+                append(rpt,boxplot_PVF_VChart);
+
+                CH_8 = sprintf('The following figures are the boxplot of peak valley factor of current of line 1 of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(Peak_Ripple_Factor_L1,Large_interval);
+                title('Peak Valley Factor Current');
+                filename = sprintf('boxplot_PVF_L1.png');
+                exportgraphics(fig,filename);
+                boxplot_PVF_L1Chart = Image(filename);
+                boxplot_PVF_L1Chart.Height = "2.6in";
+                boxplot_PVF_L1Chart.Width = "2.5in";
+                append(rpt,boxplot_PVF_L1Chart);
+
+                CH_8 = sprintf('The following figures are the boxplot of peak valley factor of current of line 2 of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(Peak_Ripple_Factor_L2,Large_interval);
+                title('Peak Valley Factor Current');
+                filename = sprintf('boxplot_PVF_L2.png');
+                exportgraphics(fig,filename);
+                boxplot_PVF_L2Chart = Image(filename);
+                boxplot_PVF_L2Chart.Height = "2.6in";
+                boxplot_PVF_L2Chart.Width = "2.5in";
+                append(rpt,boxplot_PVF_L2Chart);
+
+                CH_8 = sprintf('The following figures are the boxplot of peak valley factor of current of line 3 of different system settings.');
+                append(rpt,CH_8);
+                fig = figure
+                boxplot(Peak_Ripple_Factor_L3,Large_interval);
+                title('Peak Valley Factor Current');
+                filename = sprintf('boxplot_PVF_L3.png');
+                exportgraphics(fig,filename);
+                boxplot_PVF_L3Chart = Image(filename);
+                boxplot_PVF_L3Chart.Height = "2.6in";
+                boxplot_PVF_L3Chart.Width = "2.5in";
+                append(rpt,boxplot_PVF_L3Chart);
+
 
         end
         moveToNextHole(rpt);
@@ -659,14 +964,14 @@ else
                         disp_endtime = time_5MS(Swell(Usr_input_3,4)+Swell(Usr_input_3,5));
                     end
                     fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
-                    for i = 1:length(Setting)
+                    for i = 1:length(Setting)-1
                         if Setting_Time(i) < disp_starttime
                             continue
                         else
                             break
                         end
                     end
-                    for j = 1:length(Setting)
+                    for j = 1:length(Setting)-1
                         if Setting_Time(j) < disp_endtime
                             continue
                         else
@@ -704,7 +1009,7 @@ else
                     fprintf('·-·-·-·-·-·-·-·-·-·-\nDuring this disturbance, the network is under the following setting(s)\n');
                     for k = 1:(j-i+1)
                         fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
-                            ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
+                            ,k,string(Setting(i+k,1)),string(Setting(i+k,2)),string(Setting(i+k,3)),string(Setting(i+k,4)));
                     end
                     dist_len = Swell_time(Usr_input_3)/group_size;
                     if dist_len == 1
@@ -732,14 +1037,14 @@ else
                         disp_endtime = time_5MS(Interruption(Usr_input_3,4)+Interruption(Usr_input_3,5));
                     end
                     fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
-                    for i = 1:length(Setting)
+                    for i = 1:length(Setting)-1
                         if Setting_Time(i) < disp_starttime
                             continue
                         else
                             break
                         end
                     end
-                    for j = 1:length(Setting)
+                    for j = 1:length(Setting)-1
                         if Setting_Time(j) < disp_endtime
                             continue
                         else
@@ -758,7 +1063,7 @@ else
                     fprintf('·-·-·-·-·-·-·-·-·-·-\nDuring this disturbance, the network is under the following setting(s)\n');
                     for k = 1:(j-i+1)
                         fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
-                            ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
+                            ,k,string(Setting(i+k,1)),string(Setting(i+k,2)),string(Setting(i+k,3)),string(Setting(i+k,4)));
                     end
                     dist_len = Interruption_time(Usr_input_3)/group_size;
                     if dist_len == 1
@@ -786,14 +1091,14 @@ else
                         disp_endtime = time_5MS(Dip(Usr_input_3,4)+Dip(Usr_input_3,5));
                     end
                     fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
-                    for i = 1:length(Setting)
+                    for i = 1:length(Setting)-1
                         if Setting_Time(i) < disp_starttime
                             continue
                         else
                             break
                         end
                     end
-                    for j = 1:length(Setting)
+                    for j = 1:length(Setting)-1
                         if Setting_Time(j) < disp_endtime
                             continue
                         else
@@ -831,7 +1136,7 @@ else
                     fprintf('·-·-·-·-·-·-·-·-·-·-\nDuring this disturbance, the network is under the following setting(s)\n');
                     for k = 1:(j-i+1)
                         fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
-                            ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
+                            ,k,string(Setting(i+k,1)),string(Setting(i+k,2)),string(Setting(i+k,3)),string(Setting(i+k,4)));
                     end
                     dist_len = Dip_time(Usr_input_3)/group_size;
                     if dist_len == 1
@@ -1005,352 +1310,352 @@ else
             end
             fprintf('==========================\n\n       Tool Terminated       \n\n==========================\n');
         end
-    elseif Usr_input == "uuddlrlrab" || Usr_input == "UUDDLRLRAB"
-        Yuki = 1;
-        fprintf('=======================\n\n       Debug Mode       \n\n=======================\n');
-        for Usr_input_3 = 1:SwellCount
-            fprintf('----------------------------------\n\n');
-            fprintf('Swell No.%d \n',Usr_input_3);
-            if Swell(Usr_input_3,1) == 0 ...
-                    disp_starttime = time_5MS((sample_window_length/group_size)*Swell(Usr_input_3,3)+Swell(Usr_input_3,2)); % 40 here as 5ms is used
-                disp_endtime = time_5MS((sample_window_length/group_size)*Swell(Usr_input_3,6)+Swell(Usr_input_3,5));
-            else
-                disp_starttime = time_5MS(Swell(Usr_input_3,1)+Swell(Usr_input_3,2));
-                disp_endtime = time_5MS(Swell(Usr_input_3,4)+Swell(Usr_input_3,5));
-            end
-            fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
-            for i = 1:length(Setting)
-                if Setting_Time(i) < disp_starttime
-                    continue
-                else
-                    break
-                end
-            end
-            for j = 1:length(Setting)
-                if Setting_Time(j) < disp_endtime
-                    continue
-                else
-                    break
-                end
-            end
-            Tolerance_Within1 = 0;
-            Tolerance_Within2 = 0;
-            Tolerance_Without = 0;
-            Tolerance_Spec = SwellSpec(:,Usr_input_3);
-            temp2 = 1;
-            temp3 = 1;
-            temp4 = 1;
-            for temp = 1:(Swell_time(Usr_input_3)/group_size)
-                if Tolerance_Spec(temp) < 1.25*U_nominal
-                    Tolerance_Within1(temp2) = group_size;
-                    temp2 = temp2 + 1;
-                elseif Tolerance_Spec(temp) < 1.4*U_nominal && Tolerance_Spec(temp) >= 1.25*U_nominal
-                    Tolerance_Within2(temp3) = group_size;
-                    temp3 = temp3 + 1;
-                else
-                    Tolerance_Without(temp4) = group_size;
-                    temp4 = temp4 + 1;
-                end
-            end
-            if sum(Tolerance_Within1) < 1000000 && sum(Tolerance_Within2) < 100000 && sum(Tolerance_Without) == 0
-                fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nAll samples during this distortion are within the tolerance of Voltage Swell\nTherefore, this distortion can be tolerate.\n\n' ...
-                    '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n..' ...
-                    '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
-            else
-                fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nThis distortion is severe and can not be tolerate.\n\n' ...
-                    '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
-                    '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
-            end
-            fprintf('·-·-·-·-·-·-·-·-·-·-\nDuring this disturbance, the network is under the following setting(s)\n');
-            for k = 1:(j-i+1)
-                fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
-                    ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
-            end
-            dist_len = Swell_time(Usr_input_3)/group_size;
-            if dist_len == 1
-                fprintf('·-·-·-·-·-·-·-·-·-·-\nThis distortion duration is too short (only last for one sample window, %d ms), no distribution can be defined\n',group_size);
-            else
-                x_data=SwellSpec(1:dist_len,Usr_input_3);
-                pd = fitdist(x_data,'Normal');
-                pd_avg = mean(pd);
-                x_pdf = [1:0.1:100];
-                y_data = pdf(pd,x_pdf);
-
-                figure(Yuki)
-                histogram(x_data,'Normalization','pdf');
-                line(x_pdf,y_data)
-                title('Distribution of the selected disturbance');
-                Yuki = Yuki + 1;
-            end
-        end
-        for Usr_input_3 = 1:InterruptionCount
-            fprintf('----------------------------------\n\n');
-            fprintf('Interruption No.%d \n',Usr_input_3);
-            if Interruption(Usr_input_3,1) == 0 ...
-                    disp_starttime = time_5MS(20*Interruption(Usr_input_3,3)+Interruption(Usr_input_3,2)); % 40 here as 5ms is used
-                disp_endtime = time_5MS(20*Interruption(Usr_input_3,6)+Interruption(Usr_input_3,5));
-            else
-                disp_starttime = time_5MS(Interruption(Usr_input_3,1)+Interruption(Usr_input_3,2));
-                disp_endtime = time_5MS(Interruption(Usr_input_3,4)+Interruption(Usr_input_3,5));
-            end
-            fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
-            for i = 1:length(Setting)
-                if Setting_Time(i) < disp_starttime
-                    continue
-                else
-                    break
-                end
-            end
-            for j = 1:length(Setting)
-                if Setting_Time(j) < disp_endtime
-                    continue
-                else
-                    break
-                end
-            end
-            if Interruption_time(Usr_input_3) < 10000
-                fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nAll samples during this distortion are within the tolerance of Voltage Swell\nTherefore, this distortion can be tolerate.\n\n' ...
-                    '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n..' ...
-                    '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
-            else
-                fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nThis distortion is severe and can not be tolerate.\n\n' ...
-                    '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
-                    '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
-            end
-            fprintf('·-·-·-·-·-·-·-·-·-·-\nDuring this disturbance, the network is under the following setting(s)\n');
-            for k = 1:(j-i+1)
-                fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
-                    ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
-            end
-            dist_len = Interruption_time(Usr_input_3)/group_size;
-            if dist_len == 1
-                fprintf('·-·-·-·-·-·-·-·-·-·-\nThis distortion duration is too short (only last for one sample window, %d ms), no distribution can be defined\n',group_size);
-            else
-                x_data=InterruptionSpec(1:dist_len,Usr_input_3);
-                pd = fitdist(x_data,'Normal');
-                pd_avg = mean(pd);
-                x_pdf = [1:0.1:100];
-                y_data = pdf(pd,x_pdf);
-
-                figure(Yuki)
-                histogram(x_data,'Normalization','pdf')
-                line(x_pdf,y_data)
-                title('Distribution of this disturbance')
-                Yuki = Yuki + 1;
-            end
-        end
-        for Usr_input_3 = 1:DipCount
-            fprintf('----------------------------------\n\n');
-            fprintf('Dip No.%d \n',Usr_input_3);
-            if Dip(Usr_input_3,1) == 0 ...
-                    disp_starttime = time_5MS(20*Dip(Usr_input_3,3)+Dip(Usr_input_3,2)); % 40 here as 5ms is used
-                disp_endtime = time_5MS(20*Dip(Usr_input_3,6)+Dip(Usr_input_3,5));
-            else
-                disp_starttime = time_5MS(Dip(Usr_input_3,1)+Dip(Usr_input_3,2));
-                disp_endtime = time_5MS(Dip(Usr_input_3,4)+Dip(Usr_input_3,5));
-            end
-            fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
-            for i = 1:length(Setting)
-                if Setting_Time(i) < disp_starttime
-                    continue
-                else
-                    break
-                end
-            end
-            for j = 1:length(Setting)
-                if Setting_Time(j) < disp_endtime
-                    continue
-                else
-                    break
-                end
-            end
-            Tolerance_Within1 = 0;
-            Tolerance_Within2 = 0;
-            Tolerance_Without = 0;
-            Tolerance_Spec = DipSpec(:,Usr_input_3);
-            temp2 = 1;
-            temp3 = 1;
-            temp4 = 1;
-            for temp = 1:(Dip_time(Usr_input_3)/group_size)
-                if Tolerance_Spec(temp) > 0.7*U_nominal
-                    Tolerance_Within1(temp2) = group_size;
-                    temp2 = temp2 + 1;
-                elseif Tolerance_Spec(temp) > 0.6*U_nominal && Tolerance_Spec(temp) <= 0.7*U_nominal
-                    Tolerance_Within2(temp3) = group_size;
-                    temp3 = temp3 + 1;
-                else
-                    Tolerance_Without(temp4) = group_size;
-                    temp4 = temp4 + 1;
-                end
-            end
-            if sum(Tolerance_Within1) < 1000000 && sum(Tolerance_Within2) < 100000 && sum(Tolerance_Without) == 0
-                fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nAll samples during this distortion are within the tolerance of Voltage Dip\nTherefore, this distortion can be tolerate.\n\n' ...
-                    '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
-                    '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
-            else
-                fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nThis distortion is severe and can not be tolerate.\n\n' ...
-                    '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
-                    '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
-            end
-            fprintf('·-·-·-·-·-·-·-·-·-·-\nDuring this disturbance, the network is under the following setting(s)\n');
-            for k = 1:(j-i+1)
-                fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
-                    ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
-            end
-            dist_len = Dip_time(Usr_input_3)/group_size;
-            if dist_len == 1
-                fprintf('·-·-·-·-·-·-·-·-·-·-\nThis distortion duration is too short (only last for one sample window, %d ms), no distribution can be defined\n',group_size);
-            else
-                x_data=DipSpec(1:dist_len,Usr_input_3);
-                pd = fitdist(x_data,'Normal');
-                pd_avg = mean(pd);
-                x_pdf = [1:0.1:100];
-                y_data = pdf(pd,x_pdf);
-
-                figure(Yuki)
-                histogram(x_data,'Normalization','pdf')
-                line(x_pdf,y_data)
-                title('Distribution of this disturbance')
-                Yuki = Yuki + 1;
-            end
-        end
-        for Usr_input_3 = 1:(length(Setting_Time) + 1)
-            if Usr_input_3 == 1
-                start_5MS = 1;
-                start_200MS = 1;
-            else
-                Usr_input_3_1 = Usr_input_3 - 1;
-                temp = 0;
-                for j = 1:length(time_5MS)
-                    if time_5MS(j) <= Setting_Time(Usr_input_3_1)
-                        temp = temp + 1;
-                    else
-                        start_5MS = temp;
-                        start_200MS = floor(start_5MS/20);
-                        if floor(start_5MS/20) == 0
-                            start_200MS = 1;
-                        end
-                        break
-                    end
-                end
-            end
-            if Usr_input_3 == length(Setting_Time) + 1
-                termin_5MS = length(time_5MS);
-                termin_200MS = floor(length(time_5MS)/20);
-            else
-                temp = 0;
-                for j = 1:length(time_5MS)
-                    if time_5MS(j) <= Setting_Time(Usr_input_3_1 + 1)
-                        temp = temp + 1;
-                    else
-                        termin_5MS = temp;
-                        termin_200MS = floor(termin_5MS/20);
-                        break
-                    end
-                end
-            end
-            figure(Yuki)
-            subplot(2,3,1)
-
-            yyaxis left
-            plot(time_5MS(start_5MS:termin_5MS),U_rms(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
-            ylabel('V')
-            yyaxis right
-            plot(time_5MS(start_5MS:termin_5MS),I_rms_L1(start_5MS:termin_5MS),'Color','#C31E2D',LineStyle='-');
-            hold on
-            plot(time_5MS(start_5MS:termin_5MS),I_rms_L2(start_5MS:termin_5MS),'Color','#2773C8',LineStyle='-');
-            hold on
-            plot(time_5MS(start_5MS:termin_5MS),I_rms_L3(start_5MS:termin_5MS),'Color','#9CC38A',LineStyle='-');
-            ylabel('A')
-            xlabel('time')
-            legend('Voltage','Line 1','Line 2','Line 3');
-            hold off
-            title("RMS value of voltage and current during this period")
-            subplot(2,3,2)
-            yyaxis left
-            plot(time_5MS(start_5MS:termin_5MS),U_ripple(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
-            ylabel('V')
-            yyaxis right
-            plot(time_5MS(start_5MS:termin_5MS),I_ripple_L1(start_5MS:termin_5MS),'Color','#C31E2D',LineStyle='-');
-            hold on
-            plot(time_5MS(start_5MS:termin_5MS),I_ripple_L2(start_5MS:termin_5MS),'Color','#2773C8',LineStyle='-');
-            hold on
-            plot(time_5MS(start_5MS:termin_5MS),I_ripple_L3(start_5MS:termin_5MS),'Color','#9CC38A',LineStyle='-');
-            ylabel('A')
-            xlabel('time')
-            legend('Voltage','Line 1','Line 2','Line 3');
-            hold off
-            title('Ripple value of voltage and current during this period')
-            subplot(2,3,3)
-            yyaxis left
-            plot(time_5MS(start_5MS:termin_5MS),U_avg(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
-            ylabel('V')
-            yyaxis right
-            plot(time_5MS(start_5MS:termin_5MS),I_avg_L1(start_5MS:termin_5MS),'Color','#C31E2D',LineStyle='-');
-            hold on
-            plot(time_5MS(start_5MS:termin_5MS),I_avg_L2(start_5MS:termin_5MS),'Color','#2773C8',LineStyle='-');
-            hold on
-            plot(time_5MS(start_5MS:termin_5MS),I_avg_L3(start_5MS:termin_5MS),'Color','#9CC38A',LineStyle='-');
-            ylabel('A')
-            xlabel('time')
-            legend('Voltage','Line 1','Line 2','Line 3');
-            hold off
-            title("Average value of voltage and current during this period");
-            subplot(2,3,4)
-
-            yyaxis left
-            plot(time_200MS(start_200MS:termin_200MS),RDF_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
-            ylabel('Percent (%)')
-            ylim([0 100]);
-            yyaxis right
-            plot(time_200MS(start_200MS:termin_200MS),RDF_L1(start_200MS:termin_200MS),'Color','#C31E2D',LineStyle='-');
-            hold on
-            plot(time_200MS(start_200MS:termin_200MS),RDF_L2(start_200MS:termin_200MS),'Color','#2773C8',LineStyle='-');
-            hold on
-            plot(time_200MS(start_200MS:termin_200MS),RDF_L3(start_200MS:termin_200MS),'Color','#9CC38A',LineStyle='-');
-            ylabel('Percent (%)')
-            ylim([0 100]);
-            xlabel('time')
-            legend('Voltage','Line 1','Line 2','Line 3');
-            hold off
-            title('RDF value of voltage and current during this period');
-            subplot(2,3,5)
-            yyaxis left
-            plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
-            ylabel('Percent (%)')
-            ylim([0 100]);
-            yyaxis right
-            plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_L1(start_200MS:termin_200MS),'Color','#C31E2D',LineStyle='-');
-            hold on
-            plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_L2(start_200MS:termin_200MS),'Color','#2773C8',LineStyle='-');
-            hold on
-            plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_L3(start_200MS:termin_200MS),'Color','#9CC38A',LineStyle='-');
-            ylabel('Percent (%)')
-            ylim([0 100]);
-            xlabel('time')
-            legend('Voltage','Line 1','Line 2','Line 3');
-            hold off
-            title('Peak Ripple Factor value of voltage and current during this period');
-            subplot(2,3,6)
-            yyaxis left
-            plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
-            ylabel('Percent (%)')
-            ylim([0 100]);
-            yyaxis right
-            plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_L1(start_200MS:termin_200MS),'Color','#C31E2D',LineStyle='-');
-            hold on
-            plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_L2(start_200MS:termin_200MS),'Color','#2773C8',LineStyle='-');
-            hold on
-            plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_L3(start_200MS:termin_200MS),'Color','#9CC38A',LineStyle='-');
-            ylabel('Percent (%)')
-            ylim([0 100]);
-            xlabel('time')
-            legend('Voltage','Line 1','Line 2','Line 3');
-            hold off
-            title('RMS Ripple Factor value of voltage and current during this period');
-            Yuki = Yuki + 1;
-        end
-        fprintf('==========================\n\n       Tool Terminated       \n\n==========================\n');
+    % elseif Usr_input == "uuddlrlrab" || Usr_input == "UUDDLRLRAB"
+    %     Yuki = 1;
+    %     fprintf('=======================\n\n       Debug Mode       \n\n=======================\n');
+    %     for Usr_input_3 = 1:SwellCount
+    %         fprintf('----------------------------------\n\n');
+    %         fprintf('Swell No.%d \n',Usr_input_3);
+    %         if Swell(Usr_input_3,1) == 0 ...
+    %                 disp_starttime = time_5MS((sample_window_length/group_size)*Swell(Usr_input_3,3)+Swell(Usr_input_3,2)); % 40 here as 5ms is used
+    %             disp_endtime = time_5MS((sample_window_length/group_size)*Swell(Usr_input_3,6)+Swell(Usr_input_3,5));
+    %         else
+    %             disp_starttime = time_5MS(Swell(Usr_input_3,1)+Swell(Usr_input_3,2));
+    %             disp_endtime = time_5MS(Swell(Usr_input_3,4)+Swell(Usr_input_3,5));
+    %         end
+    %         fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
+    %         for i = 1:length(Setting)
+    %             if Setting_Time(i) < disp_starttime
+    %                 continue
+    %             else
+    %                 break
+    %             end
+    %         end
+    %         for j = 1:length(Setting)
+    %             if Setting_Time(j) < disp_endtime
+    %                 continue
+    %             else
+    %                 break
+    %             end
+    %         end
+    %         Tolerance_Within1 = 0;
+    %         Tolerance_Within2 = 0;
+    %         Tolerance_Without = 0;
+    %         Tolerance_Spec = SwellSpec(:,Usr_input_3);
+    %         temp2 = 1;
+    %         temp3 = 1;
+    %         temp4 = 1;
+    %         for temp = 1:(Swell_time(Usr_input_3)/group_size)
+    %             if Tolerance_Spec(temp) < 1.25*U_nominal
+    %                 Tolerance_Within1(temp2) = group_size;
+    %                 temp2 = temp2 + 1;
+    %             elseif Tolerance_Spec(temp) < 1.4*U_nominal && Tolerance_Spec(temp) >= 1.25*U_nominal
+    %                 Tolerance_Within2(temp3) = group_size;
+    %                 temp3 = temp3 + 1;
+    %             else
+    %                 Tolerance_Without(temp4) = group_size;
+    %                 temp4 = temp4 + 1;
+    %             end
+    %         end
+    %         if sum(Tolerance_Within1) < 1000000 && sum(Tolerance_Within2) < 100000 && sum(Tolerance_Without) == 0
+    %             fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nAll samples during this distortion are within the tolerance of Voltage Swell\nTherefore, this distortion can be tolerate.\n\n' ...
+    %                 '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n..' ...
+    %                 '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+    %         else
+    %             fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nThis distortion is severe and can not be tolerate.\n\n' ...
+    %                 '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
+    %                 '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+    %         end
+    %         fprintf('·-·-·-·-·-·-·-·-·-·-\nDuring this disturbance, the network is under the following setting(s)\n');
+    %         for k = 1:(j-i+1)
+    %             fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
+    %                 ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
+    %         end
+    %         dist_len = Swell_time(Usr_input_3)/group_size;
+    %         if dist_len == 1
+    %             fprintf('·-·-·-·-·-·-·-·-·-·-\nThis distortion duration is too short (only last for one sample window, %d ms), no distribution can be defined\n',group_size);
+    %         else
+    %             x_data=SwellSpec(1:dist_len,Usr_input_3);
+    %             pd = fitdist(x_data,'Normal');
+    %             pd_avg = mean(pd);
+    %             x_pdf = [1:0.1:100];
+    %             y_data = pdf(pd,x_pdf);
+    % 
+    %             figure(Yuki)
+    %             histogram(x_data,'Normalization','pdf');
+    %             line(x_pdf,y_data)
+    %             title('Distribution of the selected disturbance');
+    %             Yuki = Yuki + 1;
+    %         end
+    %     end
+    %     for Usr_input_3 = 1:InterruptionCount
+    %         fprintf('----------------------------------\n\n');
+    %         fprintf('Interruption No.%d \n',Usr_input_3);
+    %         if Interruption(Usr_input_3,1) == 0 ...
+    %                 disp_starttime = time_5MS(20*Interruption(Usr_input_3,3)+Interruption(Usr_input_3,2)); % 40 here as 5ms is used
+    %             disp_endtime = time_5MS(20*Interruption(Usr_input_3,6)+Interruption(Usr_input_3,5));
+    %         else
+    %             disp_starttime = time_5MS(Interruption(Usr_input_3,1)+Interruption(Usr_input_3,2));
+    %             disp_endtime = time_5MS(Interruption(Usr_input_3,4)+Interruption(Usr_input_3,5));
+    %         end
+    %         fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
+    %         for i = 1:length(Setting)
+    %             if Setting_Time(i) < disp_starttime
+    %                 continue
+    %             else
+    %                 break
+    %             end
+    %         end
+    %         for j = 1:length(Setting)
+    %             if Setting_Time(j) < disp_endtime
+    %                 continue
+    %             else
+    %                 break
+    %             end
+    %         end
+    %         if Interruption_time(Usr_input_3) < 10000
+    %             fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nAll samples during this distortion are within the tolerance of Voltage Swell\nTherefore, this distortion can be tolerate.\n\n' ...
+    %                 '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n..' ...
+    %                 '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+    %         else
+    %             fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nThis distortion is severe and can not be tolerate.\n\n' ...
+    %                 '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
+    %                 '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+    %         end
+    %         fprintf('·-·-·-·-·-·-·-·-·-·-\nDuring this disturbance, the network is under the following setting(s)\n');
+    %         for k = 1:(j-i+1)
+    %             fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
+    %                 ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
+    %         end
+    %         dist_len = Interruption_time(Usr_input_3)/group_size;
+    %         if dist_len == 1
+    %             fprintf('·-·-·-·-·-·-·-·-·-·-\nThis distortion duration is too short (only last for one sample window, %d ms), no distribution can be defined\n',group_size);
+    %         else
+    %             x_data=InterruptionSpec(1:dist_len,Usr_input_3);
+    %             pd = fitdist(x_data,'Normal');
+    %             pd_avg = mean(pd);
+    %             x_pdf = [1:0.1:100];
+    %             y_data = pdf(pd,x_pdf);
+    % 
+    %             figure(Yuki)
+    %             histogram(x_data,'Normalization','pdf')
+    %             line(x_pdf,y_data)
+    %             title('Distribution of this disturbance')
+    %             Yuki = Yuki + 1;
+    %         end
+    %     end
+    %     for Usr_input_3 = 1:DipCount
+    %         fprintf('----------------------------------\n\n');
+    %         fprintf('Dip No.%d \n',Usr_input_3);
+    %         if Dip(Usr_input_3,1) == 0 ...
+    %                 disp_starttime = time_5MS(20*Dip(Usr_input_3,3)+Dip(Usr_input_3,2)); % 40 here as 5ms is used
+    %             disp_endtime = time_5MS(20*Dip(Usr_input_3,6)+Dip(Usr_input_3,5));
+    %         else
+    %             disp_starttime = time_5MS(Dip(Usr_input_3,1)+Dip(Usr_input_3,2));
+    %             disp_endtime = time_5MS(Dip(Usr_input_3,4)+Dip(Usr_input_3,5));
+    %         end
+    %         fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
+    %         for i = 1:length(Setting)
+    %             if Setting_Time(i) < disp_starttime
+    %                 continue
+    %             else
+    %                 break
+    %             end
+    %         end
+    %         for j = 1:length(Setting)
+    %             if Setting_Time(j) < disp_endtime
+    %                 continue
+    %             else
+    %                 break
+    %             end
+    %         end
+    %         Tolerance_Within1 = 0;
+    %         Tolerance_Within2 = 0;
+    %         Tolerance_Without = 0;
+    %         Tolerance_Spec = DipSpec(:,Usr_input_3);
+    %         temp2 = 1;
+    %         temp3 = 1;
+    %         temp4 = 1;
+    %         for temp = 1:(Dip_time(Usr_input_3)/group_size)
+    %             if Tolerance_Spec(temp) > 0.7*U_nominal
+    %                 Tolerance_Within1(temp2) = group_size;
+    %                 temp2 = temp2 + 1;
+    %             elseif Tolerance_Spec(temp) > 0.6*U_nominal && Tolerance_Spec(temp) <= 0.7*U_nominal
+    %                 Tolerance_Within2(temp3) = group_size;
+    %                 temp3 = temp3 + 1;
+    %             else
+    %                 Tolerance_Without(temp4) = group_size;
+    %                 temp4 = temp4 + 1;
+    %             end
+    %         end
+    %         if sum(Tolerance_Within1) < 1000000 && sum(Tolerance_Within2) < 100000 && sum(Tolerance_Without) == 0
+    %             fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nAll samples during this distortion are within the tolerance of Voltage Dip\nTherefore, this distortion can be tolerate.\n\n' ...
+    %                 '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
+    %                 '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+    %         else
+    %             fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nThis distortion is severe and can not be tolerate.\n\n' ...
+    %                 '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
+    %                 '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
+    %         end
+    %         fprintf('·-·-·-·-·-·-·-·-·-·-\nDuring this disturbance, the network is under the following setting(s)\n');
+    %         for k = 1:(j-i+1)
+    %             fprintf('Network Setting %d,\n      AFE is %s.\n      4000uF Capacitor is %s.\n      PV is %s.\n      EVC is %s.\n'...
+    %                 ,k,string(Setting(i+k-1,1)),string(Setting(i+k-1,2)),string(Setting(i+k-1,3)),string(Setting(i+k-1,4)));
+    %         end
+    %         dist_len = Dip_time(Usr_input_3)/group_size;
+    %         if dist_len == 1
+    %             fprintf('·-·-·-·-·-·-·-·-·-·-\nThis distortion duration is too short (only last for one sample window, %d ms), no distribution can be defined\n',group_size);
+    %         else
+    %             x_data=DipSpec(1:dist_len,Usr_input_3);
+    %             pd = fitdist(x_data,'Normal');
+    %             pd_avg = mean(pd);
+    %             x_pdf = [1:0.1:100];
+    %             y_data = pdf(pd,x_pdf);
+    % 
+    %             figure(Yuki)
+    %             histogram(x_data,'Normalization','pdf')
+    %             line(x_pdf,y_data)
+    %             title('Distribution of this disturbance')
+    %             Yuki = Yuki + 1;
+    %         end
+    %     end
+    %     for Usr_input_3 = 1:(length(Setting_Time) + 1)
+    %         if Usr_input_3 == 1
+    %             start_5MS = 1;
+    %             start_200MS = 1;
+    %         else
+    %             Usr_input_3_1 = Usr_input_3 - 1;
+    %             temp = 0;
+    %             for j = 1:length(time_5MS)
+    %                 if time_5MS(j) <= Setting_Time(Usr_input_3_1)
+    %                     temp = temp + 1;
+    %                 else
+    %                     start_5MS = temp;
+    %                     start_200MS = floor(start_5MS/20);
+    %                     if floor(start_5MS/20) == 0
+    %                         start_200MS = 1;
+    %                     end
+    %                     break
+    %                 end
+    %             end
+    %         end
+    %         if Usr_input_3 == length(Setting_Time) + 1
+    %             termin_5MS = length(time_5MS);
+    %             termin_200MS = floor(length(time_5MS)/20);
+    %         else
+    %             temp = 0;
+    %             for j = 1:length(time_5MS)
+    %                 if time_5MS(j) <= Setting_Time(Usr_input_3_1 + 1)
+    %                     temp = temp + 1;
+    %                 else
+    %                     termin_5MS = temp;
+    %                     termin_200MS = floor(termin_5MS/20);
+    %                     break
+    %                 end
+    %             end
+    %         end
+    %         figure(Yuki)
+    %         subplot(2,3,1)
+    % 
+    %         yyaxis left
+    %         plot(time_5MS(start_5MS:termin_5MS),U_rms(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
+    %         ylabel('V')
+    %         yyaxis right
+    %         plot(time_5MS(start_5MS:termin_5MS),I_rms_L1(start_5MS:termin_5MS),'Color','#C31E2D',LineStyle='-');
+    %         hold on
+    %         plot(time_5MS(start_5MS:termin_5MS),I_rms_L2(start_5MS:termin_5MS),'Color','#2773C8',LineStyle='-');
+    %         hold on
+    %         plot(time_5MS(start_5MS:termin_5MS),I_rms_L3(start_5MS:termin_5MS),'Color','#9CC38A',LineStyle='-');
+    %         ylabel('A')
+    %         xlabel('time')
+    %         legend('Voltage','Line 1','Line 2','Line 3');
+    %         hold off
+    %         title("RMS value of voltage and current during this period")
+    %         subplot(2,3,2)
+    %         yyaxis left
+    %         plot(time_5MS(start_5MS:termin_5MS),U_ripple(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
+    %         ylabel('V')
+    %         yyaxis right
+    %         plot(time_5MS(start_5MS:termin_5MS),I_ripple_L1(start_5MS:termin_5MS),'Color','#C31E2D',LineStyle='-');
+    %         hold on
+    %         plot(time_5MS(start_5MS:termin_5MS),I_ripple_L2(start_5MS:termin_5MS),'Color','#2773C8',LineStyle='-');
+    %         hold on
+    %         plot(time_5MS(start_5MS:termin_5MS),I_ripple_L3(start_5MS:termin_5MS),'Color','#9CC38A',LineStyle='-');
+    %         ylabel('A')
+    %         xlabel('time')
+    %         legend('Voltage','Line 1','Line 2','Line 3');
+    %         hold off
+    %         title('Ripple value of voltage and current during this period')
+    %         subplot(2,3,3)
+    %         yyaxis left
+    %         plot(time_5MS(start_5MS:termin_5MS),U_avg(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
+    %         ylabel('V')
+    %         yyaxis right
+    %         plot(time_5MS(start_5MS:termin_5MS),I_avg_L1(start_5MS:termin_5MS),'Color','#C31E2D',LineStyle='-');
+    %         hold on
+    %         plot(time_5MS(start_5MS:termin_5MS),I_avg_L2(start_5MS:termin_5MS),'Color','#2773C8',LineStyle='-');
+    %         hold on
+    %         plot(time_5MS(start_5MS:termin_5MS),I_avg_L3(start_5MS:termin_5MS),'Color','#9CC38A',LineStyle='-');
+    %         ylabel('A')
+    %         xlabel('time')
+    %         legend('Voltage','Line 1','Line 2','Line 3');
+    %         hold off
+    %         title("Average value of voltage and current during this period");
+    %         subplot(2,3,4)
+    % 
+    %         yyaxis left
+    %         plot(time_200MS(start_200MS:termin_200MS),RDF_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
+    %         ylabel('Percent (%)')
+    %         ylim([0 100]);
+    %         yyaxis right
+    %         plot(time_200MS(start_200MS:termin_200MS),RDF_L1(start_200MS:termin_200MS),'Color','#C31E2D',LineStyle='-');
+    %         hold on
+    %         plot(time_200MS(start_200MS:termin_200MS),RDF_L2(start_200MS:termin_200MS),'Color','#2773C8',LineStyle='-');
+    %         hold on
+    %         plot(time_200MS(start_200MS:termin_200MS),RDF_L3(start_200MS:termin_200MS),'Color','#9CC38A',LineStyle='-');
+    %         ylabel('Percent (%)')
+    %         ylim([0 100]);
+    %         xlabel('time')
+    %         legend('Voltage','Line 1','Line 2','Line 3');
+    %         hold off
+    %         title('RDF value of voltage and current during this period');
+    %         subplot(2,3,5)
+    %         yyaxis left
+    %         plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
+    %         ylabel('Percent (%)')
+    %         ylim([0 100]);
+    %         yyaxis right
+    %         plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_L1(start_200MS:termin_200MS),'Color','#C31E2D',LineStyle='-');
+    %         hold on
+    %         plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_L2(start_200MS:termin_200MS),'Color','#2773C8',LineStyle='-');
+    %         hold on
+    %         plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_L3(start_200MS:termin_200MS),'Color','#9CC38A',LineStyle='-');
+    %         ylabel('Percent (%)')
+    %         ylim([0 100]);
+    %         xlabel('time')
+    %         legend('Voltage','Line 1','Line 2','Line 3');
+    %         hold off
+    %         title('Peak Ripple Factor value of voltage and current during this period');
+    %         subplot(2,3,6)
+    %         yyaxis left
+    %         plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
+    %         ylabel('Percent (%)')
+    %         ylim([0 100]);
+    %         yyaxis right
+    %         plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_L1(start_200MS:termin_200MS),'Color','#C31E2D',LineStyle='-');
+    %         hold on
+    %         plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_L2(start_200MS:termin_200MS),'Color','#2773C8',LineStyle='-');
+    %         hold on
+    %         plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_L3(start_200MS:termin_200MS),'Color','#9CC38A',LineStyle='-');
+    %         ylabel('Percent (%)')
+    %         ylim([0 100]);
+    %         xlabel('time')
+    %         legend('Voltage','Line 1','Line 2','Line 3');
+    %         hold off
+    %         title('RMS Ripple Factor value of voltage and current during this period');
+    %         Yuki = Yuki + 1;
+    %     end
+    %     fprintf('==========================\n\n       Tool Terminated       \n\n==========================\n');
     else
         fprintf('==========================\n\n       Tool Terminated       \n\n==========================\n');
     end
