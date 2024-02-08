@@ -18,7 +18,7 @@ listing = dir('*.tdms');
 len = length(listing);
 
 
-GENRPT = 0;
+% GENRPT = 0;
 U_avg =  0;
 U_rms = 0;
 I_avg_L1 = 0;
@@ -39,7 +39,7 @@ I_rms_L3_20ms = 0;
 
 leftover = 0;
 fprintf('Starting...\n\n');
-Network Settings
+% Network Settings
 cd(string(MLPath))
 if exist("setting_time.csv", 'file') == 2 && exist("setting.csv",'file') == 2
     Setting_Times = readlines("setting_time.csv");
