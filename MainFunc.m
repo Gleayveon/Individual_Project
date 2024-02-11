@@ -392,7 +392,7 @@ if GENRPT == 1
                         Ch_3 = sprintf(['(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
                         append(rpt,Ch_3);
                     end
-                    
+
                     CH_4 = sprintf('·-·-·-·-·-·-·-·-·-·-\n');
                     append(rpt,CH_4);
                     CH_4 = sprintf('During this disturbance, the network is under the following setting(s)\n');
@@ -491,7 +491,7 @@ if GENRPT == 1
                         Ch_3 = sprintf(['(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
                         append(rpt,Ch_3);
                     end
-                    
+
                     CH_4 = sprintf('·-·-·-·-·-·-·-·-·-·-\n');
                     append(rpt,CH_4);
                     CH_4 = sprintf('During this disturbance, the network is under the following setting(s)\n');
@@ -570,7 +570,7 @@ if GENRPT == 1
                         Ch_3 = sprintf(['(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage Dips in LVDC networks, this tool used the standrad used in railway applications.)\n']);
                         append(rpt,Ch_3);
                     end
-                    
+
                     CH_4 = sprintf('·-·-·-·-·-·-·-·-·-·-\n');
                     append(rpt,CH_4);
                     CH_4 = sprintf('During this disturbance, the network is under the following setting(s)\n');
@@ -610,7 +610,7 @@ if GENRPT == 1
                         TableTitle = ['Time'];
                         TableTitle = horzcat(TableTitle,Setting(1,:));
                         TableNum = zeros(length(Setting)-1,1);
-                        
+
                         for i = 1:length(Setting)-1
                             TableNum(i,1) = i;
                         end
@@ -634,8 +634,8 @@ if GENRPT == 1
                         start_200MS = 1;
                     else
                         temp = 0;
-                        for j = 1:length(time_5MS)
-                            if time_5MS(j) <= Setting_Time(Usr_input_3)
+                        for j = 1:length(time_Short)
+                            if time_Short(j) <= Setting_Time(Usr_input_3)
                                 temp = temp + 1;
                             else
                                 start_5MS = temp;
@@ -648,12 +648,12 @@ if GENRPT == 1
                         end
                     end
                     if Usr_input_3 == length(Setting_Time)
-                        termin_5MS = length(time_5MS);
-                        termin_200MS = floor(length(time_5MS)/(sample_window_length/group_size));
+                        termin_5MS = length(time_Short);
+                        termin_200MS = floor(length(time_Short)/(sample_window_length/group_size));
                     else
                         temp = 0;
-                        for j = 1:length(time_5MS)
-                            if time_5MS(j) <= Setting_Time(Usr_input_3 + 1)
+                        for j = 1:length(time_Short)
+                            if time_Short(j) <= Setting_Time(Usr_input_3 + 1)
                                 temp = temp + 1;
                             else
                                 termin_5MS = temp;
@@ -693,7 +693,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of ripple Voltage of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(U_ripple,Large_interval);
+                boxplot(double(abs(U_ripple)),Large_interval);
                 title('Ripple Voltage');
                 filename = sprintf('boxplot_ripple.png');
                 exportgraphics(fig,filename);
@@ -705,7 +705,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of ripple current of line 1 different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(I_ripple_L1,Large_interval);
+                boxplot(double(abs(I_ripple_L1)),Large_interval);
                 title('Ripple Voltage');
                 filename = sprintf('boxplot_ripple_L1.png');
                 exportgraphics(fig,filename);
@@ -717,7 +717,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of ripple current of line 2 different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(I_ripple_L2,Large_interval);
+                boxplot(double(abs(I_ripple_L2)),Large_interval);
                 title('Ripple Voltage');
                 filename = sprintf('boxplot_ripple_L2.png');
                 exportgraphics(fig,filename);
@@ -729,7 +729,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of ripple current of line 3 different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(I_ripple_L3,Large_interval);
+                boxplot(double(abs(I_ripple_L3)),Large_interval);
                 title('Ripple Voltage');
                 filename = sprintf('boxplot_ripple_L3.png');
                 exportgraphics(fig,filename);
@@ -779,7 +779,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of RDF of voltage of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(RDF_Voltage,Large_interval);
+                boxplot(double(abs(RDF_Voltage)),Large_interval);
                 title('RDF Voltage');
                 filename = sprintf('boxplot_RDF_V.png');
                 exportgraphics(fig,filename);
@@ -791,7 +791,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of RDF of current of line 1 of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(RDF_L1,Large_interval);
+                boxplot(double(abs(RDF_L1)),Large_interval);
                 title('RDF Current');
                 filename = sprintf('boxplot_RDF_L1.png');
                 exportgraphics(fig,filename);
@@ -803,7 +803,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of RDF of current of line 2 of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(RDF_L2,Large_interval);
+                boxplot(double(abs(RDF_L2)),Large_interval);
                 title('RDF Current');
                 filename = sprintf('boxplot_RDF_L2.png');
                 exportgraphics(fig,filename);
@@ -815,7 +815,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of RDF of current of line 3 of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(RDF_L3,Large_interval);
+                boxplot(double(abs(RDF_L3)),Large_interval);
                 title('RDF Current');
                 filename = sprintf('boxplot_RDF_L3.png');
                 exportgraphics(fig,filename);
@@ -827,7 +827,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of RMS ripple factor of voltage of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(RMS_Ripple_Factor_Voltage,Large_interval);
+                boxplot(double(abs(RMS_Ripple_Factor_Voltage)),Large_interval);
                 title('RMS Factor Voltage');
                 filename = sprintf('boxplot_RRF_V.png');
                 exportgraphics(fig,filename);
@@ -839,7 +839,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of RMS ripple factor of current of line 1 of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(RMS_Ripple_Factor_L1,Large_interval);
+                boxplot(double(abs(RMS_Ripple_Factor_L1)),Large_interval);
                 title('RMS Factor Current');
                 filename = sprintf('boxplot_RRF_L1.png');
                 exportgraphics(fig,filename);
@@ -851,7 +851,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of RMS ripple factor of current of line 2 of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(RMS_Ripple_Factor_L2,Large_interval);
+                boxplot(double(abs(RMS_Ripple_Factor_L2)),Large_interval);
                 title('RMS Factor Current');
                 filename = sprintf('boxplot_RRF_L2.png');
                 exportgraphics(fig,filename);
@@ -863,7 +863,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of RMS ripple factor of current of line 3 of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(RMS_Ripple_Factor_L3,Large_interval);
+                boxplot(double(abs(RMS_Ripple_Factor_L3)),Large_interval);
                 title('RMS Factor Current');
                 filename = sprintf('boxplot_RRF_L3.png');
                 exportgraphics(fig,filename);
@@ -875,7 +875,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of peak valley factor of voltage of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(Peak_Ripple_Factor_Voltage,Large_interval);
+                boxplot(double(abs(Peak_Ripple_Factor_Voltage)),Large_interval);
                 title('Peak Valley Factor Voltage');
                 filename = sprintf('boxplot_PVF_V.png');
                 exportgraphics(fig,filename);
@@ -887,7 +887,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of peak valley factor of current of line 1 of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(Peak_Ripple_Factor_L1,Large_interval);
+                boxplot(double(abs(Peak_Ripple_Factor_L1)),Large_interval);
                 title('Peak Valley Factor Current');
                 filename = sprintf('boxplot_PVF_L1.png');
                 exportgraphics(fig,filename);
@@ -899,7 +899,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of peak valley factor of current of line 2 of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(Peak_Ripple_Factor_L2,Large_interval);
+                boxplot(double(abs(Peak_Ripple_Factor_L2)),Large_interval);
                 title('Peak Valley Factor Current');
                 filename = sprintf('boxplot_PVF_L2.png');
                 exportgraphics(fig,filename);
@@ -911,7 +911,7 @@ if GENRPT == 1
                 CH_8 = sprintf('The following figures are the boxplot of peak valley factor of current of line 3 of different system settings.');
                 append(rpt,CH_8);
                 fig = figure
-                boxplot(Peak_Ripple_Factor_L3,Large_interval);
+                boxplot(double(abs(Peak_Ripple_Factor_L3)),Large_interval);
                 title('Peak Valley Factor Current');
                 filename = sprintf('boxplot_PVF_L3.png');
                 exportgraphics(fig,filename);
@@ -1328,11 +1328,11 @@ else
     %         fprintf('----------------------------------\n\n');
     %         fprintf('Swell No.%d \n',Usr_input_3);
     %         if Swell(Usr_input_3,1) == 0 ...
-    %                 disp_starttime = time_5MS((sample_window_length/group_size)*Swell(Usr_input_3,3)+Swell(Usr_input_3,2)); % 40 here as 5ms is used
-    %             disp_endtime = time_5MS((sample_window_length/group_size)*Swell(Usr_input_3,6)+Swell(Usr_input_3,5));
+    %                 disp_starttime = time_Short((sample_window_length/group_size)*Swell(Usr_input_3,3)+Swell(Usr_input_3,2)); % 40 here as 5ms is used
+    %             disp_endtime = time_Short((sample_window_length/group_size)*Swell(Usr_input_3,6)+Swell(Usr_input_3,5));
     %         else
-    %             disp_starttime = time_5MS(Swell(Usr_input_3,1)+Swell(Usr_input_3,2));
-    %             disp_endtime = time_5MS(Swell(Usr_input_3,4)+Swell(Usr_input_3,5));
+    %             disp_starttime = time_Short(Swell(Usr_input_3,1)+Swell(Usr_input_3,2));
+    %             disp_endtime = time_Short(Swell(Usr_input_3,4)+Swell(Usr_input_3,5));
     %         end
     %         fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
     %         for i = 1:length(Setting)
@@ -1403,11 +1403,11 @@ else
     %         fprintf('----------------------------------\n\n');
     %         fprintf('Interruption No.%d \n',Usr_input_3);
     %         if Interruption(Usr_input_3,1) == 0 ...
-    %                 disp_starttime = time_5MS(20*Interruption(Usr_input_3,3)+Interruption(Usr_input_3,2)); % 40 here as 5ms is used
-    %             disp_endtime = time_5MS(20*Interruption(Usr_input_3,6)+Interruption(Usr_input_3,5));
+    %                 disp_starttime = time_Short(20*Interruption(Usr_input_3,3)+Interruption(Usr_input_3,2)); % 40 here as 5ms is used
+    %             disp_endtime = time_Short(20*Interruption(Usr_input_3,6)+Interruption(Usr_input_3,5));
     %         else
-    %             disp_starttime = time_5MS(Interruption(Usr_input_3,1)+Interruption(Usr_input_3,2));
-    %             disp_endtime = time_5MS(Interruption(Usr_input_3,4)+Interruption(Usr_input_3,5));
+    %             disp_starttime = time_Short(Interruption(Usr_input_3,1)+Interruption(Usr_input_3,2));
+    %             disp_endtime = time_Short(Interruption(Usr_input_3,4)+Interruption(Usr_input_3,5));
     %         end
     %         fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
     %         for i = 1:length(Setting)
@@ -1459,11 +1459,11 @@ else
     %         fprintf('----------------------------------\n\n');
     %         fprintf('Dip No.%d \n',Usr_input_3);
     %         if Dip(Usr_input_3,1) == 0 ...
-    %                 disp_starttime = time_5MS(20*Dip(Usr_input_3,3)+Dip(Usr_input_3,2)); % 40 here as 5ms is used
-    %             disp_endtime = time_5MS(20*Dip(Usr_input_3,6)+Dip(Usr_input_3,5));
+    %                 disp_starttime = time_Short(20*Dip(Usr_input_3,3)+Dip(Usr_input_3,2)); % 40 here as 5ms is used
+    %             disp_endtime = time_Short(20*Dip(Usr_input_3,6)+Dip(Usr_input_3,5));
     %         else
-    %             disp_starttime = time_5MS(Dip(Usr_input_3,1)+Dip(Usr_input_3,2));
-    %             disp_endtime = time_5MS(Dip(Usr_input_3,4)+Dip(Usr_input_3,5));
+    %             disp_starttime = time_Short(Dip(Usr_input_3,1)+Dip(Usr_input_3,2));
+    %             disp_endtime = time_Short(Dip(Usr_input_3,4)+Dip(Usr_input_3,5));
     %         end
     %         fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
     %         for i = 1:length(Setting)
@@ -1537,8 +1537,8 @@ else
     %         else
     %             Usr_input_3_1 = Usr_input_3 - 1;
     %             temp = 0;
-    %             for j = 1:length(time_5MS)
-    %                 if time_5MS(j) <= Setting_Time(Usr_input_3_1)
+    %             for j = 1:length(time_Short)
+    %                 if time_Short(j) <= Setting_Time(Usr_input_3_1)
     %                     temp = temp + 1;
     %                 else
     %                     start_5MS = temp;
@@ -1551,12 +1551,12 @@ else
     %             end
     %         end
     %         if Usr_input_3 == length(Setting_Time) + 1
-    %             termin_5MS = length(time_5MS);
-    %             termin_200MS = floor(length(time_5MS)/20);
+    %             termin_5MS = length(time_Short);
+    %             termin_200MS = floor(length(time_Short)/20);
     %         else
     %             temp = 0;
-    %             for j = 1:length(time_5MS)
-    %                 if time_5MS(j) <= Setting_Time(Usr_input_3_1 + 1)
+    %             for j = 1:length(time_Short)
+    %                 if time_Short(j) <= Setting_Time(Usr_input_3_1 + 1)
     %                     temp = temp + 1;
     %                 else
     %                     termin_5MS = temp;
@@ -1569,14 +1569,14 @@ else
     %         subplot(2,3,1)
     % 
     %         yyaxis left
-    %         plot(time_5MS(start_5MS:termin_5MS),U_rms(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
+    %         plot(time_Short(start_5MS:termin_5MS),U_rms(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
     %         ylabel('V')
     %         yyaxis right
-    %         plot(time_5MS(start_5MS:termin_5MS),I_rms_L1(start_5MS:termin_5MS),'Color','#C31E2D',LineStyle='-');
+    %         plot(time_Short(start_5MS:termin_5MS),I_rms_L1(start_5MS:termin_5MS),'Color','#C31E2D',LineStyle='-');
     %         hold on
-    %         plot(time_5MS(start_5MS:termin_5MS),I_rms_L2(start_5MS:termin_5MS),'Color','#2773C8',LineStyle='-');
+    %         plot(time_Short(start_5MS:termin_5MS),I_rms_L2(start_5MS:termin_5MS),'Color','#2773C8',LineStyle='-');
     %         hold on
-    %         plot(time_5MS(start_5MS:termin_5MS),I_rms_L3(start_5MS:termin_5MS),'Color','#9CC38A',LineStyle='-');
+    %         plot(time_Short(start_5MS:termin_5MS),I_rms_L3(start_5MS:termin_5MS),'Color','#9CC38A',LineStyle='-');
     %         ylabel('A')
     %         xlabel('time')
     %         legend('Voltage','Line 1','Line 2','Line 3');
@@ -1584,14 +1584,14 @@ else
     %         title("RMS value of voltage and current during this period")
     %         subplot(2,3,2)
     %         yyaxis left
-    %         plot(time_5MS(start_5MS:termin_5MS),U_ripple(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
+    %         plot(time_Short(start_5MS:termin_5MS),U_ripple(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
     %         ylabel('V')
     %         yyaxis right
-    %         plot(time_5MS(start_5MS:termin_5MS),I_ripple_L1(start_5MS:termin_5MS),'Color','#C31E2D',LineStyle='-');
+    %         plot(time_Short(start_5MS:termin_5MS),I_ripple_L1(start_5MS:termin_5MS),'Color','#C31E2D',LineStyle='-');
     %         hold on
-    %         plot(time_5MS(start_5MS:termin_5MS),I_ripple_L2(start_5MS:termin_5MS),'Color','#2773C8',LineStyle='-');
+    %         plot(time_Short(start_5MS:termin_5MS),I_ripple_L2(start_5MS:termin_5MS),'Color','#2773C8',LineStyle='-');
     %         hold on
-    %         plot(time_5MS(start_5MS:termin_5MS),I_ripple_L3(start_5MS:termin_5MS),'Color','#9CC38A',LineStyle='-');
+    %         plot(time_Short(start_5MS:termin_5MS),I_ripple_L3(start_5MS:termin_5MS),'Color','#9CC38A',LineStyle='-');
     %         ylabel('A')
     %         xlabel('time')
     %         legend('Voltage','Line 1','Line 2','Line 3');
@@ -1599,14 +1599,14 @@ else
     %         title('Ripple value of voltage and current during this period')
     %         subplot(2,3,3)
     %         yyaxis left
-    %         plot(time_5MS(start_5MS:termin_5MS),U_avg(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
+    %         plot(time_Short(start_5MS:termin_5MS),U_avg(start_5MS:termin_5MS),'Color','#633736',LineStyle='-');
     %         ylabel('V')
     %         yyaxis right
-    %         plot(time_5MS(start_5MS:termin_5MS),I_avg_L1(start_5MS:termin_5MS),'Color','#C31E2D',LineStyle='-');
+    %         plot(time_Short(start_5MS:termin_5MS),I_avg_L1(start_5MS:termin_5MS),'Color','#C31E2D',LineStyle='-');
     %         hold on
-    %         plot(time_5MS(start_5MS:termin_5MS),I_avg_L2(start_5MS:termin_5MS),'Color','#2773C8',LineStyle='-');
+    %         plot(time_Short(start_5MS:termin_5MS),I_avg_L2(start_5MS:termin_5MS),'Color','#2773C8',LineStyle='-');
     %         hold on
-    %         plot(time_5MS(start_5MS:termin_5MS),I_avg_L3(start_5MS:termin_5MS),'Color','#9CC38A',LineStyle='-');
+    %         plot(time_Short(start_5MS:termin_5MS),I_avg_L3(start_5MS:termin_5MS),'Color','#9CC38A',LineStyle='-');
     %         ylabel('A')
     %         xlabel('time')
     %         legend('Voltage','Line 1','Line 2','Line 3');
@@ -1615,15 +1615,15 @@ else
     %         subplot(2,3,4)
     % 
     %         yyaxis left
-    %         plot(time_200MS(start_200MS:termin_200MS),RDF_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
+    %         plot(time_Long(start_200MS:termin_200MS),RDF_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
     %         ylabel('Percent (%)')
     %         ylim([0 100]);
     %         yyaxis right
-    %         plot(time_200MS(start_200MS:termin_200MS),RDF_L1(start_200MS:termin_200MS),'Color','#C31E2D',LineStyle='-');
+    %         plot(time_Long(start_200MS:termin_200MS),RDF_L1(start_200MS:termin_200MS),'Color','#C31E2D',LineStyle='-');
     %         hold on
-    %         plot(time_200MS(start_200MS:termin_200MS),RDF_L2(start_200MS:termin_200MS),'Color','#2773C8',LineStyle='-');
+    %         plot(time_Long(start_200MS:termin_200MS),RDF_L2(start_200MS:termin_200MS),'Color','#2773C8',LineStyle='-');
     %         hold on
-    %         plot(time_200MS(start_200MS:termin_200MS),RDF_L3(start_200MS:termin_200MS),'Color','#9CC38A',LineStyle='-');
+    %         plot(time_Long(start_200MS:termin_200MS),RDF_L3(start_200MS:termin_200MS),'Color','#9CC38A',LineStyle='-');
     %         ylabel('Percent (%)')
     %         ylim([0 100]);
     %         xlabel('time')
@@ -1632,15 +1632,15 @@ else
     %         title('RDF value of voltage and current during this period');
     %         subplot(2,3,5)
     %         yyaxis left
-    %         plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
+    %         plot(time_Long(start_200MS:termin_200MS),Peak_Ripple_Factor_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
     %         ylabel('Percent (%)')
     %         ylim([0 100]);
     %         yyaxis right
-    %         plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_L1(start_200MS:termin_200MS),'Color','#C31E2D',LineStyle='-');
+    %         plot(time_Long(start_200MS:termin_200MS),Peak_Ripple_Factor_L1(start_200MS:termin_200MS),'Color','#C31E2D',LineStyle='-');
     %         hold on
-    %         plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_L2(start_200MS:termin_200MS),'Color','#2773C8',LineStyle='-');
+    %         plot(time_Long(start_200MS:termin_200MS),Peak_Ripple_Factor_L2(start_200MS:termin_200MS),'Color','#2773C8',LineStyle='-');
     %         hold on
-    %         plot(time_200MS(start_200MS:termin_200MS),Peak_Ripple_Factor_L3(start_200MS:termin_200MS),'Color','#9CC38A',LineStyle='-');
+    %         plot(time_Long(start_200MS:termin_200MS),Peak_Ripple_Factor_L3(start_200MS:termin_200MS),'Color','#9CC38A',LineStyle='-');
     %         ylabel('Percent (%)')
     %         ylim([0 100]);
     %         xlabel('time')
@@ -1649,15 +1649,15 @@ else
     %         title('Peak Ripple Factor value of voltage and current during this period');
     %         subplot(2,3,6)
     %         yyaxis left
-    %         plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
+    %         plot(time_Long(start_200MS:termin_200MS),RMS_Ripple_Factor_Voltage(start_200MS:termin_200MS),'Color','#633736',LineStyle='-');
     %         ylabel('Percent (%)')
     %         ylim([0 100]);
     %         yyaxis right
-    %         plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_L1(start_200MS:termin_200MS),'Color','#C31E2D',LineStyle='-');
+    %         plot(time_Long(start_200MS:termin_200MS),RMS_Ripple_Factor_L1(start_200MS:termin_200MS),'Color','#C31E2D',LineStyle='-');
     %         hold on
-    %         plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_L2(start_200MS:termin_200MS),'Color','#2773C8',LineStyle='-');
+    %         plot(time_Long(start_200MS:termin_200MS),RMS_Ripple_Factor_L2(start_200MS:termin_200MS),'Color','#2773C8',LineStyle='-');
     %         hold on
-    %         plot(time_200MS(start_200MS:termin_200MS),RMS_Ripple_Factor_L3(start_200MS:termin_200MS),'Color','#9CC38A',LineStyle='-');
+    %         plot(time_Long(start_200MS:termin_200MS),RMS_Ripple_Factor_L3(start_200MS:termin_200MS),'Color','#9CC38A',LineStyle='-');
     %         ylabel('Percent (%)')
     %         ylim([0 100]);
     %         xlabel('time')
