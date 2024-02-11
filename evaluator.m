@@ -85,10 +85,10 @@ for docount = 1:num_Sample
         temp(k,4) = current_L3(i);
         k = k+1;
         if k == (20000 + 1)
-            Urms_nonStat_20ms_sample(j) = rms(temp(:,1));
-            current_rms_nonStat_20ms_sample_L1(j) = rms(temp(:,2));
-            current_rms_nonStat_20ms_sample_L2(j) = rms(temp(:,3));
-            current_rms_nonStat_20ms_sample_L3(j) = rms(temp(:,4));
+            Urms_nonStat_20ms_sample(j,1) = rms(temp(:,1));
+            current_rms_nonStat_20ms_sample_L1(j,1) = rms(temp(:,2));
+            current_rms_nonStat_20ms_sample_L2(j,1) = rms(temp(:,3));
+            current_rms_nonStat_20ms_sample_L3(j,1) = rms(temp(:,4));
             k = 1;
             j = j + 1;
         end
@@ -113,10 +113,10 @@ for docount = 1:num_Sample
         temp(k,4) = current_L3(i);
         k = k+1;
         if k == (group_size + 1)
-            Urms_nonStat_sample(j) = rms(temp(:,1));
-            current_rms_nonStat_sample_L1(j) = rms(temp(:,2));
-            current_rms_nonStat_sample_L2(j) = rms(temp(:,3));
-            current_rms_nonStat_sample_L3(j) = rms(temp(:,4));
+            Urms_nonStat_sample(j,1) = rms(temp(:,1));
+            current_rms_nonStat_sample_L1(j,1) = rms(temp(:,2));
+            current_rms_nonStat_sample_L2(j,1) = rms(temp(:,3));
+            current_rms_nonStat_sample_L3(j,1) = rms(temp(:,4));
             k = 1;
             j = j + 1;
         end
