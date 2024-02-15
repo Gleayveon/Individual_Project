@@ -51,6 +51,7 @@ Please edit the config file regarding to the following table. After edit, the cs
 
 * Please note that the interactive tool would not start if auto report generator is enabled, vise versa. *
 For default setting, which was used during the develop of the tool, please refer to the following table. The last line, which is set as 0 for active the interactive tool.
+
 | **INSERT YOUR SETTING IN THIS COLUMN**                       |
 | ------------------------------------------------------------ |
 | **The path of this tool**                                    |
