@@ -1,5 +1,7 @@
 # Individual_Project
 
+## Electrical Variables Evaluator (EVE)
+
 ## MATLAB Scripts Discription
 
 ### Environment Preparation
@@ -40,10 +42,29 @@ Please edit the config file regarding to the following table. After edit, the cs
 | **The time interval of calculating average and RMS values (unit in microseconds)** |
 | **The time interval of calculating RDF (unit in microseconds, typically 200000)** |
 | **The sampling frequency of the data (unit in Hz)**          |
+| **The threshold of Dip you would like to use (unit in pu)**  |
+| **The threshold of Swell you would like to use (unit in pu)**  |
+| **The threshold of Interruption you would like to use (unit in pu)** |
+| **The threshold of Hysteresis you would like to use (unit in pu)** |
 | **Start time (format as: yyyy-MMM-d HH:mm:ss.SSS)**          |
 | **Enable auto report generator (enter 1 for enable, 0 for disable)** |
 
 * Please note that the interactive tool would not start if auto report generator is enabled, vise versa. *
+For default setting, which was used during the develop of the tool, please refer to the following table. The last line, which is set as 0 for active the interactive tool.
+| **INSERT YOUR SETTING IN THIS COLUMN**                       |
+| ------------------------------------------------------------ |
+| **The path of this tool**                                    |
+| **The path of your data**                                    |
+| **700**             |
+| **10000** |
+| **200000** |
+| **100000**          |
+| **0.9**  |
+| **1.1**  |
+| **0.1** |
+| **0.02** |
+| **2023-09-26 13:47:47**          |
+| **0** |
 
 #### Create setting.csv and setting_time.csv
 
