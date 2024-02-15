@@ -19,9 +19,19 @@ function [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
     RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,...
     U_rms_10ms,I_rms_L1_10ms,I_rms_L2_10ms,I_rms_L3_10ms,...
     U_rms_20ms,I_rms_L1_20ms,I_rms_L2_20ms,I_rms_L3_20ms,MLPath,DTPath,leftover)
+%% EVE-Evaluator
+%   Notice:
+%   This Script can detect the non-stationary disturbances of the given
+%   data, with a native design for a data with 1 voltage signal and 3
+%   current signals, unless the signal number of new data is changed,
+%   otherwise there is no need to change any code of this script.
+%   Discription:
+%   The discription of this script can be found at the README
+%   
+%   Version: 4.2.3
+%   2024.02.15
 
 %% Data Loading
-% Version: 4.1.0
 cd(string(DTPath)) % Here is the path of where Data file locate
 
 Name = listing(num).name; % Name of the files
@@ -29,7 +39,9 @@ data = tdmsread(Name);
 
 Recordings=data{1,1};
 Recordings=table2array(Recordings);
-
+% These file structure and gain are obtained from the data provider,
+% different data provider might have different design of data structure and
+% gain.
 L1_Voltage=Recordings(:,1);
 L1_Current=Recordings(:,2);
 L2_Current=Recordings(:,3);
@@ -72,7 +84,9 @@ for docount = 1:num_Sample
     %% Mean & RMS Calculation
     
     Urms_nonStat_sample = zeros(num_groups, 1);
-    %remember to delete the following 2 lines
+    %remember to delete the following lines, 20ms are used just reversed
+    %for later studies.
+    % DELETE BELOW
     num_groups_20ms = floor(sample_window_length / 20000);
     Urms_nonStat_20ms_sample = zeros(num_groups_20ms, 1);
     k = 1;
@@ -93,6 +107,7 @@ for docount = 1:num_Sample
             j = j + 1;
         end
     end
+    % DELETE ABOVE
 
     Urms_sample = rms(voltage);
     Uavg_sample = mean(voltage);
@@ -431,7 +446,7 @@ if num == 1 && docount == 1
     I_rms_L1_10ms(1,:) = [];
     I_rms_L2_10ms(1,:) = [];
     I_rms_L3_10ms(1,:) = [];
-
+% DELETE BELOW
     U_rms_20ms = cat(1,U_rms_20ms,Urms_nonStat_20ms_sample);
     I_rms_L1_20ms = cat(1,I_rms_L1_20ms,current_rms_nonStat_20ms_sample_L1);
     I_rms_L2_20ms = cat(1,I_rms_L2_20ms,current_rms_nonStat_20ms_sample_L2);
@@ -440,6 +455,7 @@ if num == 1 && docount == 1
     I_rms_L1_20ms(1,:) = [];
     I_rms_L2_20ms(1,:) = [];
     I_rms_L3_20ms(1,:) = [];
+% DELETE ABOVE
 else
     U_avg = cat(1,U_avg,Uavg_sample);
     U_rms = cat(1,U_rms,Urms_sample);
@@ -470,11 +486,12 @@ else
     I_rms_L1_10ms = cat(1,I_rms_L1_10ms,current_rms_nonStat_sample_L1);
     I_rms_L2_10ms = cat(1,I_rms_L2_10ms,current_rms_nonStat_sample_L2);
     I_rms_L3_10ms = cat(1,I_rms_L3_10ms,current_rms_nonStat_sample_L3);
-
+% DELETE BELOW
     U_rms_20ms = cat(1,U_rms_20ms,Urms_nonStat_20ms_sample);
     I_rms_L1_20ms = cat(1,I_rms_L1_20ms,current_rms_nonStat_20ms_sample_L1);
     I_rms_L2_20ms = cat(1,I_rms_L2_20ms,current_rms_nonStat_20ms_sample_L2);
     I_rms_L3_20ms = cat(1,I_rms_L3_20ms,current_rms_nonStat_20ms_sample_L3);
+% DELETE ABOVE
 end
 end
 fprintf(['Finished No.%d. So far, %d Swell(s), %d Dip(s), %d Interruption(s)\n'],num,SwellCount,DipCount,InterruptionCount);

@@ -1,155 +1,164 @@
-% %% Version: 4.2.2
-% clc
-% clear
-% close all
-% config = readlines("config.csv");
-% MLPath = config(2);
-% DTPath = config(3);
-% U_nominal = double(config(4));
-% group_size = double(config(5));
-% sample_window_length = double(config(6));
-% Fs = double(config(7));
-% GENRPT = str2num(config(9));
-% start_time = datetime(string(config(8)), 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
-% Ts=1/Fs;    % Sampling period
-% 
-% cd(string(DTPath))
-% listing = dir('*.tdms');
-% len = length(listing);
-% 
-% 
-% % GENRPT = 0;
-% U_avg =  0;
-% U_rms = 0;
-% I_avg_L1 = 0;
-% I_rms_L1 = 0;
-% I_avg_L2 = 0;
-% I_rms_L2 = 0;
-% I_avg_L3 = 0;
-% I_rms_L3 = 0;
-% U_rms_10ms = 0;
-% I_rms_L1_10ms = 0;
-% I_rms_L2_10ms = 0;
-% I_rms_L3_10ms = 0;
-% 
-% U_rms_20ms = 0;
-% I_rms_L1_20ms = 0;
-% I_rms_L2_20ms = 0;
-% I_rms_L3_20ms = 0;
-% 
-% leftover = 0;
-% fprintf('Starting...\n\n');
-% % Network Settings
-% cd(string(MLPath))
-% if exist("setting_time.csv", 'file') == 2 && exist("setting.csv",'file') == 2
-%     Setting_Times = readlines("setting_time.csv");
-%     for i = 1:length(Setting_Times)
-%         Setting_Time(i) = datetime(string(Setting_Times(i)), 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
-%     end
-%     Setting = readtable("setting.csv",'ReadVariableNames', false);
-% else
-% end
-% fprintf('System Settings Loaded.\n\n');
-% % NonStationary
-%     isNonStatDistOccur = 0;
-%     hysteresis = 0.02*U_nominal;
-%     Swell_tr = 1.1*U_nominal;
-%     Dip_tr = 0.9*U_nominal; %Threashold_Dip
-%     Interruption_tr = 0.1*U_nominal;
-%     timecount = 0;
-%     isSwell = 0; %To flag status of the sample
-%     isDip = 0;
-%     isInterruption = 0;
-%     DipCount = 0;
-%     SwellCount = 0;
-%     InterruptionCount = 0;
-%     DipTime = 0;
-%     SwellTime = 0;
-%     InterruptionTime = 0;
-%     DipSpec = 0;
-%     SwellSpec = 0;
-%     InterruptionSpec = 0;
-%     Dip = 0;
-%     Swell = 0;
-%     Interruption = 0;
-% %Stationaty
-%     U_ripple = 0;
-%     RDF_Voltage = 0;
-%     RMS_Ripple_Factor_Voltage = 0;
-%     Peak_Ripple_Factor_Voltage = 0;
-%     I_ripple_L1 = 0;
-%     RDF_L1 = 0;
-%     RMS_Ripple_Factor_L1 = 0;
-%     Peak_Ripple_Factor_L1 = 0;
-%     I_ripple_L2 = 0;
-%     RDF_L2 = 0;
-%     RMS_Ripple_Factor_L2 = 0;
-%     Peak_Ripple_Factor_L2 = 0;
-%     I_ripple_L3 = 0;
-%     RDF_L3 = 0;
-%     RMS_Ripple_Factor_L3 = 0;
-%     Peak_Ripple_Factor_L3 = 0;
-% 
-% for num = 1:len
-%     [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
-%     isNonStatDistOccur,timecount,isSwell,isDip,...
-%     isInterruption,DipCount,SwellCount,InterruptionCount,DipTime,SwellTime,...
-%     InterruptionTime,DipSpec,SwellSpec,InterruptionSpec,U_ripple,RDF_Voltage,...
-%     RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
-%     RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
-%     RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
-%     RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,...
-%     U_rms_10ms,I_rms_L1_10ms,I_rms_L2_10ms,I_rms_L3_10ms,...
-%     U_rms_20ms,I_rms_L1_20ms,I_rms_L2_20ms,I_rms_L3_20ms,MLPath,DTPath,leftover]...
-%     = evaluator(num,listing,sample_window_length,group_size,Fs,Ts,U_avg,U_rms,...
-%     I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,isNonStatDistOccur,...
-%     hysteresis,Swell_tr,Dip_tr,Interruption_tr,timecount,isSwell,isDip,...
-%     isInterruption,DipCount,SwellCount,InterruptionCount,DipTime,SwellTime,...
-%     InterruptionTime,DipSpec,SwellSpec,InterruptionSpec,U_ripple,RDF_Voltage,...
-%     RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
-%     RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
-%     RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
-%     RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,...
-%     U_rms_10ms,I_rms_L1_10ms,I_rms_L2_10ms,I_rms_L3_10ms,...
-%     U_rms_20ms,I_rms_L1_20ms,I_rms_L2_20ms,I_rms_L3_20ms,MLPath,DTPath,leftover);
-% end
-%     fprintf('Data Analysis Finished.\n\n');
-% 
-%     Swell_time = 0;
-%     Swell_spec = U_nominal;
-%     Dip_time = 0;
-%     Dip_spec = U_nominal;
-%     Interruption_time = 0;
-%     Interruption_spec = U_nominal;
-%     Swell_timesum = 0;
-%     Dip_timesum = 0;
-%     Interruption_timesum = 0;
-% 
-% % Time Stamp
-%     time_Short_SS = (group_size/1000):(group_size/1000):(group_size/1000)*length(U_rms_10ms);
-%     time_Short_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_Short_SS, 'UniformOutput', false);
-%     time_Short = cat(1, time_Short_Cell{:});
-%     time_Long_SS = (sample_window_length/1000):(sample_window_length/1000):(sample_window_length/1000)*length(U_rms);
-%     time_Long_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_Long_SS, 'UniformOutput', false);
-%     time_Long = cat(1, time_Long_Cell{:});
-%     fprintf('Time Stemps Allocated.\n\n');
-% 
-% for i = 1:SwellCount
-%     Swell_timesum = Swell_timesum + group_size * sum(SwellTime(:,i));
-%     Swell_time(i) = group_size * sum(SwellTime(:,i));
-%     Swell_spec(i) = max(SwellSpec(1:sum(SwellTime(:,i)),i));
-% end
-% for i = 1:DipCount
-%     Dip_timesum = Dip_timesum + group_size * sum(DipTime(:,i));
-%     Dip_time(i) = group_size * sum(DipTime(:,i));
-%     Dip_spec(i) = min(DipSpec(1:sum(DipTime(:,i)),i));
-% end
-% for i = 1:InterruptionCount
-%     Interruption_timesum = Interruption_timesum + group_size * sum(InterruptionTime(:,i));
-%     Interruption_time(i) = group_size * sum(InterruptionTime(:,i));
-%     Interruption_spec(i) = min(InterruptionSpec(1:sum(InterruptionTime(:,i)),i));
-% end
+%%   EVE-Main Script
+%       Including:
+%       Define Global Variables, Time Stamp Mapping, Report generator, Interactive Tool
+%       Version: 4.2.3
+%       2024.02.15
+%% Preparation
+clc
+clear
+close all
+config = readlines("config.csv"); %The configure file name
+MLPath = config(2);
+DTPath = config(3);
+U_nominal = double(config(4));
+group_size = double(config(5));
+sample_window_length = double(config(6));
+Fs = double(config(7));
+Threshold_Dip = double(config(8));
+Threshold_Swell = double(config(9));
+Threshold_Interruption = double(config(10));
+Threshold_Hysteresis = double(config(11));
+start_time = datetime(string(config(12)), 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
+GENRPT = str2num(config(13));
+Ts=1/Fs;    % Sampling period
 
+cd(string(DTPath)) %Go to the Data folder to get the list of whole data
+listing = dir('*.tdms');
+len = length(listing);
+
+
+% GENRPT = 0; %For demo only
+U_avg =  0; %Create variable's heading, which will be deleted after the first sample is analysised
+U_rms = 0;
+I_avg_L1 = 0;
+I_rms_L1 = 0;
+I_avg_L2 = 0;
+I_rms_L2 = 0;
+I_avg_L3 = 0;
+I_rms_L3 = 0;
+U_rms_10ms = 0;
+I_rms_L1_10ms = 0;
+I_rms_L2_10ms = 0;
+I_rms_L3_10ms = 0;
+
+U_rms_20ms = 0;
+I_rms_L1_20ms = 0;
+I_rms_L2_20ms = 0;
+I_rms_L3_20ms = 0;
+
+leftover = 0;
+fprintf('Starting...\n\n');
+% Network Settings
+cd(string(MLPath))
+if exist("setting_time.csv", 'file') == 2 && exist("setting.csv",'file') == 2
+    Setting_Times = readlines("setting_time.csv");
+    for i = 1:length(Setting_Times)
+        Setting_Time(i) = datetime(string(Setting_Times(i)), 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
+    end
+    Setting = readtable("setting.csv",'ReadVariableNames', false);
+else
+end
+fprintf('System Settings Loaded.\n\n');
+% NonStationary
+    isNonStatDistOccur = 0; %Heading of Non-stationary disturbance Occur
+    hysteresis = Threshold_Hysteresis*U_nominal;
+    Swell_tr = Threshold_Swell*U_nominal;
+    Dip_tr = Threshold_Dip*U_nominal; 
+    Interruption_tr = Threshold_Interruption*U_nominal;
+    timecount = 0;
+    isSwell = 0; %To flag status of the sample
+    isDip = 0;
+    isInterruption = 0;
+    DipCount = 0;
+    SwellCount = 0;
+    InterruptionCount = 0;
+    DipTime = 0;
+    SwellTime = 0;
+    InterruptionTime = 0;
+    DipSpec = 0;
+    SwellSpec = 0;
+    InterruptionSpec = 0;
+    Dip = 0;
+    Swell = 0;
+    Interruption = 0;
+%Stationaty
+    U_ripple = 0;
+    RDF_Voltage = 0;
+    RMS_Ripple_Factor_Voltage = 0;
+    Peak_Ripple_Factor_Voltage = 0;
+    I_ripple_L1 = 0;
+    RDF_L1 = 0;
+    RMS_Ripple_Factor_L1 = 0;
+    Peak_Ripple_Factor_L1 = 0;
+    I_ripple_L2 = 0;
+    RDF_L2 = 0;
+    RMS_Ripple_Factor_L2 = 0;
+    Peak_Ripple_Factor_L2 = 0;
+    I_ripple_L3 = 0;
+    RDF_L3 = 0;
+    RMS_Ripple_Factor_L3 = 0;
+    Peak_Ripple_Factor_L3 = 0;
+%% Data Analysis
+for num = 1:len
+    [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
+    isNonStatDistOccur,timecount,isSwell,isDip,...
+    isInterruption,DipCount,SwellCount,InterruptionCount,DipTime,SwellTime,...
+    InterruptionTime,DipSpec,SwellSpec,InterruptionSpec,U_ripple,RDF_Voltage,...
+    RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
+    RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
+    RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
+    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,...
+    U_rms_10ms,I_rms_L1_10ms,I_rms_L2_10ms,I_rms_L3_10ms,...
+    U_rms_20ms,I_rms_L1_20ms,I_rms_L2_20ms,I_rms_L3_20ms,MLPath,DTPath,leftover]...
+    = evaluator(num,listing,sample_window_length,group_size,Fs,Ts,U_avg,U_rms,...
+    I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,isNonStatDistOccur,...
+    hysteresis,Swell_tr,Dip_tr,Interruption_tr,timecount,isSwell,isDip,...
+    isInterruption,DipCount,SwellCount,InterruptionCount,DipTime,SwellTime,...
+    InterruptionTime,DipSpec,SwellSpec,InterruptionSpec,U_ripple,RDF_Voltage,...
+    RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
+    RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
+    RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
+    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,...
+    U_rms_10ms,I_rms_L1_10ms,I_rms_L2_10ms,I_rms_L3_10ms,...
+    U_rms_20ms,I_rms_L1_20ms,I_rms_L2_20ms,I_rms_L3_20ms,MLPath,DTPath,leftover);
+end
+    fprintf('Data Analysis Finished.\n\n');
+% Preparation for Getting the Each Disturbance Detail
+    Swell_time = 0;
+    Swell_spec = U_nominal;
+    Dip_time = 0;
+    Dip_spec = U_nominal;
+    Interruption_time = 0;
+    Interruption_spec = U_nominal;
+    Swell_timesum = 0;
+    Dip_timesum = 0;
+    Interruption_timesum = 0;
+
+% Time Stamp
+    time_Short_SS = (group_size/1000):(group_size/1000):(group_size/1000)*length(U_rms_10ms);
+    time_Short_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_Short_SS, 'UniformOutput', false);
+    time_Short = cat(1, time_Short_Cell{:});
+    time_Long_SS = (sample_window_length/1000):(sample_window_length/1000):(sample_window_length/1000)*length(U_rms);
+    time_Long_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_Long_SS, 'UniformOutput', false);
+    time_Long = cat(1, time_Long_Cell{:});
+    fprintf('Time Stemps Allocated.\n\n');
+
+for i = 1:SwellCount
+    Swell_timesum = Swell_timesum + group_size * sum(SwellTime(:,i));
+    Swell_time(i) = group_size * sum(SwellTime(:,i));
+    Swell_spec(i) = max(SwellSpec(1:sum(SwellTime(:,i)),i));
+end
+for i = 1:DipCount
+    Dip_timesum = Dip_timesum + group_size * sum(DipTime(:,i));
+    Dip_time(i) = group_size * sum(DipTime(:,i));
+    Dip_spec(i) = min(DipSpec(1:sum(DipTime(:,i)),i));
+end
+for i = 1:InterruptionCount
+    Interruption_timesum = Interruption_timesum + group_size * sum(InterruptionTime(:,i));
+    Interruption_time(i) = group_size * sum(InterruptionTime(:,i));
+    Interruption_spec(i) = min(InterruptionSpec(1:sum(InterruptionTime(:,i)),i));
+end
+%% Overall Display
 disp('=========Detection_Report=========');
 fprintf(['In these signals sampled,\n']);
 if SwellCount == 0
@@ -231,7 +240,7 @@ yline(2,'Label','Swell');
 yline(3,'Label','Dip');
 xline(Setting_Time,'-',label)
 ylim([1 3.5]);
-% Setting = table2array(Setting);
+Setting = table2array(Setting);
 
 U_ripple = double(abs(U_ripple));
 I_ripple_L1 = double(abs(I_ripple_L1));
@@ -249,9 +258,9 @@ Peak_Ripple_Factor_Voltage = double(abs(Peak_Ripple_Factor_Voltage));
 Peak_Ripple_Factor_L1 = double(abs(Peak_Ripple_Factor_L1));
 Peak_Ripple_Factor_L2 = double(abs(Peak_Ripple_Factor_L2));
 Peak_Ripple_Factor_L3 = double(abs(Peak_Ripple_Factor_L3));
-
+%% Peport Generator & Interactive Tool
 if GENRPT == 1
-
+    % Report Generator
     import mlreportgen.dom.*
     rptname = 'AutoReport'
     rpt = Document(rptname,'docx','Evaluation Report');
@@ -642,46 +651,46 @@ if GENRPT == 1
                             {HAlign('center')}];
                         append(rpt,table1);
             case 'SystemSetting_Sec'
-                % Small_interval = zeros(length(U_rms_10ms),1);
-                % Large_interval = zeros(length(RMS_Ripple_Factor_Voltage),1);
-                % for Usr_input_3  = 1:length(Setting_Timeclos)
-                % 
-                %     if Usr_input_3 == 1
-                %         start_5MS = 1;
-                %         start_200MS = 1;
-                %     else
-                %         temp = 0;
-                %         for j = 1:length(time_Short)
-                %             if time_Short(j) <= Setting_Time(Usr_input_3)
-                %                 temp = temp + 1;
-                %             else
-                %                 start_5MS = temp;
-                %                 start_200MS = floor(start_5MS/(sample_window_length/group_size));
-                %                 if floor(start_5MS/(sample_window_length/group_size)) == 0
-                %                     start_200MS = 1;
-                %                 end
-                %                 break
-                %             end
-                %         end
-                %     end
-                %     if Usr_input_3 == length(Setting_Time)
-                %         termin_5MS = length(time_Short);
-                %         termin_200MS = floor(length(time_Short)/(sample_window_length/group_size));
-                %     else
-                %         temp = 0;
-                %         for j = 1:length(time_Short)
-                %             if time_Short(j) <= Setting_Time(Usr_input_3 + 1)
-                %                 temp = temp + 1;
-                %             else
-                %                 termin_5MS = temp;
-                %                 termin_200MS = floor(termin_5MS/(sample_window_length/group_size));
-                %                 break
-                %             end
-                %         end
-                %     end
-                %     Small_interval(start_5MS:termin_5MS) = Usr_input_3;
-                %     Large_interval(start_200MS:termin_200MS) = Usr_input_3;
-                % end
+                Small_interval = zeros(length(U_rms_10ms),1);
+                Large_interval = zeros(length(RMS_Ripple_Factor_Voltage),1);
+                for Usr_input_3  = 1:length(Setting_Timeclos)
+
+                    if Usr_input_3 == 1
+                        start_5MS = 1;
+                        start_200MS = 1;
+                    else
+                        temp = 0;
+                        for j = 1:length(time_Short)
+                            if time_Short(j) <= Setting_Time(Usr_input_3)
+                                temp = temp + 1;
+                            else
+                                start_5MS = temp;
+                                start_200MS = floor(start_5MS/(sample_window_length/group_size));
+                                if floor(start_5MS/(sample_window_length/group_size)) == 0
+                                    start_200MS = 1;
+                                end
+                                break
+                            end
+                        end
+                    end
+                    if Usr_input_3 == length(Setting_Time)
+                        termin_5MS = length(time_Short);
+                        termin_200MS = floor(length(time_Short)/(sample_window_length/group_size));
+                    else
+                        temp = 0;
+                        for j = 1:length(time_Short)
+                            if time_Short(j) <= Setting_Time(Usr_input_3 + 1)
+                                temp = temp + 1;
+                            else
+                                termin_5MS = temp;
+                                termin_200MS = floor(termin_5MS/(sample_window_length/group_size));
+                                break
+                            end
+                        end
+                    end
+                    Small_interval(start_5MS:termin_5MS) = Usr_input_3;
+                    Large_interval(start_200MS:termin_200MS) = Usr_input_3;
+                end
 
                 CH_8 = sprintf('The following figures are the boxplot of RMS Voltage of different system settings.');
                 append(rpt,CH_8);
@@ -723,7 +732,7 @@ if GENRPT == 1
                 append(rpt,CH_8);
                 fig = figure
                 boxplot(I_ripple_L1,Large_interval);
-                title('Ripple Voltage');
+                title('Ripple Current');
                 filename = sprintf('boxplot_ripple_L1.png');
                 exportgraphics(fig,filename);
                 boxplot_ripple_L1Chart = Image(filename);
@@ -735,7 +744,7 @@ if GENRPT == 1
                 append(rpt,CH_8);
                 fig = figure
                 boxplot(I_ripple_L2,Large_interval);
-                title('Ripple Voltage');
+                title('Ripple Current');
                 filename = sprintf('boxplot_ripple_L2.png');
                 exportgraphics(fig,filename);
                 boxplot_ripple_L2Chart = Image(filename);
@@ -747,7 +756,7 @@ if GENRPT == 1
                 append(rpt,CH_8);
                 fig = figure
                 boxplot(I_ripple_L3,Large_interval);
-                title('Ripple Voltage');
+                title('Ripple Current');
                 filename = sprintf('boxplot_ripple_L3.png');
                 exportgraphics(fig,filename);
                 boxplot_ripple_L3Chart = Image(filename);
@@ -893,6 +902,7 @@ if GENRPT == 1
                 append(rpt,CH_8);
                 fig = figure
                 boxplot(Peak_Ripple_Factor_Voltage,Large_interval);
+                ylim = [0 40]
                 title('Peak Valley Factor Voltage');
                 filename = sprintf('boxplot_PVF_V.png');
                 exportgraphics(fig,filename);
@@ -944,8 +954,7 @@ if GENRPT == 1
     close(rpt);
     rptview(rpt)
 else
-    %%
-
+    % Interactive Tool
     I_Atool_start =("\nDo you want to start the interactive tool? (Y/N)\n");
     Usr_input = input(I_Atool_start,"s");
     if Usr_input == "Y" || Usr_input == "Yes" || Usr_input == "yes" || Usr_input == "是" ...
