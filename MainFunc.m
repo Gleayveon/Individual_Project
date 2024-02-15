@@ -1,7 +1,7 @@
 %%   EVE-Main Script
 %       Including:
 %       Define Global Variables, Time Stamp Mapping, Report generator, Interactive Tool
-%       Version: 4.2.3
+%       Version: 4.2.4
 %       2024.02.15
 %% Preparation
 clc

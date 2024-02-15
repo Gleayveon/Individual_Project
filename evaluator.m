@@ -28,7 +28,7 @@ function [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
 %   Discription:
 %   The discription of this script can be found at the README
 %   
-%   Version: 4.2.3
+%   Version: 4.2.4
 %   2024.02.15
 
 %% Data Loading
@@ -155,7 +155,7 @@ for docount = 1:num_Sample
                 Swell(SwellCount,2) = i;
                 Swell(SwellCount,3) = ducount;
             else
-                Swell(SwellCount,1) = length(U_rms);
+                Swell(SwellCount,1) = length(U_rms_10ms);
                 Swell(SwellCount,2) = i;
                 Swell(SwellCount,3) = docount;
             end
@@ -172,7 +172,7 @@ for docount = 1:num_Sample
                 Swell(SwellCount,5) = i;
                 Swell(SwellCount,6) = docount;
             else
-                Swell(SwellCount,4) = length(U_rms);
+                Swell(SwellCount,4) = length(U_rms_10ms);
                 Swell(SwellCount,5) = i;
                 Swell(SwellCount,6) = docount;
             end
@@ -190,7 +190,7 @@ for docount = 1:num_Sample
                 Dip(DipCount,2) = i;
                 Dip(DipCount,3) = ducount;
             else
-                Dip(DipCount,1) = length(U_rms);
+                Dip(DipCount,1) = length(U_rms_10ms);
                 Dip(DipCount,2) = i;
                 Dip(DipCount,3) = docount;
             end
@@ -206,7 +206,7 @@ for docount = 1:num_Sample
                 Dip(DipCount,5) = i;
                 Dip(DipCount,6) = docount;
             else
-                Dip(DipCount,4) = length(U_rms);
+                Dip(DipCount,4) = length(U_rms_10ms);
                 Dip(DipCount,5) = i;
                 Dip(DipCount,6) = docount;
             end
@@ -217,7 +217,7 @@ for docount = 1:num_Sample
                 Dip(DipCount,5) = i;
                 Dip(DipCount,6) = docount;
             else
-                Dip(DipCount,4) = length(U_rms);
+                Dip(DipCount,4) = length(U_rms_10ms);
                 Dip(DipCount,5) = i;
                 Dip(DipCount,6) = docount;
             end
@@ -235,7 +235,7 @@ for docount = 1:num_Sample
                 Interruption(InterruptionCount,2) = i;
                 Interruption(InterruptionCount,3) = ducount;
             else
-                Interruption(InterruptionCount,1) = length(U_rms);
+                Interruption(InterruptionCount,1) = length(U_rms_10ms);
                 Interruption(InterruptionCount,2) = i;
                 Interruption(InterruptionCount,3) = docount;
             end
@@ -251,7 +251,7 @@ for docount = 1:num_Sample
                 Interruption(InterruptionCount,5) = i;
                 Interruption(InterruptionCount,6) = docount;
             else
-                Interruption(InterruptionCount,4) = length(U_rms);
+                Interruption(InterruptionCount,4) = length(U_rms_10ms);
                 Interruption(InterruptionCount,5) = i;
                 Interruption(InterruptionCount,6) = docount;
             end
@@ -369,15 +369,15 @@ for docount = 1:num_Sample
     end
     if num == length(listing) && docount == num_Sample
         if isDip == 1
-            Dip(DipCount,4) = length(U_rms);
+            Dip(DipCount,4) = length(U_rms_10ms);
             Dip(DipCount,5) = i;
             Dip(DipCount,6) = docount;
         elseif isInterruption == 1
-            Interruption(InterruptionCount,4) = length(U_rms);
+            Interruption(InterruptionCount,4) = length(U_rms_10ms);
             Interruption(InterruptionCount,5) = i;
             Interruption(InterruptionCount,6) = docount;
         elseif isSwell == 1
-            Swell(SwellCount,4) = length(U_rms);
+            Swell(SwellCount,4) = length(U_rms_10ms);
             Swell(SwellCount,5) = i;
             Swell(SwellCount,6) = docount;
         else
