@@ -1,7 +1,7 @@
 %%   EVE-Main Script
 %       Including:
 %       Define Global Variables, Time Stamp Mapping, Report generator, Interactive Tool
-%       Version: 4.2.4
+%       Version: 4.2.5
 %       2024.02.15
 %% Preparation
 clc
@@ -361,8 +361,8 @@ if GENRPT == 1
                             disp_starttime = time_Short((sample_window_length/group_size)*Dip(Usr_input_3,3)+Dip(Usr_input_3,2)); 
                         disp_endtime = time_Short((sample_window_length/group_size)*Dip(Usr_input_3,6)+Dip(Usr_input_3,5));
                     else
-                        disp_starttime = time_Short(Dip(Usr_input_3,1)+Dip(Usr_input_3,2));
-                        disp_endtime = time_Short(Dip(Usr_input_3,4)+Dip(Usr_input_3,5));
+                        disp_starttime = time_Short(sample_window_length*Dip(Usr_input_3,1)+Dip(Usr_input_3,2));
+                        disp_endtime = time_Short(sample_window_length*Dip(Usr_input_3,4)+Dip(Usr_input_3,5));
                     end
                     CH_2 = sprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
                     append(rpt,CH_2);
@@ -460,8 +460,8 @@ if GENRPT == 1
                             disp_starttime = time_Short((sample_window_length/group_size)*Swell(Usr_input_3,3)+Swell(Usr_input_3,2)); % 40 here as 5ms is used
                         disp_endtime = time_Short((sample_window_length/group_size)*Swell(Usr_input_3,6)+Swell(Usr_input_3,5));
                     else
-                        disp_starttime = time_Short(Swell(Usr_input_3,1)+Swell(Usr_input_3,2));
-                        disp_endtime = time_Short(Swell(Usr_input_3,4)+Swell(Usr_input_3,5));
+                        disp_starttime = time_Short(sample_window_length*Swell(Usr_input_3,1)+Swell(Usr_input_3,2));
+                        disp_endtime = time_Short(sample_window_length*Swell(Usr_input_3,4)+Swell(Usr_input_3,5));
                     end
                     CH_2 = sprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
                     append(rpt,CH_2);
@@ -558,8 +558,8 @@ if GENRPT == 1
                             disp_starttime = time_Short((sample_window_length/group_size)*Interruption(Usr_input_3,3)+Interruption(Usr_input_3,2));
                         disp_endtime = time_Short((sample_window_length/group_size)*Interruption(Usr_input_3,6)+Interruption(Usr_input_3,5));
                     else
-                        disp_starttime = time_Short(Interruption(Usr_input_3,1)+Interruption(Usr_input_3,2));
-                        disp_endtime = time_Short(Interruption(Usr_input_3,4)+Interruption(Usr_input_3,5));
+                        disp_starttime = time_Short(sample_window_length*Interruption(Usr_input_3,1)+Interruption(Usr_input_3,2));
+                        disp_endtime = time_Short(sample_window_length*Interruption(Usr_input_3,4)+Interruption(Usr_input_3,5));
                     end
                     CH_2 = sprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
                     append(rpt,CH_2);
@@ -997,8 +997,8 @@ else
                             disp_starttime = time_Short((sample_window_length/group_size)*Swell(Usr_input_3,3)+Swell(Usr_input_3,2)); % 40 here as 5ms is used
                         disp_endtime = time_Short((sample_window_length/group_size)*Swell(Usr_input_3,6)+Swell(Usr_input_3,5));
                     else
-                        disp_starttime = time_Short(Swell(Usr_input_3,1)+Swell(Usr_input_3,2));
-                        disp_endtime = time_Short(Swell(Usr_input_3,4)+Swell(Usr_input_3,5));
+                        disp_starttime = time_Short(sample_window_length*Swell(Usr_input_3,1)+Swell(Usr_input_3,2));
+                        disp_endtime = time_Short(sample_window_length*Swell(Usr_input_3,4)+Swell(Usr_input_3,5));
                     end
                     fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
                     for i = 1:length(Setting)-1
@@ -1070,8 +1070,8 @@ else
                             disp_starttime = time_Short((sample_window_length/group_size)*Interruption(Usr_input_3,3)+Interruption(Usr_input_3,2)); % 40 here as 5ms is used
                         disp_endtime = time_Short((sample_window_length/group_size)*Interruption(Usr_input_3,6)+Interruption(Usr_input_3,5));
                     else
-                        disp_starttime = time_Short(Interruption(Usr_input_3,1)+Interruption(Usr_input_3,2));
-                        disp_endtime = time_Short(Interruption(Usr_input_3,4)+Interruption(Usr_input_3,5));
+                        disp_starttime = time_Short(sample_window_length*Interruption(Usr_input_3,1)+Interruption(Usr_input_3,2));
+                        disp_endtime = time_Short(sample_window_length*Interruption(Usr_input_3,4)+Interruption(Usr_input_3,5));
                     end
                     fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
                     for i = 1:length(Setting)-1
@@ -1124,8 +1124,8 @@ else
                             disp_starttime = time_Short((sample_window_length/group_size)*Dip(Usr_input_3,3)+Dip(Usr_input_3,2)); % 40 here as 5ms is used
                         disp_endtime = time_Short((sample_window_length/group_size)*Dip(Usr_input_3,6)+Dip(Usr_input_3,5));
                     else
-                        disp_starttime = time_Short(Dip(Usr_input_3,1)+Dip(Usr_input_3,2));
-                        disp_endtime = time_Short(Dip(Usr_input_3,4)+Dip(Usr_input_3,5));
+                        disp_starttime = time_Short(sample_window_length*Dip(Usr_input_3,1)+Dip(Usr_input_3,2));
+                        disp_endtime = time_Short(sample_window_length*Dip(Usr_input_3,4)+Dip(Usr_input_3,5));
                     end
                     fprintf('   Start time: %s\n    End time: %s\n',disp_starttime, disp_endtime);
                     for i = 1:length(Setting)-1

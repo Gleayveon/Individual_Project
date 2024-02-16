@@ -121,9 +121,9 @@ The following table shows the description of the major variables in the scripts.
 | DipSpec                           | Global | A vector contains the voltage during each dip, one colum for one event |
 | SwellSpec                         | Global | A vector contains the voltage during each swell, one colum for one event |
 | InterruptionSpec                  | Global | A vector contains the voltage during each interruption, one colum for one event |
-| Dip                               | Global | A vector used to mark each event happening time, use the length of *U_rms_10ms* and current number of loops and number of the data |
-| Swell                             | Global | A vector used to mark each event happening time, use the length of *U_rms_10ms* and current number of loops and number of the data |
-| Interruption                      | Global | A vector used to mark each event happening time, use the length of *U_rms_10ms* and current number of loops and number of the data |
+| Dip                               | Global | A vector used to mark each event happening time, use the length of *U_rms* and current number of loops and number of the data |
+| Swell                             | Global | A vector used to mark each event happening time, use the length of *U_rms* and current number of loops and number of the data |
+| Interruption                      | Global | A vector used to mark each event happening time, use the length of *U_rms* and current number of loops and number of the data |
 | U_ripple                          | Global | Ripple voltage                                               |
 | RDF_Voltage                       | Global | Voltage RDF                                                  |
 | RMS_Ripple_Factor_Voltage         | Global | Voltage RMS ripple factor                                    |
