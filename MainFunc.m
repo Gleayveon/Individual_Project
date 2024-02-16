@@ -1,163 +1,163 @@
-% %%   EVE-Main Script
-% %       Including:
-% %       Define Global Variables, Time Stamp Mapping, Report generator, Interactive Tool
-% %       Version: 4.2.5
-% %       2024.02.15
-% %% Preparation
-% clc
-% clear
-% close all
-% config = readlines("config.csv"); %The configure file name
-% MLPath = config(2);
-% DTPath = config(3);
-% U_nominal = double(config(4));
-% group_size = double(config(5));
-% sample_window_length = double(config(6));
-% Fs = double(config(7));
-% Threshold_Dip = double(config(8));
-% Threshold_Swell = double(config(9));
-% Threshold_Interruption = double(config(10));
-% Threshold_Hysteresis = double(config(11));
-% start_time = datetime(string(config(12)), 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
-% GENRPT = str2num(config(13));
-% Ts=1/Fs;    % Sampling period
-% 
-% cd(string(DTPath)) %Go to the Data folder to get the list of whole data
-% listing = dir('*.tdms');
-% len = length(listing);
-% 
-% 
-% % GENRPT = 0; %For demo only
-% U_avg =  0; %Create variable's heading, which will be deleted after the first sample is analysised
-% U_rms = 0;
-% I_avg_L1 = 0;
-% I_rms_L1 = 0;
-% I_avg_L2 = 0;
-% I_rms_L2 = 0;
-% I_avg_L3 = 0;
-% I_rms_L3 = 0;
-% U_rms_10ms = 0;
-% I_rms_L1_10ms = 0;
-% I_rms_L2_10ms = 0;
-% I_rms_L3_10ms = 0;
-% 
-% U_rms_20ms = 0;
-% I_rms_L1_20ms = 0;
-% I_rms_L2_20ms = 0;
-% I_rms_L3_20ms = 0;
-% 
-% leftover = 0;
-% fprintf('Starting...\n\n');
-% % Network Settings
-% cd(string(MLPath))
-% if exist("setting_time.csv", 'file') == 2 && exist("setting.csv",'file') == 2
-%     Setting_Times = readlines("setting_time.csv");
-%     for i = 1:length(Setting_Times)
-%         Setting_Time(i) = datetime(string(Setting_Times(i)), 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
-%     end
-%     Setting = readtable("setting.csv",'ReadVariableNames', false);
-% else
-% end
-% fprintf('System Settings Loaded.\n\n');
-% % NonStationary
-%     isNonStatDistOccur = 0; %Heading of Non-stationary disturbance Occur
-%     hysteresis = Threshold_Hysteresis*U_nominal;
-%     Swell_tr = Threshold_Swell*U_nominal;
-%     Dip_tr = Threshold_Dip*U_nominal; 
-%     Interruption_tr = Threshold_Interruption*U_nominal;
-%     timecount = 0;
-%     isSwell = 0; %To flag status of the sample
-%     isDip = 0;
-%     isInterruption = 0;
-%     DipCount = 0;
-%     SwellCount = 0;
-%     InterruptionCount = 0;
-%     DipTime = 0;
-%     SwellTime = 0;
-%     InterruptionTime = 0;
-%     DipSpec = 0;
-%     SwellSpec = 0;
-%     InterruptionSpec = 0;
-%     Dip = 0;
-%     Swell = 0;
-%     Interruption = 0;
-% %Stationaty
-%     U_ripple = 0;
-%     RDF_Voltage = 0;
-%     RMS_Ripple_Factor_Voltage = 0;
-%     Peak_Ripple_Factor_Voltage = 0;
-%     I_ripple_L1 = 0;
-%     RDF_L1 = 0;
-%     RMS_Ripple_Factor_L1 = 0;
-%     Peak_Ripple_Factor_L1 = 0;
-%     I_ripple_L2 = 0;
-%     RDF_L2 = 0;
-%     RMS_Ripple_Factor_L2 = 0;
-%     Peak_Ripple_Factor_L2 = 0;
-%     I_ripple_L3 = 0;
-%     RDF_L3 = 0;
-%     RMS_Ripple_Factor_L3 = 0;
-%     Peak_Ripple_Factor_L3 = 0;
-% %% Data Analysis
-% for num = 1:len
-%     [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
-%     isNonStatDistOccur,timecount,isSwell,isDip,...
-%     isInterruption,DipCount,SwellCount,InterruptionCount,DipTime,SwellTime,...
-%     InterruptionTime,DipSpec,SwellSpec,InterruptionSpec,U_ripple,RDF_Voltage,...
-%     RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
-%     RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
-%     RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
-%     RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,...
-%     U_rms_10ms,I_rms_L1_10ms,I_rms_L2_10ms,I_rms_L3_10ms,...
-%     U_rms_20ms,I_rms_L1_20ms,I_rms_L2_20ms,I_rms_L3_20ms,MLPath,DTPath,leftover]...
-%     = evaluator(num,listing,sample_window_length,group_size,Fs,Ts,U_avg,U_rms,...
-%     I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,isNonStatDistOccur,...
-%     hysteresis,Swell_tr,Dip_tr,Interruption_tr,timecount,isSwell,isDip,...
-%     isInterruption,DipCount,SwellCount,InterruptionCount,DipTime,SwellTime,...
-%     InterruptionTime,DipSpec,SwellSpec,InterruptionSpec,U_ripple,RDF_Voltage,...
-%     RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
-%     RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
-%     RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
-%     RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,...
-%     U_rms_10ms,I_rms_L1_10ms,I_rms_L2_10ms,I_rms_L3_10ms,...
-%     U_rms_20ms,I_rms_L1_20ms,I_rms_L2_20ms,I_rms_L3_20ms,MLPath,DTPath,leftover);
-% end
-%     fprintf('Data Analysis Finished.\n\n');
-% % Preparation for Getting the Each Disturbance Detail
-%     Swell_time = 0;
-%     Swell_spec = U_nominal;
-%     Dip_time = 0;
-%     Dip_spec = U_nominal;
-%     Interruption_time = 0;
-%     Interruption_spec = U_nominal;
-%     Swell_timesum = 0;
-%     Dip_timesum = 0;
-%     Interruption_timesum = 0;
-% 
-% % Time Stamp
-%     time_Short_SS = (group_size/1000):(group_size/1000):(group_size/1000)*length(U_rms_10ms);
-%     time_Short_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_Short_SS, 'UniformOutput', false);
-%     time_Short = cat(1, time_Short_Cell{:});
-%     time_Long_SS = (sample_window_length/1000):(sample_window_length/1000):(sample_window_length/1000)*length(U_rms);
-%     time_Long_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_Long_SS, 'UniformOutput', false);
-%     time_Long = cat(1, time_Long_Cell{:});
-%     fprintf('Time Stemps Allocated.\n\n');
-% 
-% for i = 1:SwellCount
-%     Swell_timesum = Swell_timesum + group_size * sum(SwellTime(:,i));
-%     Swell_time(i) = group_size * sum(SwellTime(:,i));
-%     Swell_spec(i) = max(SwellSpec(1:sum(SwellTime(:,i)),i));
-% end
-% for i = 1:DipCount
-%     Dip_timesum = Dip_timesum + group_size * sum(DipTime(:,i));
-%     Dip_time(i) = group_size * sum(DipTime(:,i));
-%     Dip_spec(i) = min(DipSpec(1:sum(DipTime(:,i)),i));
-% end
-% for i = 1:InterruptionCount
-%     Interruption_timesum = Interruption_timesum + group_size * sum(InterruptionTime(:,i));
-%     Interruption_time(i) = group_size * sum(InterruptionTime(:,i));
-%     Interruption_spec(i) = min(InterruptionSpec(1:sum(InterruptionTime(:,i)),i));
-% end
+%%   EVE-Main Script
+%       Including:
+%       Define Global Variables, Time Stamp Mapping, Report generator, Interactive Tool
+%       Version: 4.2.5
+%       2024.02.15
+%% Preparation
+clc
+clear
+close all
+config = readlines("config.csv"); %The configure file name
+MLPath = config(2);
+DTPath = config(3);
+U_nominal = double(config(4));
+group_size = double(config(5));
+sample_window_length = double(config(6));
+Fs = double(config(7));
+Threshold_Dip = double(config(8));
+Threshold_Swell = double(config(9));
+Threshold_Interruption = double(config(10));
+Threshold_Hysteresis = double(config(11));
+start_time = datetime(string(config(12)), 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
+GENRPT = str2num(config(13));
+Ts=1/Fs;    % Sampling period
+
+cd(string(DTPath)) %Go to the Data folder to get the list of whole data
+listing = dir('*.tdms');
+len = length(listing);
+
+
+% GENRPT = 0; %For demo only
+U_avg =  0; %Create variable's heading, which will be deleted after the first sample is analysised
+U_rms = 0;
+I_avg_L1 = 0;
+I_rms_L1 = 0;
+I_avg_L2 = 0;
+I_rms_L2 = 0;
+I_avg_L3 = 0;
+I_rms_L3 = 0;
+U_rms_10ms = 0;
+I_rms_L1_10ms = 0;
+I_rms_L2_10ms = 0;
+I_rms_L3_10ms = 0;
+
+U_rms_20ms = 0;
+I_rms_L1_20ms = 0;
+I_rms_L2_20ms = 0;
+I_rms_L3_20ms = 0;
+
+leftover = 0;
+fprintf('Starting...\n\n');
+% Network Settings
+cd(string(MLPath))
+if exist("setting_time.csv", 'file') == 2 && exist("setting.csv",'file') == 2
+    Setting_Times = readlines("setting_time.csv");
+    for i = 1:length(Setting_Times)
+        Setting_Time(i) = datetime(string(Setting_Times(i)), 'Format', 'yyyy-MMM-d HH:mm:ss.SSS');
+    end
+    Setting = readtable("setting.csv",'ReadVariableNames', false);
+else
+end
+fprintf('System Settings Loaded.\n\n');
+% NonStationary
+    isNonStatDistOccur = 0; %Heading of Non-stationary disturbance Occur
+    hysteresis = Threshold_Hysteresis*U_nominal;
+    Swell_tr = Threshold_Swell*U_nominal;
+    Dip_tr = Threshold_Dip*U_nominal; 
+    Interruption_tr = Threshold_Interruption*U_nominal;
+    timecount = 0;
+    isSwell = 0; %To flag status of the sample
+    isDip = 0;
+    isInterruption = 0;
+    DipCount = 0;
+    SwellCount = 0;
+    InterruptionCount = 0;
+    DipTime = 0;
+    SwellTime = 0;
+    InterruptionTime = 0;
+    DipSpec = 0;
+    SwellSpec = 0;
+    InterruptionSpec = 0;
+    Dip = 0;
+    Swell = 0;
+    Interruption = 0;
+%Stationaty
+    U_ripple = 0;
+    RDF_Voltage = 0;
+    RMS_Ripple_Factor_Voltage = 0;
+    Peak_Ripple_Factor_Voltage = 0;
+    I_ripple_L1 = 0;
+    RDF_L1 = 0;
+    RMS_Ripple_Factor_L1 = 0;
+    Peak_Ripple_Factor_L1 = 0;
+    I_ripple_L2 = 0;
+    RDF_L2 = 0;
+    RMS_Ripple_Factor_L2 = 0;
+    Peak_Ripple_Factor_L2 = 0;
+    I_ripple_L3 = 0;
+    RDF_L3 = 0;
+    RMS_Ripple_Factor_L3 = 0;
+    Peak_Ripple_Factor_L3 = 0;
+%% Data Analysis
+for num = 1:len
+    [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
+    isNonStatDistOccur,timecount,isSwell,isDip,...
+    isInterruption,DipCount,SwellCount,InterruptionCount,DipTime,SwellTime,...
+    InterruptionTime,DipSpec,SwellSpec,InterruptionSpec,U_ripple,RDF_Voltage,...
+    RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
+    RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
+    RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
+    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,...
+    U_rms_10ms,I_rms_L1_10ms,I_rms_L2_10ms,I_rms_L3_10ms,...
+    U_rms_20ms,I_rms_L1_20ms,I_rms_L2_20ms,I_rms_L3_20ms,MLPath,DTPath,leftover]...
+    = evaluator(num,listing,sample_window_length,group_size,Fs,Ts,U_avg,U_rms,...
+    I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,isNonStatDistOccur,...
+    hysteresis,Swell_tr,Dip_tr,Interruption_tr,timecount,isSwell,isDip,...
+    isInterruption,DipCount,SwellCount,InterruptionCount,DipTime,SwellTime,...
+    InterruptionTime,DipSpec,SwellSpec,InterruptionSpec,U_ripple,RDF_Voltage,...
+    RMS_Ripple_Factor_Voltage,Peak_Ripple_Factor_Voltage,I_ripple_L1,RDF_L1,...
+    RMS_Ripple_Factor_L1,Peak_Ripple_Factor_L1,I_ripple_L2,RDF_L2,...
+    RMS_Ripple_Factor_L2,Peak_Ripple_Factor_L2,I_ripple_L3,RDF_L3,...
+    RMS_Ripple_Factor_L3,Peak_Ripple_Factor_L3,Dip,Swell,Interruption,...
+    U_rms_10ms,I_rms_L1_10ms,I_rms_L2_10ms,I_rms_L3_10ms,...
+    U_rms_20ms,I_rms_L1_20ms,I_rms_L2_20ms,I_rms_L3_20ms,MLPath,DTPath,leftover);
+end
+    fprintf('Data Analysis Finished.\n\n');
+% Preparation for Getting the Each Disturbance Detail
+    Swell_time = 0;
+    Swell_spec = U_nominal;
+    Dip_time = 0;
+    Dip_spec = U_nominal;
+    Interruption_time = 0;
+    Interruption_spec = U_nominal;
+    Swell_timesum = 0;
+    Dip_timesum = 0;
+    Interruption_timesum = 0;
+
+% Time Stamp
+    time_Short_SS = (group_size/1000):(group_size/1000):(group_size/1000)*length(U_rms_10ms);
+    time_Short_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_Short_SS, 'UniformOutput', false);
+    time_Short = cat(1, time_Short_Cell{:});
+    time_Long_SS = (sample_window_length/1000):(sample_window_length/1000):(sample_window_length/1000)*length(U_rms);
+    time_Long_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_Long_SS, 'UniformOutput', false);
+    time_Long = cat(1, time_Long_Cell{:});
+    fprintf('Time Stemps Allocated.\n\n');
+
+for i = 1:SwellCount
+    Swell_timesum = Swell_timesum + group_size * sum(SwellTime(:,i));
+    Swell_time(i) = group_size * sum(SwellTime(:,i));
+    Swell_spec(i) = max(SwellSpec(1:sum(SwellTime(:,i)),i));
+end
+for i = 1:DipCount
+    Dip_timesum = Dip_timesum + group_size * sum(DipTime(:,i));
+    Dip_time(i) = group_size * sum(DipTime(:,i));
+    Dip_spec(i) = min(DipSpec(1:sum(DipTime(:,i)),i));
+end
+for i = 1:InterruptionCount
+    Interruption_timesum = Interruption_timesum + group_size * sum(InterruptionTime(:,i));
+    Interruption_time(i) = group_size * sum(InterruptionTime(:,i));
+    Interruption_spec(i) = min(InterruptionSpec(1:sum(InterruptionTime(:,i)),i));
+end
 %% Overall Display
 disp('=========Detection_Report=========');
 fprintf(['In these signals sampled,\n']);
@@ -240,7 +240,7 @@ yline(2,'Label','Swell');
 yline(3,'Label','Dip');
 xline(Setting_Time,'-',label)
 ylim([1 3.5]);
-% Setting = table2array(Setting);
+Setting = table2array(Setting);
 
 U_ripple = double(abs(U_ripple));
 I_ripple_L1 = double(abs(I_ripple_L1));
