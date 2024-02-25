@@ -1,8 +1,8 @@
 %%   EVE-Main Script
 %       Including:
 %       Define Global Variables, Time Stamp Mapping, Report generator, Interactive Tool
-%       Version: 4.2.6
-%       2024.02.18
+%       Version: 4.2.7
+%       2024.02.25
 % %% Preparation
 % clc
 % clear
@@ -725,7 +725,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(U_rms(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -770,7 +770,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(U_avg(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -860,7 +860,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(I_ripple_L1(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -905,7 +905,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(I_ripple_L2(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -950,7 +950,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(I_ripple_L3(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -1033,7 +1033,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(RDF_Voltage(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -1078,7 +1078,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(RDF_L1(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -1123,7 +1123,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(RDF_L2(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -1168,7 +1168,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(RDF_L3(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -1213,7 +1213,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(RMS_Ripple_Factor_Voltage(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -1258,7 +1258,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(RMS_Ripple_Factor_L1(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -1303,7 +1303,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(RMS_Ripple_Factor_L2(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -1348,7 +1348,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(RMS_Ripple_Factor_L3(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -1393,7 +1393,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(Peak_Ripple_Factor_Voltage(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -1438,7 +1438,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(Peak_Ripple_Factor_L1(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -1483,7 +1483,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(Peak_Ripple_Factor_L2(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
@@ -1528,7 +1528,7 @@ if GENRPT == 1
 
                 ylimits = [max(0, min_q1 - 1.5 * max(IQR_all)), max_q3 + 1.5 * max(IQR_all)];
 
-                percentile90 = prctile(U_ripple(:), 90);
+                percentile90 = prctile(Peak_Ripple_Factor_L3(:), 90);
                 ylimits(1) = min(ylimits(1), percentile90);
                 ylimits(2) = max(ylimits(2), percentile90);
 
