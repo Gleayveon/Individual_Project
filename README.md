@@ -49,7 +49,7 @@ Please edit the config file regarding to the following table. After edit, the cs
 | **Start time (format as: yyyy-MMM-d HH:mm:ss.SSS)**          |
 | **Enable auto report generator (enter 1 for enable, 0 for disable)** |
 
-* Please note that the interactive tool would not start if auto report generator is enabled, vise versa. *
+** Please note that the interactive tool would not start if auto report generator is enabled, vise versa. **
 For default setting, which was used during the develop of the tool, please refer to the following table. The last line, which is set as 0 for active the interactive tool.
 
 | **INSERT YOUR SETTING IN THIS COLUMN**                       |
@@ -69,8 +69,8 @@ For default setting, which was used during the develop of the tool, please refer
 
 #### Create setting.csv and setting_time.csv
 
-These two file are not compulsory, but we highly recomment to use them to store the system setting. setting_time.csv is a single column file, each line correspond to one setting change point. The time format is the same as yyyy-MMM-d HH:mm:ss.SSS.
-setting.csv stores the description of the system at that time, the height of setting.csv and setting_time.csv should be the same.
+These two file stores the setting discription of the network, and the time when the setting starts. setting_time.csv is a single column file, each line correspond to one setting change point. The time format is the same as yyyy-MMM-d HH:mm:ss.SSS.
+setting.csv stores the description of the system at that time, with the first line contains the discription of the settings, the height of setting.csv and setting_time.csv should have a difference of one, where the height of setting.csv is larger.
 
 ### Variables Description
 
