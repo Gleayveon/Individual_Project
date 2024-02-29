@@ -18,10 +18,10 @@ To use the script, please ensure the files are stored as shown below:
 ```
 -------Matlab_File
 |                 |-MainFunc.m
-|				  |-evaluator.m
-|				  |-config.csv
-|				  |-setting.csv
-|				  |-setting_time.csv
+|                 |-evaluator.m
+|                 |-config.csv
+|                 |-setting.csv
+|                 |-setting_time.csv
 |                 |-Evaluation Report.dotx
 |
 |------Data
