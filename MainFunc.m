@@ -207,9 +207,9 @@ figure
 subplot(2,1,1)
 yyaxis left
 plot(time_Short,U_rms_10ms,'Color','#633736',LineStyle='-');
-% for i = 1:length(Setting_Time)
-%     label(i) = {sprintf('Setting %d',i)};
-% end
+for i = 1:length(Setting_Time)
+    label(i) = {sprintf('Setting %d',i)};
+end
 xline(Setting_Time,'-',label)
 ylabel('V')
 yyaxis right
@@ -222,17 +222,17 @@ ylabel('A')
 xlabel('time')
 legend('Voltage','Line 1','Line 2','Line 3');
 hold off
-% for i = 1:length(isNonStatDistOccur)
-%     if isNonStatDistOccur(i) == 0
-%         Status(i) = NaN;
-%     elseif isNonStatDistOccur(i) == 1
-%         Status(i) = 2; %swell
-%     elseif isNonStatDistOccur(i) == 2
-%         Status(i) = 3; %dip
-%     else
-%         Status(i) = 1; %inpt
-%     end
-% end
+for i = 1:length(isNonStatDistOccur)
+    if isNonStatDistOccur(i) == 0
+        Status(i) = NaN;
+    elseif isNonStatDistOccur(i) == 1
+        Status(i) = 2; %swell
+    elseif isNonStatDistOccur(i) == 2
+        Status(i) = 3; %dip
+    else
+        Status(i) = 1; %inpt
+    end
+end
 subplot(2,1,2)
 plot(time_Short,Status,'o','Color','#C31E2D');
 yline(1,'Label','Interruption');
@@ -240,24 +240,24 @@ yline(2,'Label','Swell');
 yline(3,'Label','Dip');
 xline(Setting_Time,'-',label)
 ylim([1 3.5]);
-% Setting = table2array(Setting);
+Setting = table2array(Setting);
 
-% U_ripple = double(abs(U_ripple));
-% I_ripple_L1 = double(abs(I_ripple_L1));
-% I_ripple_L2 = double(abs(I_ripple_L2));
-% I_ripple_L3 = double(abs(I_ripple_L3));
-% RDF_Voltage = double(abs(RDF_Voltage));
-% RDF_L1 = double(abs(RDF_L1));
-% RDF_L2 = double(abs(RDF_L2));
-% RDF_L3 = double(abs(RDF_L3));
-% RMS_Ripple_Factor_Voltage = double(abs(RMS_Ripple_Factor_Voltage));
-% RMS_Ripple_Factor_L1 = double(abs(RMS_Ripple_Factor_L1));
-% RMS_Ripple_Factor_L2 = double(abs(RMS_Ripple_Factor_L2));
-% RMS_Ripple_Factor_L3 = double(abs(RMS_Ripple_Factor_L3));
-% Peak_Ripple_Factor_Voltage = double(abs(Peak_Ripple_Factor_Voltage));
-% Peak_Ripple_Factor_L1 = double(abs(Peak_Ripple_Factor_L1));
-% Peak_Ripple_Factor_L2 = double(abs(Peak_Ripple_Factor_L2));
-% Peak_Ripple_Factor_L3 = double(abs(Peak_Ripple_Factor_L3));
+U_ripple = double(abs(U_ripple));
+I_ripple_L1 = double(abs(I_ripple_L1));
+I_ripple_L2 = double(abs(I_ripple_L2));
+I_ripple_L3 = double(abs(I_ripple_L3));
+RDF_Voltage = double(abs(RDF_Voltage));
+RDF_L1 = double(abs(RDF_L1));
+RDF_L2 = double(abs(RDF_L2));
+RDF_L3 = double(abs(RDF_L3));
+RMS_Ripple_Factor_Voltage = double(abs(RMS_Ripple_Factor_Voltage));
+RMS_Ripple_Factor_L1 = double(abs(RMS_Ripple_Factor_L1));
+RMS_Ripple_Factor_L2 = double(abs(RMS_Ripple_Factor_L2));
+RMS_Ripple_Factor_L3 = double(abs(RMS_Ripple_Factor_L3));
+Peak_Ripple_Factor_Voltage = double(abs(Peak_Ripple_Factor_Voltage));
+Peak_Ripple_Factor_L1 = double(abs(Peak_Ripple_Factor_L1));
+Peak_Ripple_Factor_L2 = double(abs(Peak_Ripple_Factor_L2));
+Peak_Ripple_Factor_L3 = double(abs(Peak_Ripple_Factor_L3));
 %% Peport Generator & Interactive Tool
 if GENRPT == 1
     
