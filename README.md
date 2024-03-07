@@ -8,10 +8,10 @@
 
 We highly suggest using this tool under a Windows PC (tested with Windows 10) with MATLAB R2023b
 
-| Compatibility             | Windows | macOS |
-| ------------------------- | ------- | ----- |
-| Distortion Detection      | V       | X     |
-| Detection Result Analysis | V       | V     |
+| Compatibility             | Windows | macOS                                         |
+| ------------------------- | ------- | --------------------------------------------- |
+| Distortion Detection      | V       | V with conditions (Unable to load .tdms File) |
+| Detection Result Analysis | V       | V                                             |
 
 To use the script, please ensure the files are stored as shown below:
 

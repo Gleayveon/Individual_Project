@@ -184,7 +184,7 @@ for docount = 1:num_Sample
             if num == 1
                 Dip(DipCount,1) = 0;
                 Dip(DipCount,2) = i;
-                Dip(DipCount,3) = ducount;
+                Dip(DipCount,3) = docount;
             else
                 Dip(DipCount,1) = length(U_rms_10ms);
                 Dip(DipCount,2) = i;

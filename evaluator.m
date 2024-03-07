@@ -259,7 +259,7 @@ for docount = 1:num_Sample
     end
 
     %% RDF & 2 Factors
-    L = sample_window_length / group_size;
+    L = sample_window_length;
     t = (0:L-1)*Ts;
 
     RDF_Voltage_sample = 0;
@@ -298,7 +298,7 @@ for docount = 1:num_Sample
         Iripple_L3 = NaN;
     else
         % Voltage
-        Y = fft(Urms_nonStat_sample);
+        Y = fft(voltage);
 
         P2 = abs(Y/L);
         P1 = P2(1:round(L/2));
@@ -309,14 +309,14 @@ for docount = 1:num_Sample
         Temp2 = sqrt(Temp);
         RDF_Voltage_sample = (Temp2 / P1(1)) *100;
 
-        Peak = max(Urms_nonStat_sample);
-        Valley = min(Urms_nonStat_sample);
+        Peak = max(voltage);
+        Valley = min(voltage);
         Peak_Ripple_Factor_Voltage_sample = (Peak - Valley)/Uavg_sample * 100;
 
         Uripple = sqrt((Urms_sample ^2) - (Uavg_sample ^2));
         RMS_Ripple_Factor_Voltage_sample = Uripple/Uavg_sample * 100;
         % Line 1
-        Y_L1 = fft(current_rms_nonStat_sample_L1);
+        Y_L1 = fft(current_L1);
 
         P2_L1 = abs(Y_L1/L);
         P1_L1 = P2_L1(1:round(L/2));
@@ -326,14 +326,14 @@ for docount = 1:num_Sample
         Temp2_L1 = sqrt(Temp_L1);
         RDF_L1_sample = (Temp2_L1 / P1_L1(1)) *100;
 
-        Peak = max(current_rms_nonStat_sample_L1);
-        Valley = min(current_rms_nonStat_sample_L1);
+        Peak = max(current_L1);
+        Valley = min(current_L1);
         Peak_Ripple_Factor_L1_sample = (Peak - Valley)/current_mean_sample_L1 * 100;
 
         Iripple_L1 = sqrt((current_rms_sample_L1^2) - (current_mean_sample_L1 ^2));
         RMS_Ripple_Factor_L1_sample = Iripple_L1/current_mean_sample_L1 * 100;
         % Line 2
-        Y_L2 = fft(current_rms_nonStat_sample_L2);
+        Y_L2 = fft(current_L2);
 
         P2_L2 = abs(Y_L2/L);
         P1_L2 = P2_L2(1:round(L/2));
@@ -343,14 +343,14 @@ for docount = 1:num_Sample
         Temp2_L2 = sqrt(Temp_L2);
         RDF_L2_sample = (Temp2_L2 / P1_L2(1)) *100;
 
-        Peak = max(current_rms_nonStat_sample_L2);
-        Valley = min(current_rms_nonStat_sample_L2);
+        Peak = max(current_L2);
+        Valley = min(current_L2);
         Peak_Ripple_Factor_L2_sample = (Peak - Valley)/current_mean_sample_L2 * 100;
 
         Iripple_L2 = sqrt((current_rms_sample_L2^2) - (current_mean_sample_L2 ^2));
         RMS_Ripple_Factor_L2_sample = Iripple_L2/current_mean_sample_L2 * 100;
         % Line 3
-        Y_L3 = fft(current_rms_nonStat_sample_L3);
+        Y_L3 = fft(current_L3);
 
         P2_L3 = abs(Y_L3/L);
         P1_L3 = P2_L3(1:round(L/2));
@@ -360,8 +360,8 @@ for docount = 1:num_Sample
         Temp2_L3 = sqrt(Temp_L3);
         RDF_L3_sample = (Temp2_L3 / P1_L3(1)) *100;
 
-        Peak = max(current_rms_nonStat_sample_L3);
-        Valley = min(current_rms_nonStat_sample_L3);
+        Peak = max(current_L3);
+        Valley = min(current_L3);
         Peak_Ripple_Factor_L3_sample = (Peak - Valley)/current_mean_sample_L3 * 100;
 
         Iripple_L3 = sqrt((current_rms_sample_L3^2) - (current_mean_sample_L3 ^2));
