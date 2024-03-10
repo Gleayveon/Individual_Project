@@ -39,7 +39,7 @@ Please edit the config file regarding to the following table. After edit, the cs
 | **The path of this tool**                                    |
 | **The path of your data**                                    |
 | **The nominal voltage of your data (unit in V)**             |
-| **The time interval of calculating average and RMS values (unit in microseconds)** |
+| **The time interval of calculating average and RMS values (unit is the sample number)** |
 | **The time interval of calculating RDF (unit in microseconds, typically 200000)** |
 | **The sampling frequency of the data (unit in Hz)**          |
 | **The threshold of Dip you would like to use (unit in pu)**  |

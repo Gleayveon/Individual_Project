@@ -80,43 +80,43 @@
 %     ylabel('Magnitude');
 %     xlabel('Time (ms)');
 %     legend('Line 1','Line 2','Line 3');
-figure(8)
- plot(time_5MS,U_rms);
-    title('U_r_m_s mean');
-    ylabel('U_r_m_s Magnitude');
-    xlabel('Time (ms)')
-    yline(Dip_tr,'--','Color','#C31E2D','Label','Dip tr Start');
-    yline((Dip_tr+hysteresis),'--','Color','#C31E2D','Label','Dip tr End');
-    yline(Swell_tr,'--','Color','#2773C8','Label','Swell tr Start');
-    yline((Swell_tr-hysteresis),'--','Color','#2773C8','Label','Swell tr End');
-    yline(Interruption_tr,'--','Color','#9CC38A','Label','Interruption tr ');
-    xline(datetime('2023-09-26 13:49:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','13:49');
-    xline(datetime('2023-09-26 14:05:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:05');
-    xline(datetime('2023-09-26 14:18:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:18');
-    xline(datetime('2023-09-26 14:25:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:25');
-    xline(datetime('2023-09-26 14:30:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:30');
-    xline(datetime('2023-09-26 14:47:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:47');
-    xline(datetime('2023-09-26 14:53:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:53');
-    xline(datetime('2023-09-26 14:55:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:55');
-    xline(datetime('2023-09-26 14:57:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:57');
-    xline(datetime('2023-09-26 14:58:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:58');
-    xline(datetime('2023-09-26 14:59:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:59');
-    xline(datetime('2023-09-26 15:00:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:00');
-    xline(datetime('2023-09-26 15:05:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:05');
-    xline(datetime('2023-09-26 15:09:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:09');
-    xline(datetime('2023-09-26 15:10:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:10');
-    xline(datetime('2023-09-26 15:11:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:11');
-    xline(datetime('2023-09-26 15:16:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:16');
-    xline(datetime('2023-09-26 15:18:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:18');
-    xline(datetime('2023-09-26 15:32:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:32');
-    xline(datetime('2023-09-26 15:33:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:33');
-    hold on
-    plot(time_5MS,I_rms_L1)
-    hold on
-    plot(time_5MS,I_rms_L2)
-    hold on
-    plot(time_5MS,I_rms_L3)
-    hold off
+% figure(8)
+%  plot(time_5MS,U_rms);
+%     title('U_r_m_s mean');
+%     ylabel('U_r_m_s Magnitude');
+%     xlabel('Time (ms)')
+%     yline(Dip_tr,'--','Color','#C31E2D','Label','Dip tr Start');
+%     yline((Dip_tr+hysteresis),'--','Color','#C31E2D','Label','Dip tr End');
+%     yline(Swell_tr,'--','Color','#2773C8','Label','Swell tr Start');
+%     yline((Swell_tr-hysteresis),'--','Color','#2773C8','Label','Swell tr End');
+%     yline(Interruption_tr,'--','Color','#9CC38A','Label','Interruption tr ');
+%     xline(datetime('2023-09-26 13:49:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','13:49');
+%     xline(datetime('2023-09-26 14:05:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:05');
+%     xline(datetime('2023-09-26 14:18:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:18');
+%     xline(datetime('2023-09-26 14:25:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:25');
+%     xline(datetime('2023-09-26 14:30:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:30');
+%     xline(datetime('2023-09-26 14:47:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:47');
+%     xline(datetime('2023-09-26 14:53:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:53');
+%     xline(datetime('2023-09-26 14:55:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:55');
+%     xline(datetime('2023-09-26 14:57:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:57');
+%     xline(datetime('2023-09-26 14:58:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:58');
+%     xline(datetime('2023-09-26 14:59:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','14:59');
+%     xline(datetime('2023-09-26 15:00:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:00');
+%     xline(datetime('2023-09-26 15:05:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:05');
+%     xline(datetime('2023-09-26 15:09:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:09');
+%     xline(datetime('2023-09-26 15:10:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:10');
+%     xline(datetime('2023-09-26 15:11:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:11');
+%     xline(datetime('2023-09-26 15:16:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:16');
+%     xline(datetime('2023-09-26 15:18:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:18');
+%     xline(datetime('2023-09-26 15:32:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:32');
+%     xline(datetime('2023-09-26 15:33:00','Format', 'yyyy-MMM-d HH:mm:ss.SSS'),'Label','15:33');
+%     hold on
+%     plot(time_5MS,I_rms_L1)
+%     hold on
+%     plot(time_5MS,I_rms_L2)
+%     hold on
+%     plot(time_5MS,I_rms_L3)
+%     hold off
 % figure(9)
 %     plot(time_200MS,RMS_Ripple_Factor_L1);
 %     hold on
@@ -152,3 +152,12 @@ figure(8)
 %     xlabel('Time (ms)');
 %     ylabel('Magnitude');
 %     legend('Line 1','Line 2','Line 3')
+% Pie_Data(1) = group_size * length(U_rms_10ms) - Dip_timesum - Swell_timesum - Interruption_timesum;
+%     Pie_Data(2) = Swell_timesum;
+%     Pie_Data(3) = Dip_timesum;
+%     Pie_Data(4) = Interruption_timesum;
+%     pie(Pie_Data);
+%     legend('Normal','Swell','Dip','Interruption');
+%     title('Chart of the data''s voltage status');
+TB = [Variables_200ms.I_ripple_L1,Variables_200ms.RDF_L2,Variables_200ms.Peak_Ripple_Factor_L2,Variables_200ms.RMS_Ripple_Factor_L2];
+boxplot(TB,'Labels',{'Ripple','RDF','Peak_Ripple_Factor','RMS_Ripple_Factor'})
