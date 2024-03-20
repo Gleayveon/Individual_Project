@@ -279,24 +279,24 @@ for docount = 1:num_Sample
     RMS_Ripple_Factor_L3_sample = 0;
 
     
-    if sum(isNonStatDistOccur_sample(:)) ~= 0
-        RDF_Voltage_sample = NaN;
-        Peak_Ripple_Factor_Voltage_sample = NaN;
-        RMS_Ripple_Factor_Voltage_sample = NaN;
-        RDF_L1_sample = NaN;
-        Peak_Ripple_Factor_L1_sample = NaN;
-        RMS_Ripple_Factor_L1_sample = NaN;
-        RDF_L2_sample = NaN;
-        Peak_Ripple_Factor_L2_sample = NaN;
-        RMS_Ripple_Factor_L2_sample = NaN;
-        RDF_L3_sample = NaN;
-        Peak_Ripple_Factor_L3_sample = NaN;
-        RMS_Ripple_Factor_L3_sample = NaN;
-        Uripple = NaN;
-        Iripple_L1 = NaN;
-        Iripple_L2 = NaN;
-        Iripple_L3 = NaN;
-    else
+    % if sum(isNonStatDistOccur_sample(:)) ~= 0
+    %     RDF_Voltage_sample = NaN;
+    %     Peak_Ripple_Factor_Voltage_sample = NaN;
+    %     RMS_Ripple_Factor_Voltage_sample = NaN;
+    %     RDF_L1_sample = NaN;
+    %     Peak_Ripple_Factor_L1_sample = NaN;
+    %     RMS_Ripple_Factor_L1_sample = NaN;
+    %     RDF_L2_sample = NaN;
+    %     Peak_Ripple_Factor_L2_sample = NaN;
+    %     RMS_Ripple_Factor_L2_sample = NaN;
+    %     RDF_L3_sample = NaN;
+    %     Peak_Ripple_Factor_L3_sample = NaN;
+    %     RMS_Ripple_Factor_L3_sample = NaN;
+    %     Uripple = NaN;
+    %     Iripple_L1 = NaN;
+    %     Iripple_L2 = NaN;
+    %     Iripple_L3 = NaN;
+    % else
         % Voltage
         Y = fft(voltage);
 
@@ -366,7 +366,7 @@ for docount = 1:num_Sample
 
         Iripple_L3 = sqrt((current_rms_sample_L3^2) - (current_mean_sample_L3 ^2));
         RMS_Ripple_Factor_L3_sample = Iripple_L3/current_mean_sample_L3 * 100;
-    end
+    % end
     if num == length(listing) && docount == num_Sample
         if isDip == 1
             Dip(DipCount,4) = length(U_rms_10ms);
