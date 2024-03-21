@@ -135,10 +135,10 @@ Dip_timesum = 0;
 Interruption_timesum = 0;
 
 % Time Stamp
-time_Short_SS = (group_size/1000):(group_size/1000):(group_size/1000)*length(U_rms_10ms);
+time_Short_SS = (group_size/(1000000/Fs)):(group_size/(1000000/Fs)):(group_size/(1000000/Fs))*length(U_rms_10ms);
 time_Short_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_Short_SS, 'UniformOutput', false);
 time_Short = cat(1, time_Short_Cell{:});
-time_Long_SS = (sample_window_length/1000):(sample_window_length/1000):(sample_window_length/1000)*length(U_rms);
+time_Long_SS = (sample_window_length/(1000000/Fs)):(sample_window_length/(1000000/Fs)):(sample_window_length/(1000000/Fs))*length(U_rms);
 time_Long_Cell = arrayfun(@(ms) start_time + milliseconds(ms), time_Long_SS, 'UniformOutput', false);
 time_Long = cat(1, time_Long_Cell{:});
 fprintf('Time Stemps Allocated.\n\n');
@@ -181,7 +181,7 @@ if SwellCount == 0
     fprintf(['There is no Swell in these sample.\n'])
 else
     for i = 1:SwellCount
-        fprintf('Swell No.%d: Maximum Urms is %.4f V. Duration is %d ms.\n', i, Swell_spec(i), Swell_time(i)/1000);
+        fprintf('Swell No.%d: Maximum Urms is %.4f V. Duration is %d ms.\n', i, Swell_spec(i), Swell_time(i)/(1000/(1000000/Fs));
     end
 end
 fprintf('----------------------------------\n\n');
@@ -190,7 +190,7 @@ if DipCount == 0
     fprintf(['There is no Dip in these sample.\n'])
 else
     for i = 1:DipCount
-        fprintf('Dip No.%d: Minimum Urms is %.4f V. Duration is %d ms.\n', i, Dip_spec(i), Dip_time(i)/1000);
+        fprintf('Dip No.%d: Minimum Urms is %.4f V. Duration is %d ms.\n', i, Dip_spec(i), Dip_time(i)/(1000/(1000000/Fs));
     end
 end
 fprintf('----------------------------------\n\n');
@@ -199,7 +199,7 @@ if InterruptionCount == 0
     fprintf(['There is no Interruption in these sample.\n'])
 else
     for i = 1:InterruptionCount
-        fprintf('Interruption No.%d: Minimum Urms is %.4f V. Duration is %d ms.\n', i, Interruption_spec(i), Interruption_time(i)/1000);
+        fprintf('Interruption No.%d: Minimum Urms is %.4f V. Duration is %d ms.\n', i, Interruption_spec(i), Interruption_time(i)/(1000/(1000000/Fs));
     end
 end
 fprintf('----------------------------------\n\n');
@@ -240,24 +240,24 @@ yline(2,'Label','Swell');
 yline(3,'Label','Dip');
 xline(Setting_Time,'-',label)
 ylim([1 3.5]);
-% Setting = table2array(Setting);
-% 
-% U_ripple = double(abs(U_ripple));
-% I_ripple_L1 = double(abs(I_ripple_L1));
-% I_ripple_L2 = double(abs(I_ripple_L2));
-% I_ripple_L3 = double(abs(I_ripple_L3));
-% RDF_Voltage = double(abs(RDF_Voltage));
-% RDF_L1 = double(abs(RDF_L1));
-% RDF_L2 = double(abs(RDF_L2));
-% RDF_L3 = double(abs(RDF_L3));
-% RMS_Ripple_Factor_Voltage = double(abs(RMS_Ripple_Factor_Voltage));
-% RMS_Ripple_Factor_L1 = double(abs(RMS_Ripple_Factor_L1));
-% RMS_Ripple_Factor_L2 = double(abs(RMS_Ripple_Factor_L2));
-% RMS_Ripple_Factor_L3 = double(abs(RMS_Ripple_Factor_L3));
-% Peak_Ripple_Factor_Voltage = double(abs(Peak_Ripple_Factor_Voltage));
-% Peak_Ripple_Factor_L1 = double(abs(Peak_Ripple_Factor_L1));
-% Peak_Ripple_Factor_L2 = double(abs(Peak_Ripple_Factor_L2));
-% Peak_Ripple_Factor_L3 = double(abs(Peak_Ripple_Factor_L3));
+Setting = table2array(Setting);
+
+U_ripple = double(abs(U_ripple));
+I_ripple_L1 = double(abs(I_ripple_L1));
+I_ripple_L2 = double(abs(I_ripple_L2));
+I_ripple_L3 = double(abs(I_ripple_L3));
+RDF_Voltage = double(abs(RDF_Voltage));
+RDF_L1 = double(abs(RDF_L1));
+RDF_L2 = double(abs(RDF_L2));
+RDF_L3 = double(abs(RDF_L3));
+RMS_Ripple_Factor_Voltage = double(abs(RMS_Ripple_Factor_Voltage));
+RMS_Ripple_Factor_L1 = double(abs(RMS_Ripple_Factor_L1));
+RMS_Ripple_Factor_L2 = double(abs(RMS_Ripple_Factor_L2));
+RMS_Ripple_Factor_L3 = double(abs(RMS_Ripple_Factor_L3));
+Peak_Ripple_Factor_Voltage = double(abs(Peak_Ripple_Factor_Voltage));
+Peak_Ripple_Factor_L1 = double(abs(Peak_Ripple_Factor_L1));
+Peak_Ripple_Factor_L2 = double(abs(Peak_Ripple_Factor_L2));
+Peak_Ripple_Factor_L3 = double(abs(Peak_Ripple_Factor_L3));
 %% Peport Generator & Interactive Tool
 if GENRPT == 1
     
@@ -1628,7 +1628,7 @@ else
                             temp4 = temp4 + 1;
                         end
                     end
-                    if sum(Tolerance_Within1) < 1000000 && sum(Tolerance_Within2) < 100000 && sum(Tolerance_Without) == 0
+                    if sum(Tolerance_Within1) < (1000000/(1000000/Fs)) && sum(Tolerance_Within2) < 100000/(1000000/Fs) && sum(Tolerance_Without) == 0
                         fprintf(['\n·-·-·-·-·-·-·-·-·-·-\nAll samples during this distortion are within the tolerance of Voltage Swell\nTherefore, this distortion can be tolerate.\n\n' ...
                             '(0.7~1.25 of nominal voltage for duration < 1s, 0.6~1.4 of nominal voltage for duration < 0.1s, interruption duration < 10ms)\n' ...
                             '(NB No standard defined for tolerance of equipment to voltage dips,\nshort interruptions and voltage swells in LVDC networks, this tool used the standrad used in railway applications.)\n']);
