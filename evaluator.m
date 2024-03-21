@@ -55,7 +55,7 @@ L3_Current=L3_Current.*25;
 num_groups = floor(sample_window_length / group_size);
 
 %DownSample
-DS=2;
+DS=200;
 L1_Voltage_D=downsample(L1_Voltage,DS);
 L1_Current_D=downsample(L1_Current,DS);
 L2_Current_D=downsample(L2_Current,DS);
