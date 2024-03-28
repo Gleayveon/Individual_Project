@@ -28,8 +28,10 @@ function [U_avg,U_rms,I_avg_L1,I_avg_L2,I_avg_L3,I_rms_L1,I_rms_L2,I_rms_L3,...
 %   Discription:
 %   The discription of this script can be found at the README
 %   
-%   Version: 4.2.4
-%   2024.02.15
+%   Developed by Lin @ Strathclyde
+%   Code Repository: https://github.com/Gleayveon/Individual_Project
+%   Version: 4.3.0
+%   2024.03.24
 
 %% Data Loading
 cd(string(DTPath)) % Here is the path of where Data file locate
@@ -54,24 +56,18 @@ L3_Current=L3_Current.*25;
 
 num_groups = floor(sample_window_length / group_size);
 
-%DownSample
-DS=200;
-L1_Voltage_D=downsample(L1_Voltage,DS);
-L1_Current_D=downsample(L1_Current,DS);
-L2_Current_D=downsample(L2_Current,DS);
-L3_Current_D=downsample(L3_Current,DS);
 
 %% Leftover
 if num == 1 % The starting file is special as it has no previous file
-    Data_Voltage = L1_Voltage_D;
-    Data_L1_Current = L1_Current_D;
-    Data_L2_Current = L2_Current_D;
-    Data_L3_Current = L3_Current_D;
+    Data_Voltage = L1_Voltage;
+    Data_L1_Current = L1_Current;
+    Data_L2_Current = L2_Current;
+    Data_L3_Current = L3_Current;
 else
-    Data_Voltage = cat(1,leftover(:,1),L1_Voltage_D);
-    Data_L1_Current = cat(1,leftover(:,2),L1_Current_D);
-    Data_L2_Current = cat(1,leftover(:,3),L2_Current_D);
-    Data_L3_Current = cat(1,leftover(:,4),L3_Current_D);
+    Data_Voltage = cat(1,leftover(:,1),L1_Voltage);
+    Data_L1_Current = cat(1,leftover(:,2),L1_Current);
+    Data_L2_Current = cat(1,leftover(:,3),L2_Current);
+    Data_L3_Current = cat(1,leftover(:,4),L3_Current);
 end
 num_Sample = floor(length(Data_Voltage)/sample_window_length); % Cut the data to 200ms window
 
@@ -261,7 +257,7 @@ for docount = 1:num_Sample
     Peak_Ripple_Factor_L3_sample = 0;
     RMS_Ripple_Factor_L3_sample = 0;
 
-    
+    %% uncomment these if you want to use flag
     % if sum(isNonStatDistOccur_sample(:)) ~= 0
     %     RDF_Voltage_sample = NaN;
     %     Peak_Ripple_Factor_Voltage_sample = NaN;

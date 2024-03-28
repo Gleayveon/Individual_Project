@@ -1,8 +1,11 @@
-%%   EVE-Main Script
-%       Including:
-%       Define Global Variables, Time Stamp Mapping, Report generator, Interactive Tool
-%       Version: 4.2.7
-%       2024.02.25
+%% EVE-Main Script
+    % Including:
+    % Define Global Variables, Time Stamp Mapping, Report generator, Interactive Tool
+    % 
+    % Developed by Lin @ Strathclyde
+    % Code Repository: https://github.com/Gleayveon/Individual_Project
+    % Version: 4.3.0
+    % 2024.03.24
 %% Preparation
 clc
 clear
@@ -158,7 +161,7 @@ for i = 1:InterruptionCount
     Interruption_time(i) = group_size * sum(InterruptionTime(:,i));
     Interruption_spec(i) = min(InterruptionSpec(1:sum(InterruptionTime(:,i)),i));
 end
-%% Overall Display
+% Overall Display
 disp('=========Detection_Report=========');
 fprintf(['In these signals sampled,\n']);
 if SwellCount == 0
@@ -203,45 +206,49 @@ else
     end
 end
 fprintf('----------------------------------\n\n');
-figure
-subplot(2,1,1)
+figure(3)
+% subplot(2,1,1)
 yyaxis left
-plot(time_Short,U_rms_10ms,'Color','#633736',LineStyle='-');
+plot(time_Long,U_avg,'Color','#633736',LineStyle='-',LineWidth=1.5);
 for i = 1:length(Setting_Time)
     label(i) = {sprintf('Setting %d',i)};
 end
 xline(Setting_Time,'-',label)
 ylabel('V')
 yyaxis right
-plot(time_Short,I_rms_L1_10ms,'Color','#C31E2D',LineStyle='-');
+plot(time_Long,I_avg_L1,'Color','#C31E2D',LineStyle='-',LineWidth=1.5);
 hold on
-plot(time_Short,I_rms_L2_10ms,'Color','#2773C8',LineStyle='-');
+plot(time_Long,I_avg_L2,'Color','#2773C8',LineStyle='-',LineWidth=1.5);
 hold on
-plot(time_Short,I_rms_L3_10ms,'Color','#9CC38A',LineStyle='-');
+plot(time_Long,I_avg_L3,'Color','#9CC38A',LineStyle='-',LineWidth=1.5);
 ylabel('A')
 xlabel('time')
-legend('Voltage','Line 1','Line 2','Line 3');
+legend('Voltage','Current to/from AFE','Current to/from EV','Current from PV');
 hold off
-for i = 1:length(isNonStatDistOccur)
-    if isNonStatDistOccur(i) == 0
-        Status(i) = NaN;
-    elseif isNonStatDistOccur(i) == 1
-        Status(i) = 2; %swell
-    elseif isNonStatDistOccur(i) == 2
-        Status(i) = 3; %dip
-    else
-        Status(i) = 1; %inpt
-    end
+grid on
+% figure generated below is not so useful...
+% for i = 1:length(isNonStatDistOccur)
+%     if isNonStatDistOccur(i) == 0
+%         Status(i) = NaN;
+%     elseif isNonStatDistOccur(i) == 1
+%         Status(i) = 2; %swell
+%     elseif isNonStatDistOccur(i) == 2
+%         Status(i) = 3; %dip
+%     else
+%         Status(i) = 1; %inpt
+%     end
+% end
+% subplot(2,1,2)
+% plot(time_Short,Status,'o','Color','#C31E2D');
+% yline(1,'Label','Interruption');
+% yline(2,'Label','Swell');
+% yline(3,'Label','Dip');
+% xline(Setting_Time,'-',label)
+% ylim([1 3.5]);
+if isa(Setting,"table")
+    Setting = table2array(Setting);
+else
 end
-subplot(2,1,2)
-plot(time_Short,Status,'o','Color','#C31E2D');
-yline(1,'Label','Interruption');
-yline(2,'Label','Swell');
-yline(3,'Label','Dip');
-xline(Setting_Time,'-',label)
-ylim([1 3.5]);
-Setting = table2array(Setting);
-
 U_ripple = double(abs(U_ripple));
 I_ripple_L1 = double(abs(I_ripple_L1));
 I_ripple_L2 = double(abs(I_ripple_L2));
@@ -260,12 +267,12 @@ Peak_Ripple_Factor_L2 = double(abs(Peak_Ripple_Factor_L2));
 Peak_Ripple_Factor_L3 = double(abs(Peak_Ripple_Factor_L3));
 %% Peport Generator & Interactive Tool
 if GENRPT == 1
-    
+
     % Report Generator
     import mlreportgen.dom.*
     rptname = 'AutoReport'
     rpt = Document(rptname,'docx','Evaluation Report');
-    
+
     PubDate = date();
 
     OA_1 = sprintf('The analysis data are recorded during %s to %s.\n', start_time, time_Short(end));
@@ -1786,7 +1793,7 @@ else
                     end
                 end
                 fprintf('----------------------------------\n\n');
-                I_Atool_end =("Which kinds of distortion do you want to analysis? (Dip/Interruption/Swell)\nEnter any other thing to exit\n");
+                I_Atool_end =("Which kinds of distortion do you want to analysis? (Dip/Interruption/Swell/System Setting)\nEnter any other thing to exit\n");
                 Usr_input_2 = input(I_Atool_end,"s");
             elseif Usr_input_2 == "System Setting"
                 fprintf('\nYou have chosen %s.\n',Usr_input_2);
@@ -1936,7 +1943,7 @@ else
                 hold off
                 title('RMS Ripple Factor value of voltage and current during this period');
                 fprintf('----------------------------------\n\n');
-                I_Atool_end =("Which kinds of distortion do you want to analysis? (Dip/Interruption/Swell)\nEnter any other thing to exit\n");
+                I_Atool_end =("Which kinds of distortion do you want to analysis? (Dip/Interruption/Swell/System Setting)\nEnter any other thing to exit\n");
                 Usr_input_2 = input(I_Atool_end,"s");
             end
             fprintf('==========================\n\n       Tool Terminated       \n\n==========================\n');

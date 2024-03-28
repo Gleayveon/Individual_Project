@@ -1,15 +1,9 @@
-
 %% EVE-Evaluator
 %   Notice:
-%   This Script can detect the non-stationary disturbances of the given
-%   data, with a native design for a data with 1 voltage signal and 3
-%   current signals, unless the signal number of new data is changed,
-%   otherwise there is no need to change any code of this script.
-%   Discription:
-%   The discription of this script can be found at the README
+%   This Script is the lite version that ony used for the sampling frequency
 %
-%   Version: 4.2.4
-%   2024.02.15
+%   Version: 4.3.0.a
+%   2024.03.24
 
 %% Preparation
 clc
@@ -35,7 +29,6 @@ listing = dir('*.tdms');
 len = length(listing);
 
 
-%% GENRPT = 0; %For demo only
 U_avg_500K = 0;
 U_rms_500K = 0;
 I_rms_L1_500K = 0;
